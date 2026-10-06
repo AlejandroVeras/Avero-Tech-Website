@@ -195,11 +195,14 @@ export async function deleteProduct(id: string) {
 export async function getPublicProducts(): Promise<Product[]> {
   const supabase = await createClient()
 
-  // 1. Buscar el ID del administrador (Avero Technology) para no mezclar productos de otros inquilinos SaaS
+  // 1. Buscar el tenant marcado explícitamente como dueño de la tienda pública,
+  // para no mezclar productos de otros inquilinos SaaS. Requiere la columna
+  // `is_store_owner` y su política RLS de lectura pública (ver
+  // DATABASE_STORE_OWNER_UPDATE.sql).
   const { data: adminProfile } = await supabase
     .from("profiles")
     .select("id")
-    .ilike("business_name", "%avero%")
+    .eq("is_store_owner", true)
     .limit(1)
     .single()
 

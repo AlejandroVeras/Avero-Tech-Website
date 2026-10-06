@@ -4,11 +4,11 @@ import { useState, useMemo, useEffect, useRef } from "react"
 import { motion, AnimatePresence, useInView } from "framer-motion"
 import Link from "next/link"
 import {
-  ShoppingCart, Laptop, Wrench, Settings, ArrowRight, Phone, Plus, Minus,
+  ShoppingCart, Laptop, Wrench, Phone, Plus, Minus,
   Trash2, Search, LayoutGrid, List, Filter, ChevronDown, ChevronUp,
   Shield, Zap, Heart, Monitor, Server, Wifi, HardDrive, Headphones,
   BarChart3, Users, Package, Ticket, Smartphone, Globe, CheckCircle2,
-  MessageCircle, Mail, MapPin, Menu, X, ExternalLink
+  MessageCircle, Mail, MapPin, Menu, X
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -60,10 +60,10 @@ function AnimatedCounter({ target, label, suffix = "" }: { target: number; label
 
   return (
     <div ref={ref} className="text-center">
-      <p className="text-4xl md:text-5xl font-extrabold text-primary">
+      <p className="text-4xl md:text-5xl font-semibold text-obsidian dark:text-foreground">
         {count.toLocaleString()}{suffix}
       </p>
-      <p className="text-sm text-muted-foreground mt-1">{label}</p>
+      <p className="text-sm text-pewter mt-1">{label}</p>
     </div>
   )
 }
@@ -77,13 +77,13 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between py-5 text-left group"
       >
-        <span className="font-medium text-foreground group-hover:text-primary transition-colors pr-4">
+        <span className="font-medium text-obsidian dark:text-foreground group-hover:text-sapphire dark:group-hover:text-sky-signal transition-colors pr-4">
           {question}
         </span>
         {isOpen ? (
-          <ChevronUp className="h-5 w-5 text-primary shrink-0" />
+          <ChevronUp className="h-5 w-5 text-sapphire dark:text-sky-signal shrink-0" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-muted-foreground shrink-0" />
+          <ChevronDown className="h-5 w-5 text-pewter shrink-0" />
         )}
       </button>
       <AnimatePresence>
@@ -95,7 +95,7 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <p className="pb-5 text-muted-foreground text-sm leading-relaxed">
+            <p className="pb-5 text-pewter text-sm leading-relaxed">
               {answer}
             </p>
           </motion.div>
@@ -201,18 +201,18 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
     <div className="min-h-screen bg-background text-foreground">
 
       {/* ══════════════════════════════════════════════════════════
-          NAVBAR
+          NAVBAR — frosted glass, 56px, no border (Apple gallery style)
       ══════════════════════════════════════════════════════════ */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/90 backdrop-blur-lg">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-xl backdrop-saturate-150">
+        <div className="container mx-auto px-4 h-14 flex items-center justify-between">
           {/* Logo */}
           <button onClick={() => scrollTo("#")} className="flex items-center gap-2 group">
-            <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold text-lg group-hover:scale-105 transition-transform">
+            <div className="w-8 h-8 bg-obsidian dark:bg-white rounded-full flex items-center justify-center text-background dark:text-obsidian font-semibold text-sm">
               A
             </div>
-            <div className="hidden sm:flex flex-col">
-              <span className="font-bold text-sm leading-tight">AVERO</span>
-              <span className="text-[9px] text-muted-foreground uppercase tracking-[0.2em] leading-none">Technology</span>
+            <div className="hidden sm:flex flex-col leading-none">
+              <span className="font-semibold text-[13px] tracking-tight text-obsidian dark:text-foreground">AVERO</span>
+              <span className="text-[9px] text-pewter uppercase tracking-[0.2em] leading-none">Technology</span>
             </div>
           </button>
 
@@ -222,7 +222,7 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
               <button
                 key={link.label}
                 onClick={() => scrollTo(link.href)}
-                className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted"
+                className="px-3 py-2 text-caption font-normal text-obsidian/70 dark:text-foreground/70 hover:text-obsidian dark:hover:text-foreground transition-colors"
               >
                 {link.label}
               </button>
@@ -230,20 +230,20 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
           </nav>
 
           {/* Right side */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <ThemeToggle />
 
             {/* Cart */}
             <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative">
+                <Button variant="ghost" size="icon" className="relative rounded-full">
                   <ShoppingCart className="h-5 w-5" />
                   {cartCount > 0 && (
                     <motion.span
                       key={cartCount}
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center"
+                      className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] font-semibold w-5 h-5 rounded-full flex items-center justify-center"
                     >
                       {cartCount}
                     </motion.span>
@@ -258,17 +258,17 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                   <AnimatePresence>
                     {cart.map(item => (
                       <motion.div key={item.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                        className="flex items-center gap-3 p-3 border rounded-lg"
+                        className="flex items-center gap-3 p-3 border border-pale-mist/60 rounded-2xl"
                       >
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-sm truncate">{item.name}</p>
                           <p className="text-primary font-semibold text-sm">{formatCurrency(item.price)}</p>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.id, -1)}><Minus className="h-3 w-3" /></Button>
+                          <Button variant="outline" size="icon" className="h-7 w-7 rounded-full" onClick={() => updateQuantity(item.id, -1)}><Minus className="h-3 w-3" /></Button>
                           <span className="w-6 text-center text-sm">{item.cartQuantity}</span>
-                          <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.id, 1)}><Plus className="h-3 w-3" /></Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => removeFromCart(item.id)}><Trash2 className="h-3 w-3" /></Button>
+                          <Button variant="outline" size="icon" className="h-7 w-7 rounded-full" onClick={() => updateQuantity(item.id, 1)}><Plus className="h-3 w-3" /></Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full text-destructive" onClick={() => removeFromCart(item.id)}><Trash2 className="h-3 w-3" /></Button>
                         </div>
                       </motion.div>
                     ))}
@@ -281,11 +281,11 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                   )}
                 </div>
                 {cart.length > 0 && (
-                  <div className="border-t pt-4 space-y-3">
-                    <div className="flex justify-between font-bold text-lg">
+                  <div className="border-t border-pale-mist/60 pt-4 space-y-3">
+                    <div className="flex justify-between font-semibold text-lg">
                       <span>Total:</span><span>{formatCurrency(cartTotal)}</span>
                     </div>
-                    <Button className="w-full" size="lg" onClick={handleCheckoutWhatsApp}>
+                    <Button className="w-full rounded-full" size="lg" onClick={handleCheckoutWhatsApp}>
                       <MessageCircle className="h-4 w-4 mr-2" /> Pedir por WhatsApp
                     </Button>
                   </div>
@@ -293,14 +293,14 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
               </SheetContent>
             </Sheet>
 
-            <Button asChild size="sm" className="hidden sm:flex">
+            <Button asChild size="sm" className="hidden sm:flex rounded-full">
               <Link href={isLoggedIn ? "/dashboard" : "/login"}>
                 {isLoggedIn ? "Dashboard" : "Mi Cuenta"}
               </Link>
             </Button>
 
             {/* Mobile menu */}
-            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            <Button variant="ghost" size="icon" className="md:hidden rounded-full" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
@@ -313,18 +313,18 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="md:hidden border-t overflow-hidden bg-background"
+              className="md:hidden overflow-hidden bg-background/95 backdrop-blur-xl"
             >
               <div className="p-4 space-y-1">
                 {navLinks.map(link => (
                   <button key={link.label} onClick={() => scrollTo(link.href)}
-                    className="block w-full text-left px-3 py-2.5 text-sm font-medium rounded-md hover:bg-muted"
+                    className="block w-full text-left px-3 py-2.5 text-body font-normal rounded-full hover:bg-muted"
                   >
                     {link.label}
                   </button>
                 ))}
                 <Link href={isLoggedIn ? "/dashboard" : "/login"}
-                  className="block w-full text-left px-3 py-2.5 text-sm font-medium text-primary rounded-md hover:bg-muted"
+                  className="block w-full text-left px-3 py-2.5 text-body font-normal text-sapphire rounded-full hover:bg-muted"
                 >
                   {isLoggedIn ? "Ir al Dashboard" : "Iniciar Sesión"}
                 </Link>
@@ -336,72 +336,81 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
 
       <main>
         {/* ══════════════════════════════════════════════════════════
-            HERO
+            HERO — centered gallery stack, no gradients/patterns
         ══════════════════════════════════════════════════════════ */}
-        <section className="relative overflow-hidden py-20 md:py-32">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/8 via-background to-background" />
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMDIwMjAiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHpNMjAgMzRoNHYxaC00ek0zNiAyMGg0djFoLTR6TTIwIDIwaDR2MWgtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-50" />
-
-          <div className="container mx-auto px-4 relative z-10">
+        <section className="relative bg-background py-24 md:py-36">
+          <div className="container mx-auto px-4">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="max-w-4xl mx-auto text-center space-y-6"
+              className="max-w-[980px] mx-auto text-center space-y-5"
             >
-              <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 px-4 py-1.5">
-                Soluciones Tecnológicas en Santo Domingo, RD
-              </Badge>
-
-              <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1]">
-                Tecnología que{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">
-                  impulsa tu negocio
-                </span>
-              </h1>
-
-              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Equipos, software y soporte IT. Todo lo que necesitas para digitalizar tu empresa con confianza y garantía.
+              <p className="text-caption font-normal uppercase tracking-[0.16em] text-pewter">
+                Santo Domingo, República Dominicana
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
-                <Button size="lg" onClick={() => scrollTo("#catalogo")} className="w-full sm:w-auto">
-                  <Monitor className="h-4 w-4 mr-2" /> Ver Catálogo
+              <h1 className="text-4xl sm:text-5xl md:text-display font-semibold tracking-[-0.02em] text-obsidian dark:text-foreground text-balance">
+                Tecnología que impulsa tu negocio
+              </h1>
+
+              <p className="text-body font-normal text-pewter max-w-xl mx-auto text-balance">
+                Equipos, software y soporte IT — todo lo que necesitas para digitalizar tu empresa con confianza y garantía.
+              </p>
+
+              <div className="flex items-center justify-center gap-2 pt-3">
+                <Button
+                  size="lg"
+                  onClick={() => scrollTo("#catalogo")}
+                  className="rounded-full px-6 text-[14px] font-normal"
+                >
+                  Ver catálogo
                 </Button>
-                <Button size="lg" variant="outline" onClick={() => scrollTo("#sistemas")} className="w-full sm:w-auto">
-                  <Globe className="h-4 w-4 mr-2" /> Ver Sistemas
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={() => scrollTo("#sistemas")}
+                  className="rounded-full px-6 text-[14px] font-normal border-sapphire text-sapphire bg-transparent hover:bg-sapphire/5 hover:text-sapphire dark:border-sky-signal dark:text-sky-signal"
+                >
+                  Ver sistemas
                 </Button>
-                <Button size="lg" variant="ghost" onClick={() => scrollTo("#soporte")} className="w-full sm:w-auto">
-                  <Wrench className="h-4 w-4 mr-2" /> Solicitar Soporte
-                </Button>
+              </div>
+
+              <div className="pt-1">
+                <button
+                  onClick={() => scrollTo("#soporte")}
+                  className="text-caption text-sapphire dark:text-sky-signal hover:underline underline-offset-4"
+                >
+                  Solicitar soporte técnico &gt;
+                </button>
               </div>
             </motion.div>
           </div>
         </section>
 
         {/* ══════════════════════════════════════════════════════════
-            CATÁLOGO
+            CATÁLOGO — soft ice-wash band, floating product tiles
         ══════════════════════════════════════════════════════════ */}
-        <section id="catalogo" className="py-16 md:py-24 bg-muted/30">
+        <section id="catalogo" className="py-20 md:py-28 bg-gradient-to-b from-ice-wash/25 via-ice-wash/10 to-background">
           <div className="container mx-auto px-4">
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-10">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Catálogo de Equipos</h2>
-              <p className="text-muted-foreground mt-2 max-w-lg mx-auto">Laptops, PCs y periféricos disponibles para entrega inmediata</p>
+              <h2 className="text-3xl md:text-heading-lg font-semibold tracking-[-0.02em] text-obsidian dark:text-foreground">Catálogo de equipos</h2>
+              <p className="text-body text-pewter mt-2 max-w-lg mx-auto">Laptops, PCs y periféricos disponibles para entrega inmediata</p>
             </motion.div>
 
             {/* Toolbar */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-8">
+            <div className="flex flex-col sm:flex-row gap-3 mb-8 max-w-3xl mx-auto">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-pewter" />
                 <Input
                   placeholder="Buscar equipos..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 rounded-full border-pale-mist bg-card"
                 />
               </div>
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectTrigger className="w-full sm:w-[180px] rounded-full border-pale-mist bg-card">
                   <Filter className="h-4 w-4 mr-2" />
                   <SelectValue placeholder="Categoría" />
                 </SelectTrigger>
@@ -413,7 +422,7 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                   ))}
                 </SelectContent>
               </Select>
-              <div className="flex border rounded-md overflow-hidden">
+              <div className="flex border border-pale-mist rounded-full overflow-hidden bg-card">
                 <Button variant={viewMode === "grid" ? "default" : "ghost"} size="icon" onClick={() => setViewMode("grid")} className="rounded-none">
                   <LayoutGrid className="h-4 w-4" />
                 </Button>
@@ -425,10 +434,10 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
 
             {/* Products */}
             {filteredProducts.length === 0 ? (
-              <div className="text-center py-20 bg-background rounded-2xl border border-dashed">
-                <Package className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
+              <div className="text-center py-20 bg-card rounded-3xl border border-dashed border-pale-mist">
+                <Package className="w-12 h-12 text-pewter/30 mx-auto mb-4" />
                 <h3 className="font-medium text-lg">No se encontraron equipos</h3>
-                <p className="text-muted-foreground text-sm mt-1">
+                <p className="text-pewter text-sm mt-1">
                   {searchQuery ? "Intenta con otra búsqueda" : "Pronto publicaremos nuestro inventario"}
                 </p>
               </div>
@@ -441,29 +450,29 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.05 }}
                   >
-                    <Card className="h-full flex flex-col overflow-hidden group hover:shadow-lg hover:border-primary/30 transition-all duration-300">
-                      <div className="aspect-[4/3] bg-muted/50 flex items-center justify-center border-b relative">
-                        <Laptop className="w-16 h-16 text-primary/15 group-hover:scale-110 transition-transform" />
-                        <Badge className="absolute top-3 right-3 text-[10px]" variant={product.stockQuantity > 0 ? "default" : "destructive"}>
+                    <Card className="h-full flex flex-col overflow-hidden group shadow-none border-pale-mist/70 bg-card hover:border-sapphire/40 transition-colors duration-300 py-0 gap-0">
+                      <div className="aspect-[4/3] bg-fog-white dark:bg-white/5 flex items-center justify-center relative">
+                        <Laptop className="w-16 h-16 text-obsidian/10 dark:text-white/15 group-hover:scale-110 transition-transform" />
+                        <Badge className="absolute top-3 right-3 text-[10px] rounded-full" variant={product.stockQuantity > 0 ? "default" : "destructive"}>
                           {product.stockQuantity > 0 ? "Disponible" : "Agotado"}
                         </Badge>
                       </div>
                       <CardContent className="p-4 flex-1 flex flex-col">
-                        <Badge variant="outline" className="w-fit mb-2 text-[10px]">{product.category || "Equipos"}</Badge>
-                        <h3 className="font-semibold line-clamp-2 mb-1">{product.name}</h3>
+                        <Badge variant="outline" className="w-fit mb-2 text-[10px] rounded-full border-pale-mist text-pewter">{product.category || "Equipos"}</Badge>
+                        <h3 className="font-semibold line-clamp-2 mb-1 text-obsidian dark:text-foreground">{product.name}</h3>
                         {product.description && (
-                          <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{product.description}</p>
+                          <p className="text-xs text-pewter line-clamp-2 mb-3">{product.description}</p>
                         )}
                         <div className="mt-auto pt-3">
-                          <p className="text-xl font-bold text-primary">{formatCurrency(product.price)}</p>
+                          <p className="text-xl font-semibold text-obsidian dark:text-foreground">{formatCurrency(product.price)}</p>
                           <div className="flex gap-2 mt-3">
-                            <Button size="sm" className="flex-1" onClick={() => {
+                            <Button size="sm" className="flex-1 rounded-full text-[13px] font-normal" onClick={() => {
                               const msg = `Hola, me interesa el ${product.name} (${formatCurrency(product.price)})`
                               window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank")
                             }}>
-                              <MessageCircle className="h-3 w-3 mr-1" /> Consultar
+                              Consultar
                             </Button>
-                            <Button size="sm" variant="outline" onClick={() => { addToCart(product); setIsCartOpen(true) }}>
+                            <Button size="sm" variant="outline" className="rounded-full border-sapphire text-sapphire hover:bg-sapphire/5 hover:text-sapphire dark:border-sky-signal dark:text-sky-signal" onClick={() => { addToCart(product); setIsCartOpen(true) }}>
                               <Plus className="h-3 w-3" />
                             </Button>
                           </div>
@@ -477,24 +486,24 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
               /* List view */
               <div className="space-y-3">
                 {filteredProducts.map(product => (
-                  <Card key={product.id} className="hover:shadow-md transition-shadow">
+                  <Card key={product.id} className="shadow-none border-pale-mist/70 bg-card hover:border-sapphire/40 transition-colors">
                     <CardContent className="p-4 flex items-center gap-4">
-                      <div className="w-16 h-16 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
-                        <Laptop className="w-8 h-8 text-primary/20" />
+                      <div className="w-16 h-16 rounded-2xl bg-fog-white dark:bg-white/5 flex items-center justify-center shrink-0">
+                        <Laptop className="w-8 h-8 text-obsidian/15 dark:text-white/20" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold truncate">{product.name}</h3>
-                        <p className="text-xs text-muted-foreground truncate">{product.category || "Equipos"} {product.sku ? `• SKU: ${product.sku}` : ""}</p>
+                        <h3 className="font-semibold truncate text-obsidian dark:text-foreground">{product.name}</h3>
+                        <p className="text-xs text-pewter truncate">{product.category || "Equipos"} {product.sku ? `• SKU: ${product.sku}` : ""}</p>
                       </div>
-                      <Badge variant={product.stockQuantity > 0 ? "default" : "destructive"} className="hidden sm:flex shrink-0">
+                      <Badge variant={product.stockQuantity > 0 ? "default" : "destructive"} className="hidden sm:flex shrink-0 rounded-full">
                         {product.stockQuantity > 0 ? "Disponible" : "Agotado"}
                       </Badge>
-                      <p className="text-lg font-bold text-primary shrink-0">{formatCurrency(product.price)}</p>
-                      <Button size="sm" onClick={() => {
+                      <p className="text-lg font-semibold text-obsidian dark:text-foreground shrink-0">{formatCurrency(product.price)}</p>
+                      <Button size="sm" className="rounded-full text-[13px] font-normal" onClick={() => {
                         const msg = `Hola, me interesa el ${product.name}`
                         window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank")
                       }}>
-                        <MessageCircle className="h-3 w-3 mr-1" /> Consultar
+                        Consultar
                       </Button>
                     </CardContent>
                   </Card>
@@ -505,20 +514,20 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
         </section>
 
         {/* ══════════════════════════════════════════════════════════
-            SISTEMAS TECNOLÓGICOS
+            SISTEMAS TECNOLÓGICOS — dark band, gallery contrast
         ══════════════════════════════════════════════════════════ */}
-        <section id="sistemas" className="py-16 md:py-24">
+        <section id="sistemas" className="py-20 md:py-28 bg-obsidian text-white">
           <div className="container mx-auto px-4">
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-12">
-              <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 mb-4">Software SaaS</Badge>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Sistemas de Gestión Empresarial</h2>
-              <p className="text-muted-foreground mt-2 max-w-lg mx-auto">
+              <p className="text-caption uppercase tracking-[0.16em] text-white/50 mb-3">Software SaaS</p>
+              <h2 className="text-3xl md:text-heading-lg font-semibold tracking-[-0.02em]">Sistemas de gestión empresarial</h2>
+              <p className="text-body text-white/60 mt-2 max-w-lg mx-auto">
                 Digitaliza tu negocio con nuestro sistema todo-en-uno de inventario, soporte y control de clientes
               </p>
             </motion.div>
 
             {/* Features grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto mb-12">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-3xl mx-auto mb-12">
               {[
                 { icon: Package, label: "Gestión de Inventario" },
                 { icon: Ticket, label: "Tickets de Soporte" },
@@ -528,11 +537,11 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                 { icon: Smartphone, label: "App Móvil" },
               ].map((feat, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
-                  <div className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:border-primary/30 transition-colors">
-                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                  <div className="flex items-center gap-3 p-3 rounded-2xl border border-white/10 bg-white/5 hover:border-sky-signal/40 transition-colors">
+                    <div className="p-2 rounded-full text-sky-signal">
                       <feat.icon className="w-4 h-4" />
                     </div>
-                    <span className="text-sm font-medium">{feat.label}</span>
+                    <span className="text-[13px] font-normal text-white/90">{feat.label}</span>
                   </div>
                 </motion.div>
               ))}
@@ -540,44 +549,43 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
 
             {/* Pricing toggle */}
             <div className="flex items-center justify-center gap-3 mb-8">
-              <span className={`text-sm font-medium ${!isAnnual ? "text-foreground" : "text-muted-foreground"}`}>Mensual</span>
+              <span className={`text-[13px] font-normal ${!isAnnual ? "text-white" : "text-white/50"}`}>Mensual</span>
               <button
                 onClick={() => setIsAnnual(!isAnnual)}
-                className={`relative w-14 h-7 rounded-full transition-colors ${isAnnual ? "bg-primary" : "bg-muted-foreground/30"}`}
+                className={`relative w-12 h-7 rounded-full transition-colors ${isAnnual ? "bg-sky-signal" : "bg-white/20"}`}
               >
-                <span className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow-md transition-transform ${isAnnual ? "translate-x-7" : "translate-x-0.5"}`} />
+                <span className={`absolute top-0.5 w-6 h-6 rounded-full bg-white transition-transform ${isAnnual ? "translate-x-5" : "translate-x-0.5"}`} />
               </button>
-              <span className={`text-sm font-medium ${isAnnual ? "text-foreground" : "text-muted-foreground"}`}>
-                Anual <Badge className="ml-1 bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/30">-17%</Badge>
+              <span className={`text-[13px] font-normal ${isAnnual ? "text-white" : "text-white/50"}`}>
+                Anual <span className="ml-1 text-[11px] text-sky-signal">-17%</span>
               </span>
             </div>
 
             {/* Plan card */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.97 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               className="max-w-md mx-auto"
             >
-              <Card className="border-primary/50 shadow-lg relative overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-blue-500" />
+              <Card className="border-white/10 bg-white/[0.04] shadow-none text-white">
                 <CardHeader className="text-center pb-2">
-                  <CardTitle className="text-2xl">Plan Profesional</CardTitle>
-                  <p className="text-muted-foreground text-sm">Todo lo que necesitas para gestionar tu negocio</p>
+                  <CardTitle className="text-2xl font-semibold">Plan Profesional</CardTitle>
+                  <p className="text-white/60 text-[13px]">Todo lo que necesitas para gestionar tu negocio</p>
                 </CardHeader>
                 <CardContent className="text-center space-y-6">
                   <div>
                     {isAnnual && (
-                      <p className="text-muted-foreground line-through text-lg">{formatCurrency(MONTHLY_PRICE)}/mes</p>
+                      <p className="text-white/40 line-through text-lg">{formatCurrency(MONTHLY_PRICE)}/mes</p>
                     )}
                     <div className="flex items-baseline justify-center gap-1">
-                      <span className="text-5xl font-extrabold">
+                      <span className="text-5xl font-semibold">
                         {formatCurrency(isAnnual ? ANNUAL_PRICE / 12 : MONTHLY_PRICE).replace(".00", "")}
                       </span>
-                      <span className="text-muted-foreground">/mes</span>
+                      <span className="text-white/50">/mes</span>
                     </div>
                     {isAnnual && (
-                      <p className="text-sm text-green-600 dark:text-green-400 font-medium mt-1">
+                      <p className="text-[13px] text-sky-signal mt-1">
                         {formatCurrency(ANNUAL_PRICE)}/año — Ahorras 2 meses gratis
                       </p>
                     )}
@@ -594,19 +602,19 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                       "Soporte técnico prioritario",
                       "Acceso web + app móvil",
                     ].map((feat, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm">
-                        <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />
+                      <li key={i} className="flex items-start gap-2 text-[14px] text-white/85">
+                        <CheckCircle2 className="h-4 w-4 text-sky-signal shrink-0 mt-0.5" />
                         <span>{feat}</span>
                       </li>
                     ))}
                   </ul>
 
-                  <Button size="lg" className="w-full" asChild>
+                  <Button size="lg" className="w-full rounded-full text-[14px] font-normal bg-white text-obsidian hover:bg-white/90" asChild>
                     <Link href="/pricing">
-                      Comenzar ahora <ArrowRight className="h-4 w-4 ml-2" />
+                      Comenzar ahora
                     </Link>
                   </Button>
-                  <p className="text-xs text-muted-foreground">Cancela cuando quieras. Sin contratos.</p>
+                  <p className="text-xs text-white/40">Cancela cuando quieras. Sin contratos.</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -616,11 +624,11 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
         {/* ══════════════════════════════════════════════════════════
             SOPORTE TÉCNICO
         ══════════════════════════════════════════════════════════ */}
-        <section id="soporte" className="py-16 md:py-24 bg-muted/30">
+        <section id="soporte" className="py-20 md:py-28 bg-background">
           <div className="container mx-auto px-4">
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Soporte Técnico IT</h2>
-              <p className="text-muted-foreground mt-2">Diagnóstico, reparación y consultoría tecnológica profesional</p>
+              <h2 className="text-3xl md:text-heading-lg font-semibold tracking-[-0.02em] text-obsidian dark:text-foreground">Soporte técnico IT</h2>
+              <p className="text-body text-pewter mt-2">Diagnóstico, reparación y consultoría tecnológica profesional</p>
             </motion.div>
 
             {/* Service cards */}
@@ -634,13 +642,13 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                 { icon: Headphones, title: "Consultoría", desc: "Asesoría IT empresarial" },
               ].map((svc, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
-                  <Card className="text-center h-full hover:border-primary/30 transition-colors">
+                  <Card className="text-center h-full shadow-none border-pale-mist/70 bg-card hover:border-sapphire/40 transition-colors">
                     <CardContent className="p-5 space-y-2">
-                      <div className="w-10 h-10 mx-auto rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                      <div className="w-10 h-10 mx-auto rounded-full bg-fog-white dark:bg-white/5 flex items-center justify-center text-sapphire dark:text-sky-signal">
                         <svc.icon className="w-5 h-5" />
                       </div>
-                      <h3 className="font-semibold text-sm">{svc.title}</h3>
-                      <p className="text-xs text-muted-foreground">{svc.desc}</p>
+                      <h3 className="font-semibold text-sm text-obsidian dark:text-foreground">{svc.title}</h3>
+                      <p className="text-xs text-pewter">{svc.desc}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -649,13 +657,13 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
 
             {/* Support form */}
             <div className="max-w-2xl mx-auto">
-              <Card className="shadow-lg">
+              <Card className="shadow-none border-pale-mist/70 bg-card">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Wrench className="h-5 w-5 text-primary" />
-                    Solicitar Soporte Técnico
+                  <CardTitle className="flex items-center gap-2 text-obsidian dark:text-foreground font-semibold">
+                    <Wrench className="h-5 w-5 text-sapphire dark:text-sky-signal" />
+                    Solicitar soporte técnico
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground">Completa el formulario y recibirás respuesta por WhatsApp en menos de 2 horas</p>
+                  <p className="text-[13px] text-pewter">Completa el formulario y recibirás respuesta por WhatsApp en menos de 2 horas</p>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSupportWhatsApp} className="space-y-4">
@@ -665,6 +673,7 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                         <Input id="sName" required value={supportForm.name}
                           onChange={e => setSupportForm(p => ({ ...p, name: e.target.value }))}
                           placeholder="Juan Pérez"
+                          className="rounded-full border-pale-mist"
                         />
                       </div>
                       <div className="space-y-2">
@@ -672,6 +681,7 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                         <Input id="sEmail" type="email" required value={supportForm.email}
                           onChange={e => setSupportForm(p => ({ ...p, email: e.target.value }))}
                           placeholder="tu@email.com"
+                          className="rounded-full border-pale-mist"
                         />
                       </div>
                     </div>
@@ -681,12 +691,13 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                         <Input id="sPhone" value={supportForm.phone}
                           onChange={e => setSupportForm(p => ({ ...p, phone: e.target.value }))}
                           placeholder="829-000-0000"
+                          className="rounded-full border-pale-mist"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="sType">Tipo de problema *</Label>
                         <Select value={supportForm.problemType} onValueChange={(val: any) => setSupportForm(p => ({ ...p, problemType: val }))}>
-                          <SelectTrigger id="sType"><SelectValue /></SelectTrigger>
+                          <SelectTrigger id="sType" className="rounded-full border-pale-mist"><SelectValue /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="hardware">Falla de Hardware</SelectItem>
                             <SelectItem value="software">Problema de Software</SelectItem>
@@ -703,11 +714,11 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                       <Textarea id="sDesc" required rows={4} value={supportForm.description}
                         onChange={e => setSupportForm(p => ({ ...p, description: e.target.value }))}
                         placeholder="Mi laptop no enciende, se queda en pantalla negra..."
-                        className="resize-none"
+                        className="resize-none rounded-2xl border-pale-mist"
                       />
                     </div>
-                    <Button type="submit" size="lg" className="w-full">
-                      <MessageCircle className="h-4 w-4 mr-2" /> Enviar por WhatsApp
+                    <Button type="submit" size="lg" className="w-full rounded-full text-[14px] font-normal">
+                      Enviar por WhatsApp
                     </Button>
                   </form>
                 </CardContent>
@@ -719,11 +730,11 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
         {/* ══════════════════════════════════════════════════════════
             CONFIANZA / NOSOTROS
         ══════════════════════════════════════════════════════════ */}
-        <section className="py-16 md:py-24">
+        <section className="py-20 md:py-28 bg-background">
           <div className="container mx-auto px-4">
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">¿Por qué Avero Technology?</h2>
-              <p className="text-muted-foreground mt-2 max-w-lg mx-auto">
+              <h2 className="text-3xl md:text-heading-lg font-semibold tracking-[-0.02em] text-obsidian dark:text-foreground">¿Por qué Avero Technology?</h2>
+              <p className="text-body text-pewter mt-2 max-w-lg mx-auto">
                 Más que una empresa de tecnología — somos tu aliado digital de confianza en Santo Domingo
               </p>
             </motion.div>
@@ -736,13 +747,13 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                 { icon: Shield, title: "Garantía", desc: "Todos nuestros equipos y servicios incluyen garantía completa." },
               ].map((val, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                  <Card className="h-full text-center hover:shadow-lg transition-shadow">
+                  <Card className="h-full text-center shadow-none border-pale-mist/70 bg-card">
                     <CardContent className="p-6 space-y-4">
-                      <div className="w-12 h-12 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                      <div className="w-12 h-12 mx-auto rounded-full bg-fog-white dark:bg-white/5 flex items-center justify-center text-sapphire dark:text-sky-signal">
                         <val.icon className="w-6 h-6" />
                       </div>
-                      <h3 className="text-lg font-semibold">{val.title}</h3>
-                      <p className="text-sm text-muted-foreground">{val.desc}</p>
+                      <h3 className="text-lg font-semibold text-obsidian dark:text-foreground">{val.title}</h3>
+                      <p className="text-sm text-pewter">{val.desc}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -761,13 +772,13 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
         {/* ══════════════════════════════════════════════════════════
             FAQ
         ══════════════════════════════════════════════════════════ */}
-        <section id="faq" className="py-16 md:py-24 bg-muted/30">
+        <section id="faq" className="py-20 md:py-28 bg-gradient-to-b from-fog-white to-background">
           <div className="container mx-auto px-4">
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Preguntas Frecuentes</h2>
+              <h2 className="text-3xl md:text-heading-lg font-semibold tracking-[-0.02em] text-obsidian dark:text-foreground">Preguntas frecuentes</h2>
             </motion.div>
 
-            <div className="max-w-2xl mx-auto bg-card rounded-xl border p-6">
+            <div className="max-w-2xl mx-auto bg-card rounded-3xl border border-pale-mist/70 p-6">
               <FaqItem
                 question="¿Los equipos tienen garantía?"
                 answer="Sí. Todos nuestros equipos nuevos y reacondicionados incluyen garantía. El período varía según el producto — consulta los detalles al momento de la compra."
@@ -806,39 +817,39 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
       </main>
 
       {/* ══════════════════════════════════════════════════════════
-          FOOTER
+          FOOTER — dense link grid, hairline divider, no card chrome
       ══════════════════════════════════════════════════════════ */}
-      <footer id="contacto" className="border-t bg-card py-12">
+      <footer id="contacto" className="bg-fog-white dark:bg-white/[0.03] py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Brand */}
             <div className="md:col-span-1 space-y-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold">A</div>
+                <div className="w-8 h-8 bg-obsidian dark:bg-white rounded-full flex items-center justify-center text-background dark:text-obsidian font-semibold">A</div>
                 <div>
-                  <span className="font-bold text-sm">AVERO</span>
-                  <span className="text-[9px] text-muted-foreground uppercase tracking-widest ml-1">Technology</span>
+                  <span className="font-semibold text-sm text-obsidian dark:text-foreground">AVERO</span>
+                  <span className="text-[9px] text-pewter uppercase tracking-widest ml-1">Technology</span>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-caption text-pewter">
                 Tecnología clara, honesta y funcional, lista para trabajar desde el primer día.
               </p>
             </div>
 
             {/* Links */}
             <div>
-              <h4 className="font-semibold text-sm mb-3">Navegación</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h4 className="font-semibold text-caption text-obsidian dark:text-foreground mb-3">Navegación</h4>
+              <ul className="space-y-2 text-caption text-pewter">
                 {navLinks.map(l => (
-                  <li key={l.label}><button onClick={() => scrollTo(l.href)} className="hover:text-foreground transition-colors">{l.label}</button></li>
+                  <li key={l.label}><button onClick={() => scrollTo(l.href)} className="hover:text-obsidian dark:hover:text-foreground transition-colors">{l.label}</button></li>
                 ))}
               </ul>
             </div>
 
             {/* Services */}
             <div>
-              <h4 className="font-semibold text-sm mb-3">Servicios</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h4 className="font-semibold text-caption text-obsidian dark:text-foreground mb-3">Servicios</h4>
+              <ul className="space-y-2 text-caption text-pewter">
                 <li>Venta de Equipos</li>
                 <li>Sistemas de Gestión</li>
                 <li>Soporte Técnico</li>
@@ -849,15 +860,15 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
 
             {/* Contact */}
             <div>
-              <h4 className="font-semibold text-sm mb-3">Contacto</h4>
-              <ul className="space-y-2.5 text-sm text-muted-foreground">
+              <h4 className="font-semibold text-caption text-obsidian dark:text-foreground mb-3">Contacto</h4>
+              <ul className="space-y-2.5 text-caption text-pewter">
                 <li className="flex items-start gap-2">
                   <MapPin className="h-4 w-4 shrink-0 mt-0.5" />
                   <span>Santo Domingo, República Dominicana</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Phone className="h-4 w-4 shrink-0" />
-                  <a href="https://wa.me/18298122103" target="_blank" rel="noopener" className="hover:text-foreground transition-colors">(829)-812-2103</a>
+                  <a href="https://wa.me/18298122103" target="_blank" rel="noopener" className="hover:text-obsidian dark:hover:text-foreground transition-colors">(829)-812-2103</a>
                 </li>
                 <li className="flex items-center gap-2">
                   <Mail className="h-4 w-4 shrink-0" />
@@ -867,10 +878,10 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
             </div>
           </div>
 
-          <div className="border-t mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} Avero Technology. Todos los derechos reservados.</p>
+          <div className="border-t border-pale-mist mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-[11px] text-pewter">&copy; {new Date().getFullYear()} Avero Technology. Todos los derechos reservados.</p>
             <div className="flex items-center gap-4">
-              <Link href={isLoggedIn ? "/dashboard" : "/login"} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <Link href={isLoggedIn ? "/dashboard" : "/login"} className="text-[11px] text-sapphire dark:text-sky-signal hover:underline underline-offset-4">
                 {isLoggedIn ? "Dashboard" : "Iniciar Sesión"}
               </Link>
             </div>
