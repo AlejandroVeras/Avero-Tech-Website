@@ -19,15 +19,15 @@ import { Label } from "@/components/ui/label"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ThemeToggle } from "@/components/theme-toggle"
-import type { Product } from "@/lib/data/products"
+import type { PublicProduct } from "@/lib/data/products"
 
 // ─── Types ────────────────────────────────────────────────────────
 interface StorefrontProps {
-  initialProducts: Product[]
+  initialProducts: PublicProduct[]
   isLoggedIn: boolean
 }
 
-interface CartItem extends Product {
+interface CartItem extends PublicProduct {
   cartQuantity: number
 }
 
@@ -131,7 +131,7 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
   }
 
   // Cart functions
-  const addToCart = (product: Product) => {
+  const addToCart = (product: PublicProduct) => {
     setCart(prev => {
       const existing = prev.find(i => i.id === product.id)
       if (existing) return prev.map(i => i.id === product.id ? { ...i, cartQuantity: i.cartQuantity + 1 } : i)
@@ -453,8 +453,8 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                     <Card className="h-full flex flex-col overflow-hidden group shadow-none border-pale-mist/70 bg-card hover:border-sapphire/40 transition-colors duration-300 py-0 gap-0">
                       <div className="aspect-[4/3] bg-fog-white dark:bg-white/5 flex items-center justify-center relative">
                         <Laptop className="w-16 h-16 text-obsidian/10 dark:text-white/15 group-hover:scale-110 transition-transform" />
-                        <Badge className="absolute top-3 right-3 text-[10px] rounded-full" variant={product.stockQuantity > 0 ? "default" : "destructive"}>
-                          {product.stockQuantity > 0 ? "Disponible" : "Agotado"}
+                        <Badge className="absolute top-3 right-3 text-[10px] rounded-full" variant={product.inStock ? "default" : "destructive"}>
+                          {product.inStock ? "Disponible" : "Agotado"}
                         </Badge>
                       </div>
                       <CardContent className="p-4 flex-1 flex flex-col">
@@ -493,10 +493,10 @@ export function Storefront({ initialProducts, isLoggedIn }: StorefrontProps) {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold truncate text-obsidian dark:text-foreground">{product.name}</h3>
-                        <p className="text-xs text-pewter truncate">{product.category || "Equipos"} {product.sku ? `• SKU: ${product.sku}` : ""}</p>
+                        <p className="text-xs text-pewter truncate">{product.category || "Equipos"}</p>
                       </div>
-                      <Badge variant={product.stockQuantity > 0 ? "default" : "destructive"} className="hidden sm:flex shrink-0 rounded-full">
-                        {product.stockQuantity > 0 ? "Disponible" : "Agotado"}
+                      <Badge variant={product.inStock ? "default" : "destructive"} className="hidden sm:flex shrink-0 rounded-full">
+                        {product.inStock ? "Disponible" : "Agotado"}
                       </Badge>
                       <p className="text-lg font-semibold text-obsidian dark:text-foreground shrink-0">{formatCurrency(product.price)}</p>
                       <Button size="sm" className="rounded-full text-[13px] font-normal" onClick={() => {

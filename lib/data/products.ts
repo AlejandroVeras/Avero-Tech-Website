@@ -192,29 +192,34 @@ export async function deleteProduct(id: string) {
   return { success: true }
 }
 
-export async function getPublicProducts(): Promise<Product[]> {
+// Never add cost, sku or exact stock here: this shape is serialized to the browser.
+export interface PublicProduct {
+  id: string
+  name: string
+  description?: string
+  price: number
+  category?: string
+  inStock: boolean
+}
+
+export async function getPublicProducts(): Promise<PublicProduct[]> {
   const supabase = await createClient()
 
-  // 1. Buscar el tenant marcado explícitamente como dueño de la tienda pública,
-  // para no mezclar productos de otros inquilinos SaaS. Requiere la columna
-  // `is_store_owner` y su política RLS de lectura pública (ver
-  // DATABASE_STORE_OWNER_UPDATE.sql).
-  const { data: adminProfile } = await supabase
-    .from("profiles")
+  // Vistas definidas en DATABASE_SECURITY_FIX.sql; el público no tiene acceso
+  // directo a las tablas products ni profiles.
+  const { data: store } = await supabase
+    .from("public_stores")
     .select("id")
     .eq("is_store_owner", true)
     .limit(1)
-    .single()
+    .maybeSingle()
 
-  if (!adminProfile) return []
+  if (!store) return []
 
-  // 2. Extraer solo los productos públicos de ese administrador
-  // IMPORTANTE: Requiere política RLS `is_public = true` en public.products.
   const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("is_public", true)
-    .eq("user_id", adminProfile.id)
+    .from("public_products")
+    .select("id, name, description, price, category, in_stock")
+    .eq("store_id", store.id)
     .order("created_at", { ascending: false })
 
   if (error) {
@@ -224,17 +229,10 @@ export async function getPublicProducts(): Promise<Product[]> {
 
   return (data || []).map((p) => ({
     id: p.id,
-    userId: p.user_id,
     name: p.name,
-    description: p.description,
-    sku: p.sku,
+    description: p.description ?? undefined,
     price: Number(p.price),
-    cost: p.cost ? Number(p.cost) : undefined,
-    stockQuantity: p.stock_quantity,
-    trackInventory: p.track_inventory,
-    isPublic: p.is_public || false,
-    category: p.category,
-    createdAt: new Date(p.created_at),
-    updatedAt: new Date(p.updated_at),
+    category: p.category ?? undefined,
+    inStock: p.in_stock,
   }))
 }
