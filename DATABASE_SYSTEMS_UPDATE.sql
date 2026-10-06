@@ -192,6 +192,21 @@ $$;
 -- Políticas RESTRICTIVAS: se suman a las que ya existen (no las cambian).
 -- Con la suscripción vencida el negocio sigue VIENDO todos sus datos,
 -- pero no puede crear, editar ni borrar. Nada se borra.
+--   Crear:  política restrictiva, rechaza con error.
+--   Editar: política restrictiva con USING (true). Si solo filtrara filas,
+--           el UPDATE "funcionaría" sin cambiar nada y la app diría "guardado".
+--   Borrar: un DELETE filtrado tampoco da error, así que se usa un trigger.
+CREATE OR REPLACE FUNCTION public.block_delete_without_access()
+RETURNS trigger
+LANGUAGE plpgsql AS $fn$
+BEGIN
+  IF current_user = 'authenticated' AND NOT public.has_write_access() THEN
+    RAISE EXCEPTION 'Cuenta en modo solo lectura: la suscripción no está vigente' USING ERRCODE = '42501';
+  END IF;
+  RETURN OLD;
+END;
+$fn$;
+
 DO $$
 DECLARE
   t TEXT;
@@ -209,8 +224,9 @@ BEGIN
     EXECUTE format('DROP POLICY IF EXISTS "Solo lectura sin suscripción (update)" ON public.%I', t);
     EXECUTE format('DROP POLICY IF EXISTS "Solo lectura sin suscripción (delete)" ON public.%I', t);
     EXECUTE format('CREATE POLICY "Solo lectura sin suscripción (insert)" ON public.%I AS RESTRICTIVE FOR INSERT TO authenticated WITH CHECK (public.has_write_access())', t);
-    EXECUTE format('CREATE POLICY "Solo lectura sin suscripción (update)" ON public.%I AS RESTRICTIVE FOR UPDATE TO authenticated USING (public.has_write_access()) WITH CHECK (public.has_write_access())', t);
-    EXECUTE format('CREATE POLICY "Solo lectura sin suscripción (delete)" ON public.%I AS RESTRICTIVE FOR DELETE TO authenticated USING (public.has_write_access())', t);
+    EXECUTE format('CREATE POLICY "Solo lectura sin suscripción (update)" ON public.%I AS RESTRICTIVE FOR UPDATE TO authenticated USING (true) WITH CHECK (public.has_write_access())', t);
+    EXECUTE format('DROP TRIGGER IF EXISTS block_delete_without_access ON public.%I', t);
+    EXECUTE format('CREATE TRIGGER block_delete_without_access BEFORE DELETE ON public.%I FOR EACH ROW EXECUTE FUNCTION public.block_delete_without_access()', t);
   END LOOP;
 END;
 $$;
@@ -244,6 +260,7 @@ NOTIFY pgrst, 'reload schema';
 --       EXECUTE format('DROP POLICY IF EXISTS "Solo lectura sin suscripción (insert)" ON public.%I', t);
 --       EXECUTE format('DROP POLICY IF EXISTS "Solo lectura sin suscripción (update)" ON public.%I', t);
 --       EXECUTE format('DROP POLICY IF EXISTS "Solo lectura sin suscripción (delete)" ON public.%I', t);
+--       EXECUTE format('DROP TRIGGER IF EXISTS block_delete_without_access ON public.%I', t);
 --     END IF;
 --   END LOOP;
 -- END $$;

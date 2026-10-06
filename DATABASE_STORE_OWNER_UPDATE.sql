@@ -36,11 +36,19 @@ WHERE id = (SELECT id FROM auth.users WHERE email = 'verasetanislao21@gmail.com'
 -- la fila marcada como dueña de la tienda — necesario para que
 -- getPublicProducts() pueda resolver el tenant público sin exponer al resto
 -- de los negocios que usan el sistema.
+-- Si DATABASE_SECURITY_FIX.sql ya se aplicó (existe la vista public_stores),
+-- esta política NO se crea: esa vista la reemplaza sin exponer dirección ni RNC.
 DROP POLICY IF EXISTS "Cualquiera puede ver el perfil de la tienda pública" ON public.profiles;
-CREATE POLICY "Cualquiera puede ver el perfil de la tienda pública"
-    ON public.profiles
-    FOR SELECT
-    USING (is_store_owner = true);
+DO $$
+BEGIN
+  IF to_regclass('public.public_stores') IS NULL THEN
+    CREATE POLICY "Cualquiera puede ver el perfil de la tienda pública"
+        ON public.profiles
+        FOR SELECT
+        USING (is_store_owner = true);
+  END IF;
+END;
+$$;
 
 -- Refrescar el caché del schema
 NOTIFY pgrst, 'reload schema';

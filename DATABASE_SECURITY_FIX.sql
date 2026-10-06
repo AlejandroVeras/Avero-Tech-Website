@@ -24,21 +24,29 @@ DROP POLICY IF EXISTS "Los visitantes pueden ver productos públicos" ON public.
 -- La vista corre con los permisos de su dueño (no security_invoker) a
 -- propósito: el filtro is_public = true vive dentro de la vista y es lo
 -- único que el público puede ver.
-CREATE OR REPLACE VIEW public.public_products AS
-SELECT
-  p.id,
-  p.user_id AS store_id,
-  p.name,
-  p.description,
-  p.price,
-  p.category,
-  (p.track_inventory = false OR p.stock_quantity > 0) AS in_stock,
-  p.created_at
-FROM public.products p
-WHERE p.is_public = true;
+-- Solo se crea si no existe: los SQL de fases siguientes la reemplazan con
+-- más columnas, y volver a correr este archivo no debe deshacer eso.
+DO $$
+BEGIN
+  IF to_regclass('public.public_products') IS NULL THEN
+    CREATE VIEW public.public_products AS
+    SELECT
+      p.id,
+      p.user_id AS store_id,
+      p.name,
+      p.description,
+      p.price,
+      p.category,
+      (p.track_inventory = false OR p.stock_quantity > 0) AS in_stock,
+      p.created_at
+    FROM public.products p
+    WHERE p.is_public = true;
 
-REVOKE ALL ON public.public_products FROM PUBLIC;
-GRANT SELECT ON public.public_products TO anon, authenticated;
+    REVOKE ALL ON public.public_products FROM PUBLIC;
+    GRANT SELECT ON public.public_products TO anon, authenticated;
+  END IF;
+END;
+$$;
 
 
 -- ─── 3. PERFIL DEL DUEÑO DE LA TIENDA: solo datos de vitrina ──────────
@@ -47,17 +55,23 @@ GRANT SELECT ON public.public_products TO anon, authenticated;
 -- con solo lo necesario para mostrar la tienda.
 DROP POLICY IF EXISTS "Cualquiera puede ver el perfil de la tienda pública" ON public.profiles;
 
-CREATE OR REPLACE VIEW public.public_stores AS
-SELECT
-  pr.id,
-  pr.business_name,
-  pr.logo_url,
-  pr.is_store_owner
-FROM public.profiles pr
-WHERE pr.is_store_owner = true;
+DO $$
+BEGIN
+  IF to_regclass('public.public_stores') IS NULL THEN
+    CREATE VIEW public.public_stores AS
+    SELECT
+      pr.id,
+      pr.business_name,
+      pr.logo_url,
+      pr.is_store_owner
+    FROM public.profiles pr
+    WHERE pr.is_store_owner = true;
 
-REVOKE ALL ON public.public_stores FROM PUBLIC;
-GRANT SELECT ON public.public_stores TO anon, authenticated;
+    REVOKE ALL ON public.public_stores FROM PUBLIC;
+    GRANT SELECT ON public.public_stores TO anon, authenticated;
+  END IF;
+END;
+$$;
 
 
 -- ─── 4. ADMINISTRADORES DE PLATAFORMA ────────────────────────────────

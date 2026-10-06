@@ -92,10 +92,26 @@ SET public = EXCLUDED.public,
 
 -- Cada negocio solo puede subir, cambiar o borrar archivos dentro de su
 -- propia carpeta: product-images/<su user id>/...
+-- Si DATABASE_SYSTEMS_UPDATE.sql ya se aplicó, la política conserva su
+-- bloqueo de modo solo lectura (has_write_access) al volver a correr esto.
 DROP POLICY IF EXISTS "Subir fotos a la carpeta propia" ON storage.objects;
-CREATE POLICY "Subir fotos a la carpeta propia"
-  ON storage.objects FOR INSERT TO authenticated
-  WITH CHECK (bucket_id = 'product-images' AND (storage.foldername(name))[1] = auth.uid()::text);
+DO $$
+BEGIN
+  IF to_regprocedure('public.has_write_access()') IS NOT NULL THEN
+    CREATE POLICY "Subir fotos a la carpeta propia"
+      ON storage.objects FOR INSERT TO authenticated
+      WITH CHECK (
+        bucket_id = 'product-images'
+        AND (storage.foldername(name))[1] = auth.uid()::text
+        AND public.has_write_access()
+      );
+  ELSE
+    CREATE POLICY "Subir fotos a la carpeta propia"
+      ON storage.objects FOR INSERT TO authenticated
+      WITH CHECK (bucket_id = 'product-images' AND (storage.foldername(name))[1] = auth.uid()::text);
+  END IF;
+END;
+$$;
 
 DROP POLICY IF EXISTS "Actualizar fotos de la carpeta propia" ON storage.objects;
 CREATE POLICY "Actualizar fotos de la carpeta propia"
@@ -111,39 +127,52 @@ CREATE POLICY "Borrar fotos de la carpeta propia"
 -- ─── 5. VISTAS PÚBLICAS (solo columnas seguras) ──────────────────────
 -- Se recrea public_products con los campos nuevos. Sigue sin exponer
 -- cost, sku ni el stock exacto.
-DROP VIEW IF EXISTS public.public_products;
-CREATE VIEW public.public_products AS
-SELECT
-  p.id,
-  p.user_id AS store_id,
-  p.slug,
-  p.name,
-  p.description,
-  p.price,
-  p.category,
-  p.brand,
-  p.condition,
-  p.warranty_months,
-  p.specs,
-  p.featured,
-  (p.track_inventory = false OR p.stock_quantity > 0) AS in_stock,
-  (SELECT i.url FROM public.product_images i
-    WHERE i.product_id = p.id ORDER BY i.position, i.created_at LIMIT 1) AS cover_url,
-  p.created_at
-FROM public.products p
-WHERE p.is_public = true;
+-- Si DATABASE_TENANT_STORES.sql ya se aplicó (public_stores tiene slug), se
+-- omite: esa versión de las vistas ya incluye todo esto y además filtra por
+-- tiendas visibles, así que volver a correr este archivo no la deshace.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'public_stores' AND column_name = 'slug'
+  ) THEN
+    RAISE NOTICE 'Vistas públicas ya actualizadas por DATABASE_TENANT_STORES.sql; se omiten';
+    RETURN;
+  END IF;
 
-REVOKE ALL ON public.public_products FROM PUBLIC;
-GRANT SELECT ON public.public_products TO anon, authenticated;
+  DROP VIEW IF EXISTS public.public_product_images;
+  DROP VIEW IF EXISTS public.public_products;
+  CREATE VIEW public.public_products AS
+  SELECT
+    p.id,
+    p.user_id AS store_id,
+    p.slug,
+    p.name,
+    p.description,
+    p.price,
+    p.category,
+    p.brand,
+    p.condition,
+    p.warranty_months,
+    p.specs,
+    p.featured,
+    (p.track_inventory = false OR p.stock_quantity > 0) AS in_stock,
+    (SELECT i.url FROM public.product_images i
+      WHERE i.product_id = p.id ORDER BY i.position, i.created_at LIMIT 1) AS cover_url,
+    p.created_at
+  FROM public.products p
+  WHERE p.is_public = true;
 
-CREATE OR REPLACE VIEW public.public_product_images AS
-SELECT i.product_id, i.url, i.position
-FROM public.product_images i
-JOIN public.products p ON p.id = i.product_id
-WHERE p.is_public = true;
+  CREATE VIEW public.public_product_images AS
+  SELECT i.product_id, i.url, i.position
+  FROM public.product_images i
+  JOIN public.products p ON p.id = i.product_id
+  WHERE p.is_public = true;
 
-REVOKE ALL ON public.public_product_images FROM PUBLIC;
-GRANT SELECT ON public.public_product_images TO anon, authenticated;
+  REVOKE ALL ON public.public_products, public.public_product_images FROM PUBLIC;
+  GRANT SELECT ON public.public_products, public.public_product_images TO anon, authenticated;
+END;
+$$;
 
 
 -- Refrescar el caché del schema
