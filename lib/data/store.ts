@@ -18,7 +18,7 @@ export interface MyStore {
 }
 
 // Words that could be mistaken for official Avero pages.
-const RESERVED_SLUGS = new Set(["admin", "avero", "averotech", "soporte", "ayuda", "api", "dashboard", "login", "signup"])
+const RESERVED_SLUGS = new Set(["admin", "avero", "averotech", "averotechnology", "soporte", "ayuda", "api", "dashboard", "login", "signup"])
 
 async function requireUser() {
   const supabase = await createClient()

@@ -1,4 +1,4 @@
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://averotech.com").replace(/\/$/, "")
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://averotechnology.com").replace(/\/$/, "")
 
 export const WHATSAPP_NUMBER = "18298122103"
 export const WHATSAPP_DISPLAY = "(829) 812-2103"
