@@ -13,11 +13,13 @@ export function PlanCard({
   inverted = false,
   trialDays,
   cta,
+  titleAs: Title = "h3",
 }: {
   plan: SystemPlan
   inverted?: boolean
   trialDays?: number
   cta?: React.ReactNode
+  titleAs?: "h2" | "h3"
 }) {
   const hasAnnual = plan.annual_usd != null && plan.annual_usd > 0
   const [annual, setAnnual] = useState(hasAnnual)
@@ -64,7 +66,7 @@ export function PlanCard({
         )}
       >
         <div>
-          <h3 className={cn("text-2xl font-semibold", strong)}>{plan.name}</h3>
+          <Title className={cn("text-2xl font-semibold", strong)}>{plan.name}</Title>
           {plan.description && <p className={cn("text-[13px] mt-1", inverted ? "text-white/60" : "text-pewter")}>{plan.description}</p>}
         </div>
 

@@ -96,7 +96,7 @@ export function QuotesList({ quotes }: QuotesListProps) {
       <Card className="border-dashed border-2">
         <CardContent className="flex flex-col items-center justify-center p-12 text-center">
           <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-            <FileText className="h-6 w-6 text-primary" />
+            <FileText className="h-6 w-6 text-primary dark:text-sky-signal" />
           </div>
           <h3 className="text-lg font-medium">No hay cotizaciones</h3>
           <p className="text-muted-foreground max-w-sm mt-1">
@@ -147,7 +147,7 @@ export function QuotesList({ quotes }: QuotesListProps) {
                         
                         {(quote.status === "approved" || quote.status === "sent") && (
                           <DropdownMenuItem onClick={() => handleConvertToInvoice(quote.id)} disabled={isConverting}>
-                            <ArrowRight className="h-4 w-4 mr-2 text-primary" /> Convertir a Factura
+                            <ArrowRight className="h-4 w-4 mr-2 text-primary dark:text-sky-signal" /> Convertir a Factura
                           </DropdownMenuItem>
                         )}
                         

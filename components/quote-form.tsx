@@ -363,7 +363,7 @@ export function QuoteForm({ quote, customers, products }: QuoteFormProps) {
               
               <div className="flex justify-between text-lg font-bold pt-4 border-t mt-2">
                 <span>Total Cotizado:</span>
-                <span className="text-primary">{formatCurrency(total)}</span>
+                <span className="text-primary dark:text-sky-signal">{formatCurrency(total)}</span>
               </div>
             </div>
           </CardContent>

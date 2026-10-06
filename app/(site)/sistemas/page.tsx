@@ -44,7 +44,7 @@ export default async function SistemasPage() {
                       <span
                         className={
                           available
-                            ? "rounded-full bg-sky-signal/15 px-2.5 py-1 text-[11px] text-sky-signal"
+                            ? "rounded-full bg-sky-signal/25 px-2.5 py-1 text-[11px] text-white"
                             : "rounded-full bg-white/10 px-2.5 py-1 text-[11px] text-white/70"
                         }
                       >

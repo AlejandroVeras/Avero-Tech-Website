@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card"
 import Link from "next/link"
 
 export function SignupForm({ trialDays }: { trialDays?: number }) {
@@ -50,7 +50,7 @@ export function SignupForm({ trialDays }: { trialDays?: number }) {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Crear Cuenta</CardTitle>
+        <h1 className="text-2xl font-bold leading-none">Crear cuenta</h1>
         <CardDescription>
           {trialDays
             ? `Registra tu negocio y prueba el sistema gratis por ${trialDays} días, sin tarjeta.`
@@ -86,7 +86,7 @@ export function SignupForm({ trialDays }: { trialDays?: number }) {
           </Button>
           <p className="text-sm text-center text-muted-foreground">
             ¿Ya tienes cuenta?{" "}
-            <Link href="/login" className="text-primary hover:underline">
+            <Link href="/login" className="text-primary dark:text-sky-signal underline underline-offset-4">
               Inicia sesión
             </Link>
           </p>

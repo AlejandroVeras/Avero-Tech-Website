@@ -54,7 +54,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
       <Card className="border-border">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <BuildingIcon className="h-5 w-5 text-primary" />
+            <BuildingIcon className="h-5 w-5 text-primary dark:text-sky-signal" />
             Perfil Fiscal del Negocio
           </CardTitle>
           <CardDescription>

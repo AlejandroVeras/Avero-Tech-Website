@@ -158,3 +158,10 @@ export function relatedProducts(all: PublicProduct[], current: PublicProduct, li
     ...others.filter((p) => !current.category || p.category !== current.category),
   ].slice(0, limit)
 }
+
+export async function listPublicStores(): Promise<PublicStore[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase.from("public_stores").select(STORE_COLUMNS).eq("is_store_owner", false).limit(1000)
+  if (error) return []
+  return (data as StoreRow[]).map(toStore)
+}

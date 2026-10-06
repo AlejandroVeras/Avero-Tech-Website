@@ -35,6 +35,7 @@ export default async function PreciosPage() {
                 key={plan.id}
                 plan={plan}
                 trialDays={trialDays}
+                titleAs="h2"
                 cta={
                   <div className="space-y-3 pt-2">
                     <Button size="lg" className="w-full rounded-full text-[14px] font-normal" asChild>

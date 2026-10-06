@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation"
+import Link from "next/link"
+import { Logo } from "@/components/site/logo"
 import { getUser } from "@/lib/auth"
 import { LoginForm } from "@/components/login-form"
+
+export const metadata = { title: "Iniciar sesión", robots: { index: false } }
 
 export default async function LoginPage() {
   const user = await getUser()
@@ -10,8 +14,11 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+    <main className="min-h-screen flex flex-col items-center justify-center gap-8 bg-background p-4">
+      <Link href="/" aria-label="Avero Tech, inicio">
+        <Logo className="h-10" />
+      </Link>
       <LoginForm />
-    </div>
+    </main>
   )
 }

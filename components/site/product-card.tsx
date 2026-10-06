@@ -67,11 +67,13 @@ export function ProductCard({
   priority,
   basePath = "/catalogo",
   showCart = true,
+  headingLevel: Heading = "h3",
 }: {
   product: PublicProduct
   priority?: boolean
   basePath?: string
   showCart?: boolean
+  headingLevel?: "h2" | "h3"
 }) {
   const href = `${basePath}/${product.slug}`
   return (
@@ -89,11 +91,11 @@ export function ProductCard({
             product.category ||
             "Equipos"}
         </p>
-        <h3 className="font-semibold line-clamp-2 mt-1 text-obsidian dark:text-foreground">
+        <Heading className="font-semibold line-clamp-2 mt-1 text-obsidian dark:text-foreground">
           <Link href={href} prefetch={priority} className="after:absolute after:inset-0 focus-visible:outline-none">
             {product.name}
           </Link>
-        </h3>
+        </Heading>
         <div className="mt-auto pt-4 flex items-center justify-between gap-3">
           <p className="text-xl font-semibold text-obsidian dark:text-foreground">{formatDOP(product.price)}</p>
           {showCart && <AddToCart product={product} />}
@@ -108,21 +110,23 @@ export function ProductRow({
   product,
   basePath = "/catalogo",
   showCart = true,
+  headingLevel: Heading = "h3",
 }: {
   product: PublicProduct
   basePath?: string
   showCart?: boolean
+  headingLevel?: "h2" | "h3"
 }) {
   const href = `${basePath}/${product.slug}`
   return (
     <article className="group relative flex items-center gap-4 rounded-3xl border border-pale-mist/70 bg-card p-3 pr-4 hover:border-sapphire/40 transition-colors">
       <Cover product={product} tech={basePath === "/catalogo"} className="w-20 h-20 rounded-2xl shrink-0" sizes="80px" />
       <div className="flex-1 min-w-0">
-        <h3 className="font-semibold truncate text-obsidian dark:text-foreground">
+        <Heading className="font-semibold truncate text-obsidian dark:text-foreground">
           <Link href={href} className="after:absolute after:inset-0 focus-visible:outline-none">
             {product.name}
           </Link>
-        </h3>
+        </Heading>
         <p className="text-xs text-pewter truncate">
           {[product.category, product.brand, product.condition && CONDITION_LABELS[product.condition]].filter(Boolean).join(" · ") || "Equipos"}
         </p>

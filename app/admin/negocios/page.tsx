@@ -125,7 +125,7 @@ export default async function NegociosPage({ searchParams }: { searchParams: Pro
                       </td>
                       <td className="px-4 py-3">
                         {a.storeEnabled && a.slug ? (
-                          <a href={`/t/${a.slug}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                          <a href={`/t/${a.slug}`} target="_blank" rel="noopener noreferrer" className="text-primary dark:text-sky-signal hover:underline">
                             /t/{a.slug}
                           </a>
                         ) : (

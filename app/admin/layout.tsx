@@ -19,7 +19,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
         <div className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2 font-semibold">
-            <ShieldCheck className="h-5 w-5 text-primary" aria-hidden />
+            <ShieldCheck className="h-5 w-5 text-primary dark:text-sky-signal" aria-hidden />
             Panel de plataforma
           </div>
           <AdminNav />

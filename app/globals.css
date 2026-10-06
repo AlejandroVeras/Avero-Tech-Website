@@ -39,6 +39,7 @@
   --sidebar-border: #d6d6d6;
   --sidebar-ring: #0071e3;
   --pale-mist: #d6d6d6;
+  --pewter: #707070;
 }
 
 .dark {
@@ -48,8 +49,8 @@
   --card-foreground: oklch(0.98 0.005 261);
   --popover: oklch(0.16 0.03 261);
   --popover-foreground: oklch(0.98 0.005 261);
-  --primary: #2997ff; /* Sky Signal — dark-surface accent */
-  --primary-foreground: oklch(0.98 0.005 261);
+  --primary: #0071e3; /* Iris Blue: white text keeps AA contrast in dark mode too */
+  --primary-foreground: #ffffff;
   --secondary: oklch(0.22 0.04 261);
   --secondary-foreground: oklch(0.98 0.005 261);
   --muted: oklch(0.22 0.04 261);
@@ -63,13 +64,14 @@
   --ring: #2997ff;
   --sidebar: oklch(0.14 0.03 261);
   --sidebar-foreground: oklch(0.98 0.005 261);
-  --sidebar-primary: #2997ff;
-  --sidebar-primary-foreground: oklch(0.98 0.005 261);
+  --sidebar-primary: #0071e3;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: oklch(0.22 0.04 261);
   --sidebar-accent-foreground: oklch(0.98 0.005 261);
   --sidebar-border: oklch(0.22 0.04 261);
   --sidebar-ring: #2997ff;
   --pale-mist: rgb(255 255 255 / 0.14);
+  --pewter: #a1a1a6;
 }
 
 @theme inline {
@@ -103,7 +105,7 @@
 
   /* Raw Apple palette accents not covered by the semantic tokens above */
   --color-obsidian: #1d1d1f;
-  --color-pewter: #707070;
+  --color-pewter: var(--pewter);
   --color-sapphire: #0066cc;
   --color-sky-signal: #2997ff;
   --color-cornflower: #509be7;

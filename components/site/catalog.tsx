@@ -210,7 +210,7 @@ export function Catalog({
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {filtered.map((p, i) => (
             <li key={p.id}>
-              <ProductCard product={p} priority={i < 4} basePath={basePath} showCart={showCart} />
+              <ProductCard product={p} priority={i < 4} basePath={basePath} showCart={showCart} headingLevel="h2" />
             </li>
           ))}
         </ul>
@@ -218,7 +218,7 @@ export function Catalog({
         <ul className="space-y-3">
           {filtered.map((p) => (
             <li key={p.id}>
-              <ProductRow product={p} basePath={basePath} showCart={showCart} />
+              <ProductRow product={p} basePath={basePath} showCart={showCart} headingLevel="h2" />
             </li>
           ))}
         </ul>

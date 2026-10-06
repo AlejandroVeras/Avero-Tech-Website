@@ -45,7 +45,7 @@ export function TicketMessages({ ticketId, messages }: TicketMessagesProps) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <MessageSquare className="h-5 w-5 text-primary" />
+          <MessageSquare className="h-5 w-5 text-primary dark:text-sky-signal" />
           Notas y Actividad ({messages.length})
         </CardTitle>
       </CardHeader>

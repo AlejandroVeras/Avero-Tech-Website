@@ -42,7 +42,7 @@ export default async function TenantStoreLayout({
             <ThemeToggle />
             {store.whatsapp && (
               <Button size="sm" className="rounded-full" asChild>
-                <a href={whatsappUrl(`Hola ${store.name}, vi su catálogo en línea.`, store.whatsapp)} target="_blank" rel="noopener noreferrer">
+                <a href={whatsappUrl(`Hola ${store.name}, vi su catálogo en línea.`, store.whatsapp)} target="_blank" rel="noopener noreferrer" aria-label={`Escribir a ${store.name} por WhatsApp`}>
                   <MessageCircle className="h-4 w-4" aria-hidden />
                   <span className="hidden sm:inline">WhatsApp</span>
                 </a>
