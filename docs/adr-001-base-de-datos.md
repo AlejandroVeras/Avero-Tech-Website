@@ -33,7 +33,7 @@ Inventario sacado del repositorio:
   
   En Firebase, el equivalente son Cloud Functions, y esas **solo existen en Blaze**.
 - **Fotos de productos y logos:** viven en Supabase Storage. En Spark **no hay dónde guardarlas**.
-- **Capa de datos de la app:** 17 de los 18 módulos de `lib/data/` usan el cliente de Supabase y tendría que reescribirse.
+- **Capa de datos de la app:** 16 de los 18 módulos de `lib/data/` usan el cliente de Supabase directamente (y los reportes dependen de ellos); habría que reescribirlos.
 - **Usuarios:** habría que exportar las cuentas y sus contraseñas e importarlas en Firebase Auth. Si la importación de los hashes falla, cada negocio tendría que restablecer su contraseña.
 
 ## Riesgo
