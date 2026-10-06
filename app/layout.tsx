@@ -22,10 +22,6 @@ export const metadata: Metadata = {
     siteName: 'Avero Technology',
     images: ['/LOGO.png'],
   },
-  icons: {
-    icon: '/LOGO.png',
-    apple: '/LOGO.png',
-  },
 }
 
 export default function RootLayout({
