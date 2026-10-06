@@ -26,7 +26,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
           <p className="text-muted-foreground mt-1">Actualiza la información del producto</p>
         </div>
 
-        <ProductForm product={product} />
+        <ProductForm product={product} userId={user.id} />
       </main>
     </div>
   )

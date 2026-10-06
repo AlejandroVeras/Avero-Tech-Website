@@ -2,8 +2,8 @@ import Link from "next/link"
 import { ArrowRight, Laptop, LayoutDashboard, Wrench, Zap, Heart, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { SectionHeading } from "@/components/site/section-heading"
-import { getPublicProducts } from "@/lib/data/products"
-import { formatDOP } from "@/lib/site"
+import { getStoreProducts } from "@/lib/data/public-catalog"
+import { ProductCard } from "@/components/site/product-card"
 
 const ENTRY_POINTS = [
   {
@@ -36,7 +36,7 @@ const VALUES = [
 ]
 
 export default async function HomePage() {
-  const products = await getPublicProducts()
+  const products = await getStoreProducts()
   const featured = products.filter((p) => p.inStock).slice(0, 4)
 
   return (
@@ -97,10 +97,8 @@ export default async function HomePage() {
             <SectionHeading title="Disponibles ahora" description="Algunos de los equipos que tenemos listos para entrega." className="mb-12" />
             <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
               {featured.map((p) => (
-                <li key={p.id} className="rounded-3xl border border-pale-mist/70 bg-card p-5">
-                  <p className="text-[11px] uppercase tracking-wider text-pewter">{p.category || "Equipos"}</p>
-                  <p className="font-semibold text-obsidian dark:text-foreground mt-1 line-clamp-2">{p.name}</p>
-                  <p className="text-lg font-semibold text-obsidian dark:text-foreground mt-3">{formatDOP(p.price)}</p>
+                <li key={p.id}>
+                  <ProductCard product={p} />
                 </li>
               ))}
             </ul>

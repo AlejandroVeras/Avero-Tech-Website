@@ -2,7 +2,7 @@
 
 import { create } from "zustand"
 import { persist, createJSONStorage, type StateStorage } from "zustand/middleware"
-import type { PublicProduct } from "@/lib/data/products"
+import type { PublicProduct } from "@/lib/catalog"
 
 export interface CartItem {
   id: string

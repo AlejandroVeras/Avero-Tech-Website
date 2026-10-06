@@ -19,7 +19,7 @@ export default async function NewProductPage() {
           <p className="text-muted-foreground mt-1">Agrega un nuevo producto o servicio a tu catálogo</p>
         </div>
 
-        <ProductForm />
+        <ProductForm userId={user.id} />
       </main>
     </div>
   )

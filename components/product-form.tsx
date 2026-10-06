@@ -1,28 +1,61 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { ArrowLeft } from "lucide-react"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
-import { createProduct, updateProduct, type Product } from "@/lib/data/products"
-import { ArrowLeft } from "lucide-react"
-import Link from "next/link"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  createProduct,
+  updateProduct,
+  discardUploadedImages,
+  type Product,
+  type ProductImage,
+} from "@/lib/data/products"
+import { CONDITIONS, CONDITION_LABELS, slugify, type Spec } from "@/lib/catalog"
+import { ImagesField } from "@/components/product-form/images-field"
+import { SpecsField } from "@/components/product-form/specs-field"
 
 interface ProductFormProps {
   product?: Product
+  userId: string
 }
 
-export function ProductForm({ product }: ProductFormProps) {
+export function ProductForm({ product, userId }: ProductFormProps) {
   const router = useRouter()
   const [error, setError] = useState<string>("")
   const [loading, setLoading] = useState(false)
   const [trackInventory, setTrackInventory] = useState(product?.trackInventory !== false)
   const [isPublic, setIsPublic] = useState(product?.isPublic || false)
+  const [featured, setFeatured] = useState(product?.featured || false)
+  const [name, setName] = useState(product?.name ?? "")
+  const [images, setImages] = useState<ProductImage[]>(product?.images ?? [])
+  const [specs, setSpecs] = useState<Spec[]>(product?.specs ?? [])
+  // Files uploaded in this session that are not yet attached to a saved product.
+  const unsaved = useRef(new Set<string>())
+
+  function handleImagesChange(next: ProductImage[]) {
+    const kept = new Set(next.map((i) => i.path))
+    const dropped = images.map((i) => i.path).filter((p) => !kept.has(p) && unsaved.current.has(p))
+    if (dropped.length > 0) {
+      dropped.forEach((p) => unsaved.current.delete(p))
+      void discardUploadedImages(dropped)
+    }
+    setImages(next)
+  }
+
+  async function handleCancel() {
+    const paths = Array.from(unsaved.current)
+    unsaved.current.clear()
+    if (paths.length > 0) await discardUploadedImages(paths)
+    router.push("/dashboard/products")
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -31,14 +64,11 @@ export function ProductForm({ product }: ProductFormProps) {
 
     try {
       const formData = new FormData(e.currentTarget)
-      // Ajustar valor del checkbox manual si es necesario, 
-      // pero FormData suele capturarlo si tiene 'name' y está checked.
-      if (!formData.get("trackInventory")) {
-        formData.append("trackInventory", "false")
-      }
-      if (!formData.get("isPublic")) {
-        formData.append("isPublic", "false")
-      }
+      formData.set("trackInventory", trackInventory ? "true" : "false")
+      formData.set("isPublic", isPublic ? "true" : "false")
+      formData.set("featured", featured ? "true" : "false")
+      formData.set("specs", JSON.stringify(specs))
+      formData.set("images", JSON.stringify(images.map((i) => i.path)))
 
       const result = product ? await updateProduct(product.id, formData) : await createProduct(formData)
 
@@ -46,6 +76,7 @@ export function ProductForm({ product }: ProductFormProps) {
         setError(result.error)
         setLoading(false)
       } else {
+        unsaved.current.clear()
         router.refresh()
         router.push("/dashboard/products")
       }
@@ -57,10 +88,14 @@ export function ProductForm({ product }: ProductFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-6">
       <Card>
         <CardContent className="pt-6 space-y-4">
-          {error && <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200">{error}</div>}
+          {error && (
+            <div role="alert" className="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200">
+              {error}
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2 md:col-span-2">
@@ -71,8 +106,10 @@ export function ProductForm({ product }: ProductFormProps) {
                 type="text"
                 placeholder="Nombre del producto o servicio"
                 required
+                maxLength={200}
                 disabled={loading}
-                defaultValue={product?.name}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
 
@@ -90,14 +127,7 @@ export function ProductForm({ product }: ProductFormProps) {
 
             <div className="space-y-2">
               <Label htmlFor="sku">SKU / Código</Label>
-              <Input
-                id="sku"
-                name="sku"
-                type="text"
-                placeholder="SKU-001"
-                disabled={loading}
-                defaultValue={product?.sku}
-              />
+              <Input id="sku" name="sku" type="text" placeholder="SKU-001" disabled={loading} defaultValue={product?.sku} />
             </div>
 
             <div className="space-y-2">
@@ -106,7 +136,7 @@ export function ProductForm({ product }: ProductFormProps) {
                 id="category"
                 name="category"
                 type="text"
-                placeholder="Ej: Servicios, Hardware"
+                placeholder="Ej: Laptops, Monitores, Servicios"
                 disabled={loading}
                 defaultValue={product?.category}
               />
@@ -139,76 +169,160 @@ export function ProductForm({ product }: ProductFormProps) {
                 disabled={loading}
                 defaultValue={product?.cost}
               />
+              <p className="text-xs text-muted-foreground">Privado: nunca se muestra en la tienda.</p>
             </div>
 
-            <div className="space-y-3 md:col-span-1 pt-2">
+            <div className="md:col-span-1 pt-2">
               <div className="flex items-center space-x-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                 <Checkbox
                   id="trackInventory"
-                  name="trackInventory"
                   checked={trackInventory}
-                  onCheckedChange={(checked) => setTrackInventory(checked as boolean)}
+                  onCheckedChange={(checked) => setTrackInventory(checked === true)}
                   disabled={loading}
                 />
                 <div className="flex-1">
                   <Label htmlFor="trackInventory" className="cursor-pointer font-semibold">
-                    ✓ Controlar inventario
+                    Controlar inventario
                   </Label>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                    Reduce stock al vender
-                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">Reduce stock al vender</p>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-3 md:col-span-1 pt-2">
+            <div className="md:col-span-1 pt-2">
               <div className="flex items-center space-x-2 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg border border-indigo-200 dark:border-indigo-800">
                 <Checkbox
                   id="isPublic"
-                  name="isPublic"
                   checked={isPublic}
-                  onCheckedChange={(checked) => setIsPublic(checked as boolean)}
+                  onCheckedChange={(checked) => setIsPublic(checked === true)}
                   disabled={loading}
                 />
                 <div className="flex-1">
                   <Label htmlFor="isPublic" className="cursor-pointer font-semibold">
-                    🌐 Público en Tienda
+                    Visible en la tienda
                   </Label>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                    Cualquiera podrá verlo en tu web
-                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">Cualquiera podrá verlo en tu web</p>
                 </div>
               </div>
             </div>
 
             {trackInventory && (
-              <div className="space-y-2 md:col-span-2 p-3 bg-green-50 rounded-lg border border-green-200">
+              <div className="space-y-2 md:col-span-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                 <Label htmlFor="stockQuantity" className="font-semibold">
-                  📦 Cantidad disponible en Stock
+                  Cantidad disponible en stock
                 </Label>
                 <Input
                   id="stockQuantity"
                   name="stockQuantity"
                   type="number"
                   min="0"
+                  step="1"
                   placeholder="0"
                   disabled={loading}
                   defaultValue={product?.stockQuantity || 0}
-                  className="border-green-300"
                 />
-                <p className="text-xs text-gray-600">
-                  Esta cantidad se reducirá automáticamente cuando hagas una venta
+                <p className="text-xs text-muted-foreground">
+                  Esta cantidad se reducirá automáticamente cuando hagas una venta. Con 0 el equipo aparece como
+                  agotado en la tienda.
                 </p>
               </div>
             )}
           </div>
         </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Detalles para la tienda en línea</CardTitle>
+          <CardDescription>
+            Opcional. Se muestran en la página pública del producto cuando está visible en la tienda.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <ImagesField
+            userId={userId}
+            images={images}
+            onChange={handleImagesChange}
+            onUploaded={(paths) => paths.forEach((p) => unsaved.current.add(p))}
+            disabled={loading}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="brand">Marca</Label>
+              <Input id="brand" name="brand" placeholder="Ej: Dell" maxLength={80} disabled={loading} defaultValue={product?.brand} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="condition">Condición</Label>
+              <Select name="condition" defaultValue={product?.condition ?? "none"} disabled={loading}>
+                <SelectTrigger id="condition" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Sin especificar</SelectItem>
+                  {CONDITIONS.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {CONDITION_LABELS[c]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="warrantyMonths">Garantía (meses)</Label>
+              <Input
+                id="warrantyMonths"
+                name="warrantyMonths"
+                type="number"
+                min="0"
+                max="120"
+                step="1"
+                placeholder="Ej: 3"
+                disabled={loading}
+                defaultValue={product?.warrantyMonths}
+              />
+            </div>
+          </div>
+
+          <SpecsField specs={specs} onChange={setSpecs} disabled={loading} />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="slug">Dirección web</Label>
+              <div className="flex items-center rounded-md border bg-muted/40 pl-3 focus-within:ring-[3px] focus-within:ring-ring/50">
+                <span className="text-xs text-muted-foreground whitespace-nowrap">/catalogo/</span>
+                <Input
+                  id="slug"
+                  name="slug"
+                  placeholder={slugify(name) || "se-genera-del-nombre"}
+                  maxLength={100}
+                  disabled={loading}
+                  defaultValue={product?.slug}
+                  className="border-0 shadow-none focus-visible:ring-0 pl-1"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">Déjalo vacío para generarla del nombre.</p>
+            </div>
+            <div className="flex items-center space-x-2 p-3 rounded-lg border self-end">
+              <Checkbox
+                id="featured"
+                checked={featured}
+                onCheckedChange={(checked) => setFeatured(checked === true)}
+                disabled={loading}
+              />
+              <div className="flex-1">
+                <Label htmlFor="featured" className="cursor-pointer font-semibold">
+                  Destacado
+                </Label>
+                <p className="text-xs text-muted-foreground mt-1">Aparece primero en el catálogo y en el inicio</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
         <CardFooter className="flex justify-between">
-          <Button type="button" variant="outline" asChild>
-            <Link href="/dashboard/products">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Cancelar
-            </Link>
+          <Button type="button" variant="outline" onClick={handleCancel} disabled={loading}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Cancelar
           </Button>
           <Button type="submit" disabled={loading}>
             {loading ? "Guardando..." : product ? "Actualizar Producto" : "Crear Producto"}

@@ -3,7 +3,7 @@ import { SectionHeading } from "@/components/site/section-heading"
 import { Catalog } from "@/components/site/catalog"
 import { Faq } from "@/components/site/faq"
 import { STORE_FAQ } from "@/components/site/faq-content"
-import { getPublicProducts } from "@/lib/data/products"
+import { getStoreProducts } from "@/lib/data/public-catalog"
 
 export const metadata: Metadata = {
   title: "Catálogo de equipos",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 }
 
 export default async function CatalogoPage() {
-  const products = await getPublicProducts()
+  const products = await getStoreProducts()
 
   return (
     <>
