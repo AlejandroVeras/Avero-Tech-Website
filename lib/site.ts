@@ -2,7 +2,7 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://averotechn
 
 export const WHATSAPP_NUMBER = "18298122103"
 export const WHATSAPP_DISPLAY = "(829) 812-2103"
-export const CONTACT_EMAIL = "info@averotech.com"
+export const CONTACT_EMAIL = "info@averotechnology.com"
 export const LOCATION = "Santo Domingo, República Dominicana"
 
 export const NAV_LINKS = [
