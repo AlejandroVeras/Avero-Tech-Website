@@ -15,7 +15,7 @@ import { signOut } from "@/lib/auth"
 import { useRouter, usePathname } from "next/navigation"
 import type { User } from "@/lib/auth"
 import Link from "next/link"
-import Image from "next/image"
+import { Logo } from "@/components/site/logo"
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "./theme-toggle"
 import {
@@ -29,13 +29,15 @@ import {
   Users,
   Ticket,
   Store,
+  ShieldCheck,
 } from "lucide-react"
 
 interface DashboardHeaderProps {
   user: User
+  isAdmin?: boolean
 }
 
-export function DashboardHeader({ user }: DashboardHeaderProps) {
+export function DashboardHeader({ user, isAdmin = false }: DashboardHeaderProps) {
   const router = useRouter()
   const pathname = usePathname()
 
@@ -55,6 +57,7 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
     { name: "Tickets", href: "/dashboard/tickets", icon: Ticket },
     { name: "Reportes", href: "/dashboard/reports", icon: BarChart3 },
     { name: "Configuración", href: "/dashboard/settings", icon: Settings },
+    ...(isAdmin ? [{ name: "Administración", href: "/admin", icon: ShieldCheck }] : []),
   ]
 
   return (
@@ -71,20 +74,8 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
             <SheetContent side="left" className="w-72 p-0">
               <SheetTitle className="sr-only">Navegación Móvil</SheetTitle>
               <div className="flex h-16 items-center gap-2 border-b px-6">
-                <Link href="/dashboard" className="flex items-center gap-2">
-                  <Image
-                    src="/LOGO.png"
-                    alt="AVERO Technology"
-                    width={32}
-                    height={32}
-                    className="rounded-lg"
-                  />
-                  <div className="flex flex-col">
-                    <span className="font-bold text-base leading-tight">AVERO</span>
-                    <span className="text-[10px] leading-none text-muted-foreground uppercase tracking-widest">
-                      Technology
-                    </span>
-                  </div>
+                <Link href="/dashboard" aria-label="Avero Tech, dashboard" className="flex items-center">
+                  <Logo className="h-8" />
                 </Link>
               </div>
               <div className="flex flex-col gap-2 p-4">

@@ -1,6 +1,6 @@
 import type React from "react"
 import { getUser } from "@/lib/auth"
-import { getAccess } from "@/lib/data/access"
+import { getAccess, isPlatformAdmin } from "@/lib/data/access"
 import { DashboardHeader } from "@/components/dashboard-header"
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { SubscriptionBanner } from "@/components/subscription-banner"
@@ -13,13 +13,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect("/login")
   }
 
-  const access = await getAccess()
+  const [access, isAdmin] = await Promise.all([getAccess(), isPlatformAdmin()])
 
   return (
     <div className="flex min-h-screen bg-muted/40">
-      <DashboardSidebar />
+      <DashboardSidebar isAdmin={isAdmin} />
       <div className="flex flex-col flex-1 w-full lg:w-[calc(100%-16rem)] border-l">
-        <DashboardHeader user={user} />
+        <DashboardHeader user={user} isAdmin={isAdmin} />
         <SubscriptionBanner access={access} businessName={user.businessName} />
         <main className="flex-1 w-full">
           {children}

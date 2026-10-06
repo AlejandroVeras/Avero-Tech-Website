@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import Image from "next/image"
+import { Logo } from "@/components/site/logo"
 import { 
   BarChart3, 
   CreditCard, 
@@ -14,11 +14,12 @@ import {
   Users,
   Ticket,
   Store,
+  ShieldCheck,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-export function DashboardSidebar() {
+export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname()
 
   const navigation = [
@@ -32,23 +33,14 @@ export function DashboardSidebar() {
     { name: "Tickets", href: "/dashboard/tickets", icon: Ticket },
     { name: "Reportes", href: "/dashboard/reports", icon: BarChart3 },
     { name: "Configuración", href: "/dashboard/settings", icon: Settings },
+    ...(isAdmin ? [{ name: "Administración", href: "/admin", icon: ShieldCheck }] : []),
   ]
 
   return (
     <aside className="hidden border-r bg-card md:block w-64 shrink-0 h-[calc(100vh-4rem)] lg:h-screen sticky top-0 overflow-y-auto">
       <div className="flex h-16 items-center gap-2 border-b px-6 lg:flex">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <Image 
-            src="/LOGO.png" 
-            alt="AVERO Technology" 
-            width={32} 
-            height={32}
-            className="rounded-lg"
-          />
-          <div className="flex flex-col">
-            <span className="font-bold text-base leading-tight text-foreground/90">AVERO</span>
-            <span className="text-[10px] leading-none text-muted-foreground uppercase tracking-widest">Technology</span>
-          </div>
+        <Link href="/dashboard" aria-label="Avero Tech, dashboard" className="flex items-center">
+          <Logo className="h-8" />
         </Link>
       </div>
 
