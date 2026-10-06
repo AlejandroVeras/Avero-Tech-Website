@@ -39,6 +39,8 @@ export default async function SystemPage({ params }: Params) {
   if (!system) notFound()
 
   const available = system.status === "disponible"
+  // Pains, onboarding steps and FAQ are written for the management system only.
+  const isGestion = available && system.slug === "gestion"
   const hasStore = system.features.some((f) => f.icon === "store")
   const waMessage = available
     ? `Hola, quiero contratar el ${system.name} de Avero Technology.`
@@ -87,7 +89,7 @@ export default async function SystemPage({ params }: Params) {
         </div>
       </section>
 
-      {available && (
+      {isGestion && (
         <section className="py-20 md:py-28 bg-background">
           <div className="container mx-auto px-4">
             <SectionHeading title="¿Te suena familiar?" className="mb-12" />
@@ -159,7 +161,7 @@ export default async function SystemPage({ params }: Params) {
         </section>
       )}
 
-      {available && (
+      {isGestion && (
         <section className="py-20 md:py-28 bg-gradient-to-b from-fog-white to-background dark:from-white/[0.03]">
           <div className="container mx-auto px-4">
             <SectionHeading title="Empieza en tres pasos" className="mb-12" />
@@ -212,7 +214,7 @@ export default async function SystemPage({ params }: Params) {
         </section>
       )}
 
-      {available && (
+      {isGestion && (
         <section className="py-20 md:py-28 bg-background">
           <div className="container mx-auto px-4">
             <SectionHeading title="Preguntas frecuentes" className="mb-12" />

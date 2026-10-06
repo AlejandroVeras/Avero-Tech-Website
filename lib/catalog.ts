@@ -38,6 +38,25 @@ export interface PublicProductDetail extends PublicProduct {
   images: string[]
 }
 
+export interface PublicStore {
+  id: string
+  slug: string
+  name: string
+  logoUrl?: string
+  description?: string
+  whatsapp?: string
+  isStoreOwner: boolean
+}
+
+// "829-812-2103" -> "18298122103" (wa.me needs the country code, DR is +1).
+export function normalizeWhatsapp(input: string): string | null {
+  const digits = input.replace(/\D/g, "")
+  if (/^(809|829|849)\d{7}$/.test(digits)) return `1${digits}`
+  if (/^1(809|829|849)\d{7}$/.test(digits)) return digits
+  if (digits.length >= 11 && digits.length <= 15) return digits
+  return null
+}
+
 export function slugify(input: string) {
   return input
     .normalize("NFD")

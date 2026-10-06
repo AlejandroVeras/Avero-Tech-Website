@@ -2,16 +2,20 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { Laptop } from "lucide-react"
+import { Laptop, Package } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-export function ProductGallery({ images, name }: { images: string[]; name: string }) {
+export function ProductGallery({ images, name, tech = true }: { images: string[]; name: string; tech?: boolean }) {
   const [active, setActive] = useState(0)
 
   if (images.length === 0) {
     return (
       <div className="aspect-square rounded-3xl bg-fog-white dark:bg-white/5 flex items-center justify-center">
-        <Laptop className="w-1/4 h-1/4 text-obsidian/10 dark:text-white/15" aria-hidden />
+        {tech ? (
+          <Laptop className="w-1/4 h-1/4 text-obsidian/10 dark:text-white/15" aria-hidden />
+        ) : (
+          <Package className="w-1/4 h-1/4 text-obsidian/10 dark:text-white/15" aria-hidden />
+        )}
       </div>
     )
   }

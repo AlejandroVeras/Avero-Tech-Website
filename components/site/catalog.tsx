@@ -25,7 +25,17 @@ function uniqueSorted(values: (string | undefined)[]) {
 
 const pill = "rounded-full border-pale-mist bg-card"
 
-export function Catalog({ products }: { products: PublicProduct[] }) {
+export function Catalog({
+  products,
+  basePath = "/catalogo",
+  showCart = true,
+  emptyMessage = "Pronto publicaremos nuestro inventario",
+}: {
+  products: PublicProduct[]
+  basePath?: string
+  showCart?: boolean
+  emptyMessage?: string
+}) {
   const [query, setQuery] = useState("")
   const [category, setCategory] = useState(ALL)
   const [brand, setBrand] = useState(ALL)
@@ -85,7 +95,7 @@ export function Catalog({ products }: { products: PublicProduct[] }) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-pewter" aria-hidden />
             <Input
               type="search"
-              aria-label="Buscar equipos"
+              aria-label="Buscar productos"
               placeholder="Buscar por nombre, marca o categoría..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -184,23 +194,23 @@ export function Catalog({ products }: { products: PublicProduct[] }) {
           )}
         </div>
         <p className="text-caption text-pewter" aria-live="polite">
-          {filtered.length === 1 ? "1 equipo" : `${filtered.length} equipos`}
+          {filtered.length === 1 ? "1 producto" : `${filtered.length} productos`}
         </p>
       </div>
 
       {filtered.length === 0 ? (
         <div className="text-center py-20 bg-card rounded-3xl border border-dashed border-pale-mist">
           <Package className="w-12 h-12 text-pewter/30 mx-auto mb-4" aria-hidden />
-          <h2 className="font-medium text-lg">No se encontraron equipos</h2>
+          <h2 className="font-medium text-lg">No se encontraron productos</h2>
           <p className="text-pewter text-sm mt-1">
-            {hasFilters ? "Prueba con otros filtros" : "Pronto publicaremos nuestro inventario"}
+            {hasFilters ? "Prueba con otros filtros" : emptyMessage}
           </p>
         </div>
       ) : view === "grid" ? (
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {filtered.map((p, i) => (
             <li key={p.id}>
-              <ProductCard product={p} priority={i < 4} />
+              <ProductCard product={p} priority={i < 4} basePath={basePath} showCart={showCart} />
             </li>
           ))}
         </ul>
@@ -208,7 +218,7 @@ export function Catalog({ products }: { products: PublicProduct[] }) {
         <ul className="space-y-3">
           {filtered.map((p) => (
             <li key={p.id}>
-              <ProductRow product={p} />
+              <ProductRow product={p} basePath={basePath} showCart={showCart} />
             </li>
           ))}
         </ul>

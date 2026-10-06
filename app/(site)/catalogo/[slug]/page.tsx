@@ -1,14 +1,8 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ChevronRight, MessageCircle, ShieldCheck, Truck, CheckCircle2, XCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { ProductGallery } from "@/components/site/product-gallery"
-import { AddToCartButton } from "@/components/site/add-to-cart-button"
-import { ProductCard } from "@/components/site/product-card"
-import { getStoreProduct, getStoreProducts } from "@/lib/data/public-catalog"
-import { CONDITION_LABELS, warrantyLabel } from "@/lib/catalog"
-import { SITE_URL, formatDOP, whatsappUrl } from "@/lib/site"
+import { ProductDetail } from "@/components/site/product-detail"
+import { getStoreProduct, getStoreProducts, relatedProducts } from "@/lib/data/public-catalog"
+import { WHATSAPP_NUMBER, formatDOP } from "@/lib/site"
 
 type Params = { params: Promise<{ slug: string }> }
 
@@ -38,153 +32,17 @@ export default async function ProductPage({ params }: Params) {
   const product = await getStoreProduct(slug)
   if (!product) notFound()
 
-  const all = await getStoreProducts()
-  const others = all.filter((p) => p.id !== product.id && p.inStock)
-  const related = [
-    ...others.filter((p) => product.category && p.category === product.category),
-    ...others.filter((p) => !product.category || p.category !== product.category),
-  ].slice(0, 4)
-
-  const url = `${SITE_URL}/catalogo/${product.slug}`
-  const message = `Hola Avero Technology, me interesa el ${product.name} (${formatDOP(product.price)}).\n${url}`
-  const warranty = warrantyLabel(product.warrantyMonths)
-  const eyebrow = [product.brand, product.condition && CONDITION_LABELS[product.condition], product.category]
-    .filter(Boolean)
-    .join(" · ")
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.name,
-    description: product.description,
-    image: product.images,
-    brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
-    itemCondition:
-      product.condition === "nuevo"
-        ? "https://schema.org/NewCondition"
-        : product.condition === "reacondicionado"
-          ? "https://schema.org/RefurbishedCondition"
-          : product.condition === "usado"
-            ? "https://schema.org/UsedCondition"
-            : undefined,
-    offers: {
-      "@type": "Offer",
-      url,
-      priceCurrency: "DOP",
-      price: product.price,
-      availability: product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-    },
-  }
+  const related = relatedProducts(await getStoreProducts(), product)
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
-      />
-
-      <section className="py-10 md:py-16 bg-background">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <nav aria-label="Ruta de navegación" className="mb-8">
-            <ol className="flex items-center gap-1 text-caption text-pewter">
-              <li>
-                <Link href="/catalogo" className="hover:text-obsidian dark:hover:text-foreground">
-                  Catálogo
-                </Link>
-              </li>
-              <li aria-hidden>
-                <ChevronRight className="h-3 w-3" />
-              </li>
-              <li className="truncate text-obsidian dark:text-foreground" aria-current="page">
-                {product.name}
-              </li>
-            </ol>
-          </nav>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-            <ProductGallery images={product.images} name={product.name} />
-
-            <div className="flex flex-col">
-              {eyebrow && <p className="text-caption uppercase tracking-[0.16em] text-pewter">{eyebrow}</p>}
-              <h1 className="mt-2 text-3xl md:text-heading-lg font-semibold tracking-[-0.02em] text-obsidian dark:text-foreground text-balance">
-                {product.name}
-              </h1>
-              <p className="mt-4 text-heading font-semibold text-obsidian dark:text-foreground">{formatDOP(product.price)}</p>
-
-              <ul className="mt-4 space-y-2 text-[15px]">
-                <li className="flex items-center gap-2">
-                  {product.inStock ? (
-                    <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" aria-hidden />
-                  ) : (
-                    <XCircle className="h-4 w-4 text-destructive" aria-hidden />
-                  )}
-                  <span className="text-obsidian dark:text-foreground">
-                    {product.inStock ? "Disponible para entrega inmediata" : "Agotado por ahora — pregúntanos por disponibilidad"}
-                  </span>
-                </li>
-                {warranty && (
-                  <li className="flex items-center gap-2">
-                    <ShieldCheck className="h-4 w-4 text-sapphire dark:text-sky-signal" aria-hidden />
-                    <span className="text-obsidian dark:text-foreground">Garantía: {warranty}</span>
-                  </li>
-                )}
-                <li className="flex items-center gap-2">
-                  <Truck className="h-4 w-4 text-sapphire dark:text-sky-signal" aria-hidden />
-                  <span className="text-pewter">Entrega en Santo Domingo; otras provincias, coordinamos el envío</span>
-                </li>
-              </ul>
-
-              <div className="mt-8 flex flex-wrap gap-2">
-                <Button size="lg" className="rounded-full px-6 text-[14px] font-normal" asChild>
-                  <a href={whatsappUrl(message)} target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="h-4 w-4" aria-hidden />
-                    Consultar por WhatsApp
-                  </a>
-                </Button>
-                <AddToCartButton product={product} />
-              </div>
-
-              {product.description && (
-                <div className="mt-10">
-                  <h2 className="text-lg font-semibold text-obsidian dark:text-foreground">Descripción</h2>
-                  <p className="mt-2 text-body text-pewter whitespace-pre-line">{product.description}</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {product.specs.length > 0 && (
-            <div className="mt-16 max-w-3xl">
-              <h2 className="text-heading-sm font-semibold text-obsidian dark:text-foreground">Especificaciones</h2>
-              <dl className="mt-4 divide-y divide-pale-mist/70 border-y border-pale-mist/70">
-                {product.specs.map((s, i) => (
-                  <div key={`${s.label}-${i}`} className="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-1 sm:gap-6 py-3.5">
-                    <dt className="text-[14px] text-pewter">{s.label}</dt>
-                    <dd className="text-[15px] text-obsidian dark:text-foreground">{s.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {related.length > 0 && (
-        <section className="py-16 md:py-24 bg-gradient-to-b from-fog-white to-background dark:from-white/[0.03]">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <h2 className="text-heading-sm md:text-heading font-semibold text-obsidian dark:text-foreground mb-8">
-              También te puede interesar
-            </h2>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {related.map((p) => (
-                <li key={p.id}>
-                  <ProductCard product={p} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
-    </>
+    <ProductDetail
+      product={product}
+      related={related}
+      basePath="/catalogo"
+      storeName="Avero Technology"
+      whatsapp={WHATSAPP_NUMBER}
+      showCart
+      deliveryNote="Entrega en Santo Domingo; otras provincias, coordinamos el envío"
+    />
   )
 }

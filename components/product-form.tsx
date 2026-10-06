@@ -201,7 +201,7 @@ export function ProductForm({ product, userId }: ProductFormProps) {
                   <Label htmlFor="isPublic" className="cursor-pointer font-semibold">
                     Visible en la tienda
                   </Label>
-                  <p className="text-xs text-muted-foreground mt-1">Cualquiera podrá verlo en tu web</p>
+                  <p className="text-xs text-muted-foreground mt-1">Aparece en tu tienda en línea (actívala en Mi tienda)</p>
                 </div>
               </div>
             </div>

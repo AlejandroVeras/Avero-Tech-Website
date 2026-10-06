@@ -8,21 +8,7 @@ import { createClient } from "@/lib/supabase/client"
 import { MAX_PRODUCT_IMAGES, PRODUCT_IMAGES_BUCKET } from "@/lib/catalog"
 import type { ProductImage } from "@/lib/data/products"
 import { friendlyError } from "@/lib/data/errors"
-
-const MAX_DIMENSION = 1600
-
-async function compress(file: File): Promise<Blob> {
-  const bitmap = await createImageBitmap(file)
-  const scale = Math.min(1, MAX_DIMENSION / Math.max(bitmap.width, bitmap.height))
-  const canvas = document.createElement("canvas")
-  canvas.width = Math.round(bitmap.width * scale)
-  canvas.height = Math.round(bitmap.height * scale)
-  canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
-  bitmap.close()
-  return new Promise((resolve, reject) =>
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("No se pudo procesar la imagen"))), "image/webp", 0.85),
-  )
-}
+import { compressImage } from "@/lib/image"
 
 export function ImagesField({
   userId,
@@ -54,7 +40,7 @@ export function ImagesField({
     for (const file of selected) {
       try {
         if (!file.type.startsWith("image/")) throw new Error(`${file.name} no es una imagen`)
-        const blob = await compress(file)
+        const blob = await compressImage(file)
         const path = `${userId}/${crypto.randomUUID()}.webp`
         const { error: upError } = await supabase.storage
           .from(PRODUCT_IMAGES_BUCKET)

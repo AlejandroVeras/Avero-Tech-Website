@@ -27,7 +27,8 @@ import {
   Receipt,
   Settings,
   Users,
-  Ticket
+  Ticket,
+  Store,
 } from "lucide-react"
 
 interface DashboardHeaderProps {
@@ -47,6 +48,7 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Clientes", href: "/dashboard/customers", icon: Users },
     { name: "Productos", href: "/dashboard/products", icon: Package },
+    { name: "Mi tienda", href: "/dashboard/tienda", icon: Store },
     { name: "Cotizaciones", href: "/dashboard/quotes", icon: FileText },
     { name: "Facturas", href: "/dashboard/invoices", icon: Receipt },
     { name: "Gastos", href: "/dashboard/expenses", icon: CreditCard },
