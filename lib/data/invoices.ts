@@ -1,5 +1,7 @@
 "use server"
 
+import { friendlyError } from "@/lib/data/errors"
+
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 
@@ -265,7 +267,7 @@ export async function createInvoice(data: {
     .select()
     .single()
 
-  if (invoiceError) return { error: invoiceError.message }
+  if (invoiceError) return { error: friendlyError(invoiceError) }
 
   const itemsToInsert = data.items.map((item) => ({
     invoice_id: invoiceData.id,
@@ -280,7 +282,7 @@ export async function createInvoice(data: {
 
   if (itemsError) {
     await supabase.from("invoices").delete().eq("id", invoiceData.id)
-    return { error: itemsError.message }
+    return { error: friendlyError(itemsError) }
   }
 
   // --- LÓGICA DE INVENTARIO: RESTAR STOCK ---
@@ -402,7 +404,7 @@ export async function updateInvoice(
     .eq("id", id)
     .eq("user_id", user.id)
 
-  if (updateError) return { error: updateError.message }
+  if (updateError) return { error: friendlyError(updateError) }
 
   await supabase.from("invoice_items").delete().eq("invoice_id", id)
 
@@ -417,7 +419,7 @@ export async function updateInvoice(
 
   const { error: itemsError } = await supabase.from("invoice_items").insert(itemsToInsert)
 
-  if (itemsError) return { error: itemsError.message }
+  if (itemsError) return { error: friendlyError(itemsError) }
 
   // --- LÓGICA DE INVENTARIO: RESTAR NUEVO STOCK ---
   for (const item of data.items) {
@@ -475,7 +477,7 @@ export async function deleteInvoice(id: string) {
 
   const { error } = await supabase.from("invoices").delete().eq("id", id).eq("user_id", user.id)
 
-  if (error) return { error: error.message }
+  if (error) return { error: friendlyError(error) }
 
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/invoices")
@@ -514,7 +516,7 @@ export async function updateInvoiceStatus(id: string, status: InvoiceStatus) {
     .eq("id", id)
     .eq("user_id", user.id)
 
-  if (error) return { error: error.message }
+  if (error) return { error: friendlyError(error) }
 
   // Ajustar financiamiento si cambia desde/hacia draft
   if (invoice.customer_id && invoice.apply_financing) {

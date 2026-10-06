@@ -1,26 +1,21 @@
 import type { Metadata } from "next"
-import { Package, CreditCard, FileText, Users, Receipt, BarChart3 } from "lucide-react"
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { SectionHeading } from "@/components/site/section-heading"
-import { PlanCard } from "@/components/site/plan-card"
-import { Faq } from "@/components/site/faq"
-import { SYSTEM_FAQ } from "@/components/site/faq-content"
+import { SystemIcon } from "@/components/site/system-icon"
+import { getPublishedSystems, getTrialDays } from "@/lib/data/systems"
+import { formatUSD, whatsappUrl } from "@/lib/site"
 
 export const metadata: Metadata = {
-  title: "Sistemas de gestión",
+  title: "Sistemas",
   description:
-    "Sistema de gestión para pequeños negocios en República Dominicana: inventario, ventas a crédito, facturas con ITBIS, gastos y reportes.",
+    "Software para administrar tu negocio: inventario, ventas a crédito, facturas con ITBIS y catálogo en línea. Hecho en República Dominicana.",
 }
 
-const FEATURES = [
-  { icon: Package, title: "Inventario", description: "Tus productos, precios y existencias en un solo lugar." },
-  { icon: CreditCard, title: "Ventas a crédito", description: "Lleva lo que te deben tus clientes y registra cada abono." },
-  { icon: FileText, title: "Facturas y cotizaciones", description: "En PDF, con ITBIS y RNC, listas para enviar." },
-  { icon: Users, title: "Clientes", description: "Datos de contacto e historial de cada cliente." },
-  { icon: Receipt, title: "Gastos", description: "Registra en qué se va el dinero del negocio." },
-  { icon: BarChart3, title: "Reportes", description: "Ingresos, gastos y ganancia por mes." },
-]
+export default async function SistemasPage() {
+  const [systems, trialDays] = await Promise.all([getPublishedSystems(), getTrialDays()])
 
-export default function SistemasPage() {
   return (
     <>
       <section className="py-24 md:py-32 bg-obsidian text-white">
@@ -29,33 +24,82 @@ export default function SistemasPage() {
             as="h1"
             inverted
             eyebrow="Software para tu negocio"
-            title="Sistemas de gestión empresarial"
-            description="Deja la libreta y el Excel. Administra inventario, ventas a crédito, facturas y gastos desde el navegador, sin instalar nada."
+            title="Sistemas que trabajan por ti"
+            description="Herramientas web, simples y en español, para que administres tu negocio desde el celular o la computadora. Sin instalar nada."
             className="mb-14"
           />
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
-            {FEATURES.map((f) => (
-              <li key={f.title} className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                <f.icon className="w-6 h-6 text-sky-signal mb-4" aria-hidden />
-                <h2 className="text-lg font-semibold">{f.title}</h2>
-                <p className="text-[14px] text-white/60 mt-1">{f.description}</p>
-              </li>
-            ))}
+
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-5xl mx-auto">
+            {systems.map((s) => {
+              const plan = s.plans[0]
+              const available = s.status === "disponible"
+              return (
+                <li key={s.id}>
+                  <Link
+                    href={`/sistemas/${s.slug}`}
+                    className="group flex h-full flex-col rounded-3xl border border-white/10 bg-white/[0.04] p-8 transition-colors hover:border-sky-signal/50 focus-visible:outline-2 focus-visible:outline-sky-signal"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <h2 className="text-heading-sm font-semibold">{s.name}</h2>
+                      <span
+                        className={
+                          available
+                            ? "rounded-full bg-sky-signal/15 px-2.5 py-1 text-[11px] text-sky-signal"
+                            : "rounded-full bg-white/10 px-2.5 py-1 text-[11px] text-white/70"
+                        }
+                      >
+                        {available ? "Disponible" : "Próximamente"}
+                      </span>
+                    </div>
+                    {s.tagline && <p className="mt-2 text-[15px] text-white/70">{s.tagline}</p>}
+                    {s.features.length > 0 && (
+                      <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-2">
+                        {s.features.slice(0, 6).map((f) => (
+                          <li key={f.title} className="flex items-center gap-2 text-[13px] text-white/80">
+                            <SystemIcon name={f.icon} className="h-4 w-4 shrink-0 text-sky-signal" />
+                            {f.title}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div className="mt-auto pt-8 flex items-end justify-between gap-4">
+                      {available && plan ? (
+                        <p className="text-[13px] text-white/60">
+                          Desde <span className="text-lg font-semibold text-white">{formatUSD(plan.annual_usd ? plan.annual_usd / 12 : plan.monthly_usd)}</span>/mes
+                          {trialDays ? ` · ${trialDays} días gratis` : ""}
+                        </p>
+                      ) : (
+                        <p className="text-[13px] text-white/60">En desarrollo</p>
+                      )}
+                      <span className="inline-flex items-center gap-1 text-[14px] text-sky-signal">
+                        Ver más
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
+                      </span>
+                    </div>
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         </div>
       </section>
 
-      <section className="py-20 md:py-28 bg-obsidian text-white border-t border-white/5">
-        <div className="container mx-auto px-4">
-          <SectionHeading inverted title="Un plan, todo incluido" className="mb-10" />
-          <PlanCard inverted />
-        </div>
-      </section>
-
-      <section className="py-20 md:py-28 bg-gradient-to-b from-fog-white to-background dark:from-white/[0.03]">
-        <div className="container mx-auto px-4">
-          <SectionHeading title="Preguntas frecuentes" className="mb-12" />
-          <Faq entries={SYSTEM_FAQ} />
+      <section className="py-20 md:py-28 bg-background">
+        <div className="container mx-auto px-4 text-center">
+          <SectionHeading
+            title="¿Necesitas algo a la medida?"
+            description="Si tu negocio necesita un sistema que todavía no está aquí, cuéntanos qué quieres resolver."
+            className="mb-8"
+          />
+          <Button size="lg" className="rounded-full px-6 text-[14px] font-normal" asChild>
+            <a
+              href={whatsappUrl("Hola, me interesa un sistema a la medida para mi negocio.")}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Hablar por WhatsApp
+            </a>
+          </Button>
         </div>
       </section>
     </>

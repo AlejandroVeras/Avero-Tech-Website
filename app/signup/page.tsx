@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 import { getUser } from "@/lib/auth"
 import { SignupForm } from "@/components/signup-form"
+import { getTrialDays } from "@/lib/data/systems"
 
 export default async function SignupPage() {
   const user = await getUser()
@@ -11,7 +12,7 @@ export default async function SignupPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
-      <SignupForm />
+      <SignupForm trialDays={await getTrialDays()} />
     </div>
   )
 }

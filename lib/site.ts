@@ -5,9 +5,6 @@ export const WHATSAPP_DISPLAY = "(829) 812-2103"
 export const CONTACT_EMAIL = "info@averotech.com"
 export const LOCATION = "Santo Domingo, República Dominicana"
 
-export const SAAS_MONTHLY_PRICE_USD = 15
-export const SAAS_ANNUAL_PRICE_USD = 150
-
 export const NAV_LINKS = [
   { label: "Inicio", href: "/" },
   { label: "Catálogo", href: "/catalogo" },

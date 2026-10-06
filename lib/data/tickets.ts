@@ -1,5 +1,7 @@
 "use server"
 
+import { friendlyError } from "@/lib/data/errors"
+
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 
@@ -128,7 +130,7 @@ export async function createTicket(formData: FormData) {
     .select()
     .single()
 
-  if (error) return { error: error.message }
+  if (error) return { error: friendlyError(error) }
 
   revalidatePath("/dashboard/tickets")
   return { success: true, id: data.id }
@@ -166,7 +168,7 @@ export async function updateTicket(id: string, formData: FormData) {
     .eq("id", id)
     .eq("user_id", user.id)
 
-  if (error) return { error: error.message }
+  if (error) return { error: friendlyError(error) }
 
   revalidatePath("/dashboard/tickets")
   revalidatePath(`/dashboard/tickets/${id}`)
@@ -185,7 +187,7 @@ export async function updateTicketStatus(id: string, status: string) {
     .eq("id", id)
     .eq("user_id", user.id)
 
-  if (error) return { error: error.message }
+  if (error) return { error: friendlyError(error) }
 
   revalidatePath("/dashboard/tickets")
   revalidatePath(`/dashboard/tickets/${id}`)
@@ -204,7 +206,7 @@ export async function deleteTicket(id: string) {
     .eq("id", id)
     .eq("user_id", user.id)
 
-  if (error) return { error: error.message }
+  if (error) return { error: friendlyError(error) }
 
   revalidatePath("/dashboard/tickets")
   return { success: true }
@@ -243,7 +245,7 @@ export async function addTicketMessage(ticketId: string, message: string, isInte
       is_internal: isInternal,
     })
 
-  if (error) return { error: error.message }
+  if (error) return { error: friendlyError(error) }
 
   // Also update the ticket's updated_at
   await supabase

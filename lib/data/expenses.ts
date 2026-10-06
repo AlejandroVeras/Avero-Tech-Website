@@ -1,5 +1,7 @@
 "use server"
 
+import { friendlyError } from "@/lib/data/errors"
+
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 
@@ -136,7 +138,7 @@ export async function createExpense(formData: FormData) {
     .single()
 
   if (error) {
-    return { error: error.message }
+    return { error: friendlyError(error) }
   }
 
   // Actualizar caché
@@ -180,7 +182,7 @@ export async function updateExpense(id: string, formData: FormData) {
     .eq("user_id", user.id)
 
   if (error) {
-    return { error: error.message }
+    return { error: friendlyError(error) }
   }
 
   // Actualizar caché
@@ -207,7 +209,7 @@ export async function deleteExpense(id: string) {
     .eq("user_id", user.id)
 
   if (error) {
-    return { error: error.message }
+    return { error: friendlyError(error) }
   }
 
   // Actualizar caché

@@ -12,6 +12,11 @@ export const SYSTEM_FAQ: FaqEntry[] = [
       "No. Funciona desde el navegador de cualquier celular, tablet o computadora con internet.",
   },
   {
+    question: "¿Hay prueba gratis?",
+    answer:
+      "Sí. Al crear tu cuenta empiezas una prueba gratis con todas las funciones, sin poner tarjeta. Desde el sistema ves cuántos días te quedan.",
+  },
+  {
     question: "¿Cómo pago la suscripción?",
     answer:
       "Por ahora coordinamos el pago por WhatsApp. Te indicamos los métodos disponibles y activamos tu cuenta.",
@@ -22,7 +27,8 @@ export const SYSTEM_FAQ: FaqEntry[] = [
   },
   {
     question: "¿Qué pasa con mis datos si dejo de pagar?",
-    answer: "Tus datos se conservan. Al renovar, todo sigue exactamente como lo dejaste.",
+    answer:
+      "Tu cuenta pasa a modo solo lectura: sigues viendo todo, pero no puedes crear ni editar. No se borra nada, y al renovar todo sigue exactamente como lo dejaste.",
   },
 ]
 

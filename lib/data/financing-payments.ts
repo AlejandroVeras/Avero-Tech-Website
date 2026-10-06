@@ -1,5 +1,7 @@
 "use server"
 
+import { friendlyError } from "@/lib/data/errors"
+
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 
@@ -92,7 +94,7 @@ export async function createFinancingPayment(data: {
     .single()
 
   if (paymentError) {
-    return { error: paymentError.message }
+    return { error: friendlyError(paymentError) }
   }
 
   // 4. Actualizar deuda del cliente
@@ -105,7 +107,7 @@ export async function createFinancingPayment(data: {
   if (updateError) {
     // Si falla la actualización, eliminar el pago registrado
     await supabase.from("financing_payments").delete().eq("id", paymentData.id)
-    return { error: updateError.message }
+    return { error: friendlyError(updateError) }
   }
 
   revalidatePath("/dashboard/customers")
@@ -151,7 +153,7 @@ export async function deleteFinancingPayment(paymentId: string, customerId: stri
     .eq("customer_id", customerId)
 
   if (deleteError) {
-    return { error: deleteError.message }
+    return { error: friendlyError(deleteError) }
   }
 
   // 4. Restaurar la deuda del cliente

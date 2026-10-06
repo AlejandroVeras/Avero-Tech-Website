@@ -1,5 +1,7 @@
 "use server"
 
+import { friendlyError } from "@/lib/data/errors"
+
 import { z } from "zod"
 import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
@@ -323,7 +325,7 @@ export async function createProduct(formData: FormData) {
     .select("id")
     .single()
 
-  if (error) return { error: error.message }
+  if (error) return { error: friendlyError(error) }
 
   const imageError = await syncImages(supabase, user.id, data.id, d.images)
   if (imageError) return { error: `Producto guardado, pero falló al guardar las fotos: ${imageError}` }
@@ -350,7 +352,7 @@ export async function updateProduct(id: string, formData: FormData) {
     .eq("id", id)
     .eq("user_id", user.id)
 
-  if (error) return { error: error.message }
+  if (error) return { error: friendlyError(error) }
 
   const imageError = await syncImages(supabase, user.id, id, d.images)
   if (imageError) return { error: `Producto guardado, pero falló al guardar las fotos: ${imageError}` }
@@ -377,7 +379,7 @@ export async function deleteProduct(id: string) {
     .select("slug")
     .maybeSingle()
 
-  if (error) return { error: error.message }
+  if (error) return { error: friendlyError(error) }
 
   const paths = (images ?? []).map((i) => i.storage_path as string)
   if (paths.length > 0) await supabase.storage.from(PRODUCT_IMAGES_BUCKET).remove(paths)

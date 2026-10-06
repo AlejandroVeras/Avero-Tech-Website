@@ -1,5 +1,7 @@
 "use server"
 
+import { friendlyError } from "@/lib/data/errors"
+
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { updateInvoiceStatus } from "./invoices"
@@ -67,7 +69,7 @@ export async function createPayment(data: {
     notes: data.notes
   })
 
-  if (error) return { error: error.message }
+  if (error) return { error: friendlyError(error) }
 
   // 3. SOLO SI la factura aplicó financiamiento, reducir la deuda del cliente y registrar en financing_payments
   if (invoice.customer_id && invoice.apply_financing) {
@@ -127,7 +129,7 @@ export async function deletePayment(id: string, invoiceId: string) {
 
     const { error } = await supabase.from("payments").delete().eq("id", id)
     
-    if (error) return { error: error.message }
+    if (error) return { error: friendlyError(error) }
 
     // Revertir descuento de deuda si aplicaba financiamiento
     if (invoice?.customer_id && invoice?.apply_financing && payment?.amount) {

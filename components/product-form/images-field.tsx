@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { createClient } from "@/lib/supabase/client"
 import { MAX_PRODUCT_IMAGES, PRODUCT_IMAGES_BUCKET } from "@/lib/catalog"
 import type { ProductImage } from "@/lib/data/products"
+import { friendlyError } from "@/lib/data/errors"
 
 const MAX_DIMENSION = 1600
 
@@ -58,7 +59,7 @@ export function ImagesField({
         const { error: upError } = await supabase.storage
           .from(PRODUCT_IMAGES_BUCKET)
           .upload(path, blob, { contentType: "image/webp", cacheControl: "31536000" })
-        if (upError) throw upError
+        if (upError) throw new Error(friendlyError(upError))
         const url = supabase.storage.from(PRODUCT_IMAGES_BUCKET).getPublicUrl(path).data.publicUrl
         added.push({ path, url })
       } catch (e) {

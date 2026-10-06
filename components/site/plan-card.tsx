@@ -5,52 +5,57 @@ import Link from "next/link"
 import { CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { SAAS_ANNUAL_PRICE_USD, SAAS_MONTHLY_PRICE_USD, formatUSD } from "@/lib/site"
-
-export const PLAN_FEATURES = [
-  "Inventario de productos con control de stock",
-  "Ventas a crédito y registro de cobros",
-  "Facturas y cotizaciones en PDF con ITBIS",
-  "Base de clientes",
-  "Registro de gastos",
-  "Reportes de ingresos, gastos y ganancia",
-  "Tickets de soporte para tus clientes",
-  "Acceso desde el navegador del celular o la computadora",
-]
+import { formatUSD } from "@/lib/site"
+import type { SystemPlan } from "@/lib/systems"
 
 export function PlanCard({
+  plan,
   inverted = false,
+  trialDays,
   cta,
 }: {
+  plan: SystemPlan
   inverted?: boolean
+  trialDays?: number
   cta?: React.ReactNode
 }) {
-  const [annual, setAnnual] = useState(true)
-  const perMonth = annual ? SAAS_ANNUAL_PRICE_USD / 12 : SAAS_MONTHLY_PRICE_USD
+  const hasAnnual = plan.annual_usd != null && plan.annual_usd > 0
+  const [annual, setAnnual] = useState(hasAnnual)
+  const perMonth = annual && hasAnnual ? plan.annual_usd! / 12 : plan.monthly_usd
+  const monthsFree = hasAnnual ? Math.round(12 - plan.annual_usd! / plan.monthly_usd) : 0
+
+  const muted = inverted ? "text-white/50" : "text-pewter"
+  const strong = inverted ? "text-white" : "text-obsidian dark:text-foreground"
+  const accent = inverted ? "text-sky-signal" : "text-sapphire dark:text-sky-signal"
 
   return (
     <div className="max-w-md mx-auto">
-      <div className="flex items-center justify-center gap-3 mb-8">
-        <span className={cn("text-[13px]", inverted ? (annual ? "text-white/50" : "text-white") : annual ? "text-pewter" : "text-obsidian dark:text-foreground")}>
-          Mensual
-        </span>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={annual}
-          aria-label="Facturación anual"
-          onClick={() => setAnnual((a) => !a)}
-          className={cn(
-            "relative w-12 h-7 rounded-full transition-colors",
-            annual ? (inverted ? "bg-sky-signal" : "bg-primary") : inverted ? "bg-white/20" : "bg-pale-mist",
-          )}
-        >
-          <span className={cn("absolute top-0.5 left-0 w-6 h-6 rounded-full bg-white transition-transform", annual ? "translate-x-5" : "translate-x-0.5")} />
-        </button>
-        <span className={cn("text-[13px]", inverted ? (annual ? "text-white" : "text-white/50") : annual ? "text-obsidian dark:text-foreground" : "text-pewter")}>
-          Anual <span className={cn("ml-1 text-[11px]", inverted ? "text-sky-signal" : "text-sapphire dark:text-sky-signal")}>2 meses gratis</span>
-        </span>
-      </div>
+      {hasAnnual && (
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <span className={cn("text-[13px]", annual ? muted : strong)}>Mensual</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={annual}
+            aria-label="Facturación anual"
+            onClick={() => setAnnual((a) => !a)}
+            className={cn(
+              "relative w-12 h-7 rounded-full transition-colors",
+              annual ? (inverted ? "bg-sky-signal" : "bg-primary") : inverted ? "bg-white/20" : "bg-pale-mist",
+            )}
+          >
+            <span className={cn("absolute top-0.5 left-0 w-6 h-6 rounded-full bg-white transition-transform", annual ? "translate-x-5" : "translate-x-0.5")} />
+          </button>
+          <span className={cn("text-[13px]", annual ? strong : muted)}>
+            Anual
+            {monthsFree > 0 && (
+              <span className={cn("ml-1 text-[11px]", accent)}>
+                {monthsFree === 1 ? "1 mes gratis" : `${monthsFree} meses gratis`}
+              </span>
+            )}
+          </span>
+        </div>
+      )}
 
       <div
         className={cn(
@@ -59,31 +64,30 @@ export function PlanCard({
         )}
       >
         <div>
-          <h3 className={cn("text-2xl font-semibold", !inverted && "text-obsidian dark:text-foreground")}>Plan Profesional</h3>
-          <p className={cn("text-[13px] mt-1", inverted ? "text-white/60" : "text-pewter")}>
-            Todo lo que necesitas para administrar tu negocio
-          </p>
+          <h3 className={cn("text-2xl font-semibold", strong)}>{plan.name}</h3>
+          {plan.description && <p className={cn("text-[13px] mt-1", inverted ? "text-white/60" : "text-pewter")}>{plan.description}</p>}
         </div>
 
         <div>
-          {annual && (
-            <p className={cn("line-through text-lg", inverted ? "text-white/40" : "text-pewter")}>
-              {formatUSD(SAAS_MONTHLY_PRICE_USD)}/mes
-            </p>
-          )}
+          {annual && hasAnnual && <p className={cn("line-through text-lg", muted)}>{formatUSD(plan.monthly_usd)}/mes</p>}
           <div className="flex items-baseline justify-center gap-1">
-            <span className="text-5xl font-semibold">{formatUSD(perMonth)}</span>
-            <span className={inverted ? "text-white/50" : "text-pewter"}>/mes</span>
+            <span className={cn("text-5xl font-semibold", strong)}>{formatUSD(perMonth)}</span>
+            <span className={muted}>/mes</span>
           </div>
-          <p className={cn("text-[13px] mt-1", inverted ? "text-sky-signal" : "text-sapphire dark:text-sky-signal")}>
-            {annual ? `${formatUSD(SAAS_ANNUAL_PRICE_USD)} al año` : "Facturado cada mes"}
+          <p className={cn("text-[13px] mt-1", accent)}>
+            {annual && hasAnnual ? `${formatUSD(plan.annual_usd!)} al año` : "Facturado cada mes"}
           </p>
+          {trialDays ? (
+            <p className={cn("text-[13px] mt-2", inverted ? "text-white/70" : "text-obsidian/80 dark:text-foreground/80")}>
+              Prueba gratis {trialDays} días, sin tarjeta.
+            </p>
+          ) : null}
         </div>
 
         <ul className="text-left space-y-3">
-          {PLAN_FEATURES.map((f) => (
+          {plan.features.map((f) => (
             <li key={f} className={cn("flex items-start gap-2 text-[14px]", inverted ? "text-white/85" : "text-obsidian/85 dark:text-foreground/85")}>
-              <CheckCircle2 className={cn("h-4 w-4 shrink-0 mt-0.5", inverted ? "text-sky-signal" : "text-sapphire dark:text-sky-signal")} aria-hidden />
+              <CheckCircle2 className={cn("h-4 w-4 shrink-0 mt-0.5", accent)} aria-hidden />
               <span>{f}</span>
             </li>
           ))}

@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 
-export function SignupForm() {
+export function SignupForm({ trialDays }: { trialDays?: number }) {
   const router = useRouter()
   const [error, setError] = useState<string>("")
   const [loading, setLoading] = useState(false)
@@ -51,7 +51,11 @@ export function SignupForm() {
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold">Crear Cuenta</CardTitle>
-        <CardDescription>Registra tu negocio en Avero Technology</CardDescription>
+        <CardDescription>
+          {trialDays
+            ? `Registra tu negocio y prueba el sistema gratis por ${trialDays} días, sin tarjeta.`
+            : "Registra tu negocio en Avero Technology"}
+        </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
@@ -62,7 +66,7 @@ export function SignupForm() {
               id="businessName"
               name="businessName"
               type="text"
-              placeholder="Avero Technology"
+              placeholder="Ej: Colmado La Esquina"
               required
               disabled={loading}
             />

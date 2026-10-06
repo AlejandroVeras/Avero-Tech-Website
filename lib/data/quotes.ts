@@ -1,5 +1,7 @@
 "use server"
 
+import { friendlyError } from "@/lib/data/errors"
+
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { createInvoice } from "./invoices"
@@ -205,7 +207,7 @@ export async function createQuote(data: {
     .select()
     .single()
 
-  if (quoteError) return { error: quoteError.message }
+  if (quoteError) return { error: friendlyError(quoteError) }
 
   const itemsToInsert = data.items.map((item) => ({
     quote_id: quoteData.id,
@@ -220,7 +222,7 @@ export async function createQuote(data: {
 
   if (itemsError) {
     await supabase.from("quotes").delete().eq("id", quoteData.id)
-    return { error: itemsError.message }
+    return { error: friendlyError(itemsError) }
   }
 
   revalidatePath("/dashboard")
@@ -282,7 +284,7 @@ export async function updateQuote(
     .eq("id", id)
     .eq("user_id", user.id)
 
-  if (updateError) return { error: updateError.message }
+  if (updateError) return { error: friendlyError(updateError) }
 
   await supabase.from("quote_items").delete().eq("quote_id", id)
 
@@ -297,7 +299,7 @@ export async function updateQuote(
 
   const { error: itemsError } = await supabase.from("quote_items").insert(itemsToInsert)
 
-  if (itemsError) return { error: itemsError.message }
+  if (itemsError) return { error: friendlyError(itemsError) }
 
   revalidatePath("/dashboard/quotes")
   revalidatePath(`/dashboard/quotes/${id}`)
@@ -313,7 +315,7 @@ export async function deleteQuote(id: string) {
 
   const { error } = await supabase.from("quotes").delete().eq("id", id).eq("user_id", user.id)
 
-  if (error) return { error: error.message }
+  if (error) return { error: friendlyError(error) }
 
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/quotes")
@@ -336,7 +338,7 @@ export async function updateQuoteStatus(id: string, status: QuoteStatus) {
     .eq("id", id)
     .eq("user_id", user.id)
 
-  if (error) return { error: error.message }
+  if (error) return { error: friendlyError(error) }
 
   revalidatePath("/dashboard/quotes")
   revalidatePath(`/dashboard/quotes/${id}`)
