@@ -24,7 +24,7 @@ const FILTERS: { value: "todos" | AccountState; label: string }[] = [
   { value: "todos", label: "Todos" },
   { value: "pagando", label: "Pagando" },
   { value: "prueba", label: "En prueba" },
-  { value: "pendiente", label: "Sin tarjeta" },
+  { value: "pendiente", label: "Sin activar" },
   { value: "cortesia", label: "Cortesía" },
   { value: "vencido", label: "Vencidos" },
 ]
@@ -121,9 +121,9 @@ export default async function NegociosPage({ searchParams }: { searchParams: Pro
                       </td>
                       <td className="px-4 py-3">
                         {a.planId ? PLAN_LABELS[a.planId] ?? a.planId : "—"}
-                        {a.provider === "lemonsqueezy" && (
+                        {a.provider === "paypal" && (
                           <span className="block text-xs text-muted-foreground">
-                            Tarjeta{a.cardLastFour ? ` •${a.cardLastFour}` : ""}
+                            PayPal
                           </span>
                         )}
                       </td>

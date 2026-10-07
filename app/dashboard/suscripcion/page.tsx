@@ -3,13 +3,14 @@ import { redirect } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { PlanCheckout } from "@/components/billing/plan-checkout"
-import { ManageBillingButton } from "@/components/billing/manage-billing-button"
+import { ManagePayPalSubscription } from "@/components/billing/manage-billing-button"
 import { PaymentReturnSync } from "@/components/billing/payment-return-sync"
 import { getUser } from "@/lib/auth"
 import { getAccess, type AccessState } from "@/lib/data/access"
 import { getCheckoutMode } from "@/lib/data/billing"
 import { getPublishedSystem, getTrialDays } from "@/lib/data/systems"
 import { createClient } from "@/lib/supabase/server"
+import { emailConfigured } from "@/lib/email"
 import { FALLBACK_GESTION } from "@/lib/systems"
 import { formatDOP, formatUSD } from "@/lib/site"
 
@@ -24,23 +25,25 @@ function describe(access: AccessState): { label: string; tone: "default" | "seco
         label: "Prueba gratis",
         tone: "secondary",
         detail:
-          access.billing.provider === "lemonsqueezy"
+          access.billing.provider === "paypal"
             ? `Termina el ${dateFormat.format(access.endsAt)}; ese día se hace el primer cobro.`
             : `Termina el ${dateFormat.format(access.endsAt)}.`,
       }
     case "active":
-      if (access.pastDue) return { label: "Pago pendiente", tone: "destructive", detail: "El último cobro falló. Actualiza tu tarjeta." }
+      if (access.pastDue)
+        return { label: "Pago pendiente", tone: "destructive", detail: "El último cobro falló. Revisa tu forma de pago en PayPal; seguiremos intentando unos días." }
       if (access.canceled)
         return { label: "Cancelada", tone: "secondary", detail: access.endsAt ? `Tienes acceso hasta el ${dateFormat.format(access.endsAt)}.` : "" }
       if (access.billing.planId === "courtesy") return { label: "Cortesía", tone: "default", detail: "Tu cuenta tiene acceso sin costo." }
       return {
         label: "Activa",
         tone: "default",
-        detail: access.endsAt
-          ? access.billing.provider === "lemonsqueezy"
-            ? `Próximo cobro: ${dateFormat.format(access.endsAt)}.`
-            : `Pagada hasta el ${dateFormat.format(access.endsAt)}.`
-          : "Sin vencimiento.",
+        detail:
+          access.billing.provider === "paypal" && access.billing.nextChargeAt
+            ? `Próximo cobro: ${dateFormat.format(access.billing.nextChargeAt)}.`
+            : access.endsAt
+              ? `Pagada hasta el ${dateFormat.format(access.endsAt)}.`
+              : "Sin vencimiento.",
       }
     case "expired":
       return { label: "Vencida", tone: "destructive", detail: "Tu cuenta está en solo lectura hasta que reactives." }
@@ -65,18 +68,20 @@ export default async function SuscripcionPage() {
   const plan = (system ?? FALLBACK_GESTION).plans[0]
   const status = describe(access)
   const billing = "billing" in access ? access.billing : undefined
-  const hasCardSubscription = billing?.provider === "lemonsqueezy"
-  // An expired card subscription can't be resumed from the portal, so it needs a new checkout.
+  const hasPayPal = billing?.provider === "paypal"
+  // A cancelled or expired PayPal subscription can't be resumed, so reactivating needs a new one.
   const canSubscribe =
     billing?.planId !== "courtesy" &&
-    (access.kind === "expired" || (!hasCardSubscription && (access.kind === "trialing" || access.kind === "active")))
+    (access.kind === "expired" || (!hasPayPal && (access.kind === "trialing" || access.kind === "active")))
+  const canCancel = hasPayPal && (access.kind === "trialing" || (access.kind === "active" && !access.canceled))
+  const accessUntil = access.kind === "trialing" || access.kind === "active" ? access.endsAt : null
 
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Mi suscripción</h1>
-          <p className="text-muted-foreground mt-1">Tu plan del sistema de gestión, la tarjeta y los pagos.</p>
+          <p className="text-muted-foreground mt-1">Tu plan del sistema de gestión, la forma de pago y los pagos.</p>
         </div>
 
         <Suspense fallback={null}>
@@ -103,26 +108,17 @@ export default async function SuscripcionPage() {
                     </dd>
                   </div>
                 )}
-                {hasCardSubscription && (
-                  <div className="flex justify-between py-2">
-                    <dt className="text-muted-foreground">Tarjeta</dt>
-                    <dd>
-                      {billing.cardBrand ? billing.cardBrand.charAt(0).toUpperCase() + billing.cardBrand.slice(1) : "Tarjeta"}
-                      {billing.cardLastFour ? ` •${billing.cardLastFour}` : ""}
-                    </dd>
-                  </div>
-                )}
                 <div className="flex justify-between py-2">
                   <dt className="text-muted-foreground">Forma de pago</dt>
-                  <dd>{hasCardSubscription ? "Cobro automático con tarjeta" : billing.planId === "courtesy" ? "Cortesía" : "Manual (transferencia)"}</dd>
+                  <dd>{hasPayPal ? "Cobro automático con PayPal" : billing.planId === "courtesy" ? "Cortesía" : "Manual (transferencia)"}</dd>
                 </div>
               </dl>
             )}
-            {hasCardSubscription && (
+            {hasPayPal && (
               <div className="space-y-2 pt-2">
-                <ManageBillingButton />
+                <ManagePayPalSubscription canCancel={canCancel} accessUntil={accessUntil ? dateFormat.format(accessUntil) : undefined} />
                 <p className="text-xs text-muted-foreground">
-                  Abre el portal seguro de Lemon Squeezy para cambiar la tarjeta, ver facturas, cancelar o reanudar.
+                  Para cambiar la tarjeta o la cuenta con la que pagas, hazlo desde tus pagos automáticos en PayPal.
                 </p>
               </div>
             )}
@@ -133,10 +129,16 @@ export default async function SuscripcionPage() {
           <Card>
             <CardHeader>
               <CardTitle>{access.kind === "expired" ? "Reactiva tu cuenta" : "Pasa al cobro automático"}</CardTitle>
-              <CardDescription>Registra tu tarjeta y olvídate de renovar a mano.</CardDescription>
+              <CardDescription>Autoriza el pago automático con PayPal y olvídate de renovar a mano.</CardDescription>
             </CardHeader>
             <CardContent>
-              <PlanCheckout plan={plan} trialDays={trialDays} withTrial={mode.withTrial} businessName={user.businessName} />
+              <PlanCheckout
+                plan={plan}
+                trialDays={trialDays}
+                withTrial={mode.withTrial}
+                businessName={user.businessName}
+                remindsByEmail={emailConfigured()}
+              />
             </CardContent>
           </Card>
         )}

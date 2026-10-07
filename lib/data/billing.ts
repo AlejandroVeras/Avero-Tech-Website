@@ -4,8 +4,8 @@ import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
-import { createCheckout, getSubscription, lemonConfig, listSubscriptionsByEmail } from "@/lib/billing/lemonsqueezy"
-import { applySubscription } from "@/lib/billing/sync"
+import { cancelSubscription, createSubscription, paypalConfig } from "@/lib/billing/paypal"
+import { refreshSubscription } from "@/lib/billing/sync"
 import { SITE_URL } from "@/lib/site"
 
 async function currentUser() {
@@ -26,91 +26,88 @@ async function baseUrl() {
   return `${proto}://${host}`
 }
 
-// Only brand-new accounts (never activated) get the free trial; everyone else pays from day one.
-async function trialEligible(supabase: Awaited<ReturnType<typeof createClient>>, userId: string) {
+async function mySubscription(supabase: Awaited<ReturnType<typeof createClient>>, userId: string) {
   const { data } = await supabase
     .from("subscriptions")
-    .select("status, systems!inner(slug)")
+    .select("status, provider, external_subscription_id, systems!inner(slug)")
     .eq("user_id", userId)
     .eq("systems.slug", "gestion")
     .maybeSingle()
-  return !data || data.status === "incomplete"
+  return data
+}
+
+// Only brand-new accounts (never activated) get the free trial; everyone else pays from day one.
+async function trialEligible(supabase: Awaited<ReturnType<typeof createClient>>, userId: string) {
+  const sub = await mySubscription(supabase, userId)
+  return !sub || sub.status === "incomplete"
 }
 
 export async function getCheckoutMode(): Promise<{ ready: boolean; withTrial: boolean }> {
-  const config = lemonConfig()
+  const config = paypalConfig()
   const { supabase, user } = await currentUser()
   const eligible = await trialEligible(supabase, user.id)
-  const hasNoTrialVariants = !!(config.variantsNoTrial.monthly || config.variantsNoTrial.annual)
-  // Without no-trial variants Lemon Squeezy would still grant the trial, so say so honestly.
-  return { ready: config.ready, withTrial: eligible || !hasNoTrialVariants }
+  const hasNoTrialPlans = !!(config.plansNoTrial.monthly || config.plansNoTrial.annual)
+  // Without no-trial plans PayPal would still grant the trial, so say so honestly.
+  return { ready: config.ready, withTrial: eligible || !hasNoTrialPlans }
 }
 
 export async function startCheckout(formData: FormData): Promise<{ error?: string }> {
   const plan = formData.get("plan") === "annual" ? "annual" : "monthly"
-  const config = lemonConfig()
+  const config = paypalConfig()
   if (!config.ready) {
-    return { error: "Los pagos con tarjeta todavía no están activos. Escríbenos por WhatsApp y te activamos la cuenta." }
+    return { error: "Los pagos automáticos todavía no están activos. Escríbenos por WhatsApp y te activamos la cuenta." }
   }
 
   const { supabase, user } = await currentUser()
-  const group = (await trialEligible(supabase, user.id)) ? config.variants : config.variantsNoTrial
-  const variantId =
-    group[plan] ?? group.monthly ?? group.annual ?? config.variants[plan] ?? config.variants.monthly ?? config.variants.annual
-  if (!variantId) return { error: "No hay un plan configurado para cobrar. Escríbenos por WhatsApp." }
+  const group = (await trialEligible(supabase, user.id)) ? config.plans : config.plansNoTrial
+  const planId = group[plan] ?? group.monthly ?? group.annual ?? config.plans[plan] ?? config.plans.monthly ?? config.plans.annual
+  if (!planId) return { error: "No hay un plan configurado para cobrar. Escríbenos por WhatsApp." }
   const { data: profile } = await supabase.from("profiles").select("business_name").eq("id", user.id).maybeSingle()
 
-  let url: string
+  const base = await baseUrl()
+  let approveUrl: string
   try {
-    url = await createCheckout({
-      variantId,
-      email: user.email!,
-      name: profile?.business_name ?? user.email!,
+    approveUrl = await createSubscription({
+      planId,
       userId: user.id,
-      redirectUrl: `${await baseUrl()}/dashboard/suscripcion?activando=1`,
+      email: user.email!,
+      businessName: profile?.business_name ?? "Mi negocio",
+      returnUrl: `${base}/dashboard/suscripcion?paypal=ok`,
+      cancelUrl: `${base}/dashboard/suscripcion?paypal=cancelado`,
     })
   } catch (e) {
     console.error("startCheckout:", e)
-    return { error: "No pudimos abrir la página de pago. Intenta de nuevo en unos minutos." }
+    return { error: "No pudimos conectar con PayPal. Intenta de nuevo en unos minutos." }
   }
-  redirect(url)
+  redirect(approveUrl)
 }
 
-export async function openBillingPortal(): Promise<{ error?: string }> {
-  const { supabase, user } = await currentUser()
-  const { data } = await supabase
-    .from("subscriptions")
-    .select("external_subscription_id, provider, systems!inner(slug)")
-    .eq("user_id", user.id)
-    .eq("systems.slug", "gestion")
-    .eq("provider", "lemonsqueezy")
-    .maybeSingle()
-  if (!data?.external_subscription_id) return { error: "No tienes una suscripción con tarjeta." }
-
-  let portal: string | undefined
-  try {
-    const sub = await getSubscription(data.external_subscription_id)
-    portal = sub.attributes.urls?.customer_portal
-  } catch (e) {
-    console.error("openBillingPortal:", e)
-  }
-  if (!portal) return { error: "No pudimos abrir el portal de pagos. Intenta de nuevo en unos minutos." }
-  redirect(portal)
-}
-
-// Called when the customer comes back from checkout, in case the webhook hasn't arrived yet.
-export async function syncMySubscription(): Promise<{ synced: boolean }> {
-  if (!lemonConfig().ready) return { synced: false }
+// PayPal sends the customer back with ?subscription_id=...; confirm it right away instead of
+// waiting for the webhook. Only subscriptions created for this account are accepted.
+export async function confirmPayPalReturn(subscriptionId: string): Promise<{ synced: boolean }> {
+  if (!paypalConfig().ready || !/^I-[A-Z0-9]{6,}$/.test(subscriptionId)) return { synced: false }
   const { user } = await currentUser()
   try {
-    const subs = await listSubscriptionsByEmail(user.email!)
-    const latest = subs.sort((a, b) => Number(b.id) - Number(a.id))[0]
-    if (!latest) return { synced: false }
-    const linked = await applySubscription(latest.id, latest.attributes, user.id)
+    const linked = await refreshSubscription(subscriptionId, user.id)
     if (linked) revalidatePath("/dashboard", "layout")
     return { synced: !!linked }
   } catch (e) {
-    console.error("syncMySubscription:", e)
+    console.error("confirmPayPalReturn:", e)
     return { synced: false }
   }
+}
+
+export async function cancelMySubscription(): Promise<{ error?: string }> {
+  const { supabase, user } = await currentUser()
+  const sub = await mySubscription(supabase, user.id)
+  if (sub?.provider !== "paypal" || !sub.external_subscription_id) return { error: "No tienes un pago automático activo." }
+  try {
+    await cancelSubscription(sub.external_subscription_id, "Cancelada por el cliente desde Avero")
+    await refreshSubscription(sub.external_subscription_id, user.id)
+  } catch (e) {
+    console.error("cancelMySubscription:", e)
+    return { error: "No pudimos cancelar en PayPal. Intenta de nuevo o cancélala desde tu cuenta de PayPal." }
+  }
+  revalidatePath("/dashboard", "layout")
+  return {}
 }

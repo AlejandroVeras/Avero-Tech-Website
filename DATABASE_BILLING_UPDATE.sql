@@ -1,15 +1,15 @@
 -- =====================================================
--- AVERO TECHNOLOGY — COBRO AUTOMÁTICO CON LEMON SQUEEZY
+-- AVERO TECHNOLOGY — COBRO AUTOMÁTICO CON PAYPAL
 -- Ejecutar en Supabase SQL Editor DESPUÉS de DATABASE_SUPPORT_UPDATE.sql
 -- Es idempotente: se puede correr más de una vez sin romper nada.
 --
 -- Qué cambia:
--- * Las cuentas NUEVAS quedan "pendientes" (incomplete) hasta que ponen su
---   tarjeta en Lemon Squeezy; ahí empieza la prueba gratis y al terminar se
---   cobra solo. Sin tarjeta, la cuenta no puede escribir (y la app la
+-- * Las cuentas NUEVAS quedan "pendientes" (incomplete) hasta que autorizan
+--   el pago automático en PayPal (cuenta PayPal o tarjeta); ahí empieza la
+--   prueba gratis y al terminar se cobra solo. Sin tarjeta, la cuenta no puede escribir (y la app la
 --   bloquea por completo).
 -- * Las cuentas que ya existen NO cambian (cortesía, pagos manuales, etc.).
--- * Un cobro fallido (past_due) mantiene el acceso mientras Lemon Squeezy
+-- * Un cobro fallido (past_due) mantiene el acceso mientras PayPal
 --   reintenta; una suscripción cancelada lo mantiene hasta el final del
 --   período pagado.
 -- =====================================================
@@ -24,9 +24,13 @@ ALTER TABLE public.subscriptions ADD COLUMN IF NOT EXISTS external_status TEXT;
 ALTER TABLE public.subscriptions ADD COLUMN IF NOT EXISTS trial_ends_at TIMESTAMP WITH TIME ZONE;
 ALTER TABLE public.subscriptions ADD COLUMN IF NOT EXISTS card_brand TEXT;
 ALTER TABLE public.subscriptions ADD COLUMN IF NOT EXISTS card_last_four TEXT;
+-- Fecha real del próximo cobro según el procesador (la de acceso lleva un margen).
+ALTER TABLE public.subscriptions ADD COLUMN IF NOT EXISTS next_billing_at TIMESTAMP WITH TIME ZONE;
+-- Cuándo se le avisó por correo que su prueba gratis está por terminar.
+ALTER TABLE public.subscriptions ADD COLUMN IF NOT EXISTS trial_reminder_sent_at TIMESTAMP WITH TIME ZONE;
 
 ALTER TABLE public.subscriptions DROP CONSTRAINT IF EXISTS subscriptions_provider_check;
-ALTER TABLE public.subscriptions ADD CONSTRAINT subscriptions_provider_check CHECK (provider IN ('manual', 'lemonsqueezy'));
+ALTER TABLE public.subscriptions ADD CONSTRAINT subscriptions_provider_check CHECK (provider IN ('manual', 'paypal'));
 
 -- Índices únicos completos (no parciales): PostgREST los necesita para los
 -- upsert con on_conflict. Varios NULL siguen permitidos.
@@ -50,7 +54,7 @@ CREATE UNIQUE INDEX subscription_payments_external_unique
 
 
 -- ─── 3. REGISTRO DE AVISOS (WEBHOOKS) DEL PROCESADOR ─────────────────
--- Sirve para auditar qué mandó Lemon Squeezy y depurar problemas. Solo lo
+-- Sirve para auditar qué mandó PayPal y depurar problemas. Solo lo
 -- escribe el servidor (clave secreta); solo lo leen los administradores.
 CREATE TABLE IF NOT EXISTS public.billing_events (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,

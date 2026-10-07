@@ -52,7 +52,7 @@ export default async function PreciosPage() {
                       </a>
                     </Button>
                     <p className="text-[12px] text-pewter">
-                      El cobro es automático con tarjeta al terminar la prueba. ¿Prefieres transferencia? Escríbenos por WhatsApp.
+                      El cobro es automático con PayPal al terminar la prueba. ¿Prefieres transferencia? Escríbenos por WhatsApp.
                     </p>
                   </div>
                 }

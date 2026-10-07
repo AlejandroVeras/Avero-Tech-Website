@@ -4,10 +4,11 @@ import { cache } from "react"
 import { createClient } from "@/lib/supabase/server"
 
 export interface BillingInfo {
-  provider: "manual" | "lemonsqueezy"
+  provider: "manual" | "paypal"
   planId?: string
   cardBrand?: string
   cardLastFour?: string
+  nextChargeAt?: Date
 }
 
 export type AccessState =
@@ -28,7 +29,7 @@ export const getAccess = cache(async (): Promise<AccessState> => {
 
   const full = await supabase
     .from("subscriptions")
-    .select("status, plan_id, current_period_end, provider, card_brand, card_last_four, systems!inner(slug)")
+    .select("status, plan_id, current_period_end, trial_ends_at, next_billing_at, provider, card_brand, card_last_four, systems!inner(slug)")
     .eq("user_id", user.id)
     .eq("systems.slug", "gestion")
     .maybeSingle()
@@ -45,19 +46,28 @@ export const getAccess = cache(async (): Promise<AccessState> => {
   if (error || !data) return { kind: "unknown" }
   if (data.status === "incomplete") return { kind: "incomplete" }
 
-  const row = data as typeof data & { provider?: string; card_brand?: string | null; card_last_four?: string | null }
+  const row = data as typeof data & {
+    provider?: string
+    card_brand?: string | null
+    card_last_four?: string | null
+    trial_ends_at?: string | null
+    next_billing_at?: string | null
+  }
   const billing: BillingInfo = {
-    provider: row.provider === "lemonsqueezy" ? "lemonsqueezy" : "manual",
+    provider: row.provider === "paypal" ? "paypal" : "manual",
     planId: row.plan_id ?? undefined,
     cardBrand: row.card_brand ?? undefined,
     cardLastFour: row.card_last_four ?? undefined,
+    nextChargeAt: row.next_billing_at ? new Date(row.next_billing_at) : undefined,
   }
   const endsAt = data.current_period_end ? new Date(data.current_period_end) : null
   const notExpired = !endsAt || endsAt.getTime() > Date.now()
 
   if (data.status === "trialing" && endsAt && notExpired) {
-    const daysLeft = Math.max(1, Math.ceil((endsAt.getTime() - Date.now()) / 86_400_000))
-    return { kind: "trialing", endsAt, daysLeft, billing }
+    // Show the real charge date; current_period_end carries a small safety buffer.
+    const trialEnd = row.trial_ends_at ? new Date(row.trial_ends_at) : endsAt
+    const daysLeft = Math.max(1, Math.ceil((trialEnd.getTime() - Date.now()) / 86_400_000))
+    return { kind: "trialing", endsAt: trialEnd, daysLeft, billing }
   }
   if (["active", "trialing", "past_due", "canceled"].includes(data.status) && notExpired) {
     return { kind: "active", endsAt, billing, canceled: data.status === "canceled", pastDue: data.status === "past_due" }

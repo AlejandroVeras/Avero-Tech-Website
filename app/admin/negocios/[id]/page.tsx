@@ -34,10 +34,10 @@ export default async function NegocioPage({ params }: { params: Promise<{ id: st
     ["Plan", account.planId ? PLAN_LABELS[account.planId] ?? account.planId : "Sin suscripción"],
     [
       "Cobro",
-      account.provider === "lemonsqueezy"
-        ? `Automático con tarjeta${account.cardBrand ? ` ${account.cardBrand}` : ""}${account.cardLastFour ? ` •${account.cardLastFour}` : ""}`
+      account.provider === "paypal"
+        ? "Automático con PayPal"
         : account.status === "incomplete"
-          ? "No ha registrado tarjeta"
+          ? "No ha autorizado el pago"
           : "Manual",
     ],
     [

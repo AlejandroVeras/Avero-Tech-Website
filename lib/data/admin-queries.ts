@@ -60,7 +60,7 @@ export const listAccounts = cache(async (): Promise<{ accounts: AdminAccount[]; 
       products: r.products,
       publicProducts: r.public_products,
       lastPaymentAt: r.last_payment_at ?? undefined,
-      provider: r.provider === "lemonsqueezy" ? "lemonsqueezy" : "manual",
+      provider: r.provider === "paypal" ? "paypal" : "manual",
       cardBrand: r.card_brand ?? undefined,
       cardLastFour: r.card_last_four ?? undefined,
     })),

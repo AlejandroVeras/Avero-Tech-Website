@@ -1,16 +1,10 @@
 import Link from "next/link"
 import { AlertTriangle, CalendarClock, Clock, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import type { AccessState, BillingInfo } from "@/lib/data/access"
+import type { AccessState } from "@/lib/data/access"
 import { whatsappUrl } from "@/lib/site"
 
 const dateFormat = new Intl.DateTimeFormat("es-DO", { day: "numeric", month: "long", year: "numeric" })
-
-function cardLabel(b: BillingInfo) {
-  if (!b.cardLastFour) return "tu tarjeta"
-  const brand = b.cardBrand ? b.cardBrand.charAt(0).toUpperCase() + b.cardBrand.slice(1) : "Tarjeta"
-  return `${brand} •${b.cardLastFour}`
-}
 
 function Bar({
   tone,
@@ -46,7 +40,7 @@ function Bar({
 export function SubscriptionBanner({ access, businessName }: { access: AccessState; businessName: string }) {
   if (access.kind === "trialing") {
     const days = access.daysLeft === 1 ? "queda 1 día" : `quedan ${access.daysLeft} días`
-    if (access.billing.provider === "lemonsqueezy") {
+    if (access.billing.provider === "paypal") {
       return (
         <Bar
           tone="info"
@@ -57,7 +51,7 @@ export function SubscriptionBanner({ access, businessName }: { access: AccessSta
             </Button>
           }
         >
-          Prueba gratis: {days}. El {dateFormat.format(access.endsAt)} se cobrará automáticamente con {cardLabel(access.billing)}.
+          Prueba gratis: {days}. El {dateFormat.format(access.endsAt)} se cobrará automáticamente con PayPal.
         </Bar>
       )
     }
@@ -85,12 +79,12 @@ export function SubscriptionBanner({ access, businessName }: { access: AccessSta
         role="alert"
         action={
           <Button size="sm" asChild>
-            <Link href="/dashboard/suscripcion">Actualizar tarjeta</Link>
+            <Link href="/dashboard/suscripcion">Ver suscripción</Link>
           </Button>
         }
       >
-        No pudimos cobrar tu suscripción con {cardLabel(access.billing)}. Seguiremos intentando unos días; actualiza tu tarjeta
-        para no perder el acceso.
+        No pudimos cobrar tu suscripción con PayPal. Seguiremos intentando unos días; revisa tu forma de pago en
+        PayPal para no perder el acceso.
       </Bar>
     )
   }
@@ -102,7 +96,7 @@ export function SubscriptionBanner({ access, businessName }: { access: AccessSta
         icon={CalendarClock}
         action={
           <Button size="sm" variant="outline" asChild>
-            <Link href="/dashboard/suscripcion">Reanudar</Link>
+            <Link href="/dashboard/suscripcion">Ver suscripción</Link>
           </Button>
         }
       >

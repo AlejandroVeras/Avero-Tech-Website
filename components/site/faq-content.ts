@@ -14,12 +14,12 @@ export const SYSTEM_FAQ: FaqEntry[] = [
   {
     question: "¿Hay prueba gratis?",
     answer:
-      "Sí. Al crear tu cuenta registras tu tarjeta y empiezas tu prueba gratis con todas las funciones. No se cobra nada mientras dura la prueba, te avisamos por correo antes del primer cobro y, si cancelas antes, no pagas nada.",
+      "Sí. Al crear tu cuenta autorizas el pago automático con PayPal y empiezas tu prueba gratis con todas las funciones. No se cobra nada mientras dura la prueba y, si cancelas antes de que termine, no pagas nada.",
   },
   {
     question: "¿Cómo pago la suscripción?",
     answer:
-      "Con tarjeta de crédito o débito: el cobro es automático cada mes o cada año, según tu plan. Si prefieres pagar por transferencia, escríbenos por WhatsApp.",
+      "Con PayPal: con tu cuenta PayPal o, donde PayPal lo permita, con tarjeta. El cobro es automático cada mes o cada año, según tu plan. Si prefieres pagar por transferencia, escríbenos por WhatsApp.",
   },
   {
     question: "¿Puedo cancelar cuando quiera?",

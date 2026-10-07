@@ -16,7 +16,7 @@ export interface AdminAccount {
   products: number
   publicProducts: number
   lastPaymentAt?: string
-  provider?: "manual" | "lemonsqueezy"
+  provider?: "manual" | "paypal"
   cardBrand?: string
   cardLastFour?: string
 }
@@ -41,7 +41,7 @@ export const STATE_LABELS: Record<AccountState, string> = {
   pagando: "Pagando",
   cortesia: "Cortesía",
   prueba: "En prueba",
-  pendiente: "Sin tarjeta (pendiente)",
+  pendiente: "Sin activar (pendiente)",
   vencido: "Vencido / suspendido",
 }
 

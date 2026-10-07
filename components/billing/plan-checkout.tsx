@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { CheckCircle2, CreditCard, Loader2, Lock } from "lucide-react"
+import { CheckCircle2, Loader2, Lock, Wallet } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { startCheckout } from "@/lib/data/billing"
 import { formatUSD, whatsappUrl } from "@/lib/site"
@@ -15,11 +15,13 @@ export function PlanCheckout({
   trialDays,
   withTrial = true,
   businessName,
+  remindsByEmail = false,
 }: {
   plan: SystemPlan
   trialDays: number
   withTrial?: boolean
   businessName: string
+  remindsByEmail?: boolean
 }) {
   const hasAnnual = !!plan.annual_usd
   const [choice, setChoice] = useState<"monthly" | "annual">(hasAnnual ? "annual" : "monthly")
@@ -93,13 +95,13 @@ export function PlanCheckout({
           <p className="text-muted-foreground">
             Tienes {trialDays} días gratis con todas las funciones. Si no cancelas antes, el{" "}
             <strong className="text-foreground">{dateFormat.format(firstCharge)}</strong> se cobrarán{" "}
-            <strong className="text-foreground">{formatUSD(price)}</strong> a tu tarjeta y luego cada{" "}
-            {choice === "annual" ? "año" : "mes"}. Te avisamos por correo antes del cobro.
+            <strong className="text-foreground">{formatUSD(price)}</strong> con PayPal y luego cada{" "}
+            {choice === "annual" ? "año" : "mes"}.{remindsByEmail ? " Te avisamos por correo unos días antes del cobro." : ""}
           </p>
         </div>
       ) : (
         <div className="rounded-2xl bg-muted/60 p-4 text-sm">
-          Se cobrarán <strong>{formatUSD(price)}</strong> hoy y luego cada {choice === "annual" ? "año" : "mes"}. Puedes cancelar
+          Se cobrarán <strong>{formatUSD(price)}</strong> con PayPal hoy y luego cada {choice === "annual" ? "año" : "mes"}. Puedes cancelar
           cuando quieras.
         </div>
       )}
@@ -117,12 +119,12 @@ export function PlanCheckout({
           </>
         ) : (
           <>
-            <CreditCard className="h-4 w-4" aria-hidden /> {withTrial ? "Poner tarjeta y empezar la prueba" : "Activar suscripción"}
+            <Wallet className="h-4 w-4" aria-hidden /> {withTrial ? "Continuar con PayPal y empezar la prueba" : "Continuar con PayPal"}
           </>
         )}
       </Button>
       <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
-        <Lock className="h-3.5 w-3.5" aria-hidden /> Pago seguro procesado por Lemon Squeezy. Avero no ve ni guarda tu tarjeta.
+        <Lock className="h-3.5 w-3.5" aria-hidden /> Pago seguro con PayPal: con tu cuenta PayPal o, donde PayPal lo permita, con tarjeta. Avero no ve ni guarda tus datos de pago.
       </p>
       <p className="text-center text-xs text-muted-foreground">
         ¿Prefieres pagar por transferencia?{" "}

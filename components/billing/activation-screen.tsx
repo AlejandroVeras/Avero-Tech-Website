@@ -7,6 +7,7 @@ import { getPublishedSystem, getTrialDays } from "@/lib/data/systems"
 import { getCheckoutMode } from "@/lib/data/billing"
 import { FALLBACK_GESTION } from "@/lib/systems"
 import { whatsappUrl } from "@/lib/site"
+import { emailConfigured } from "@/lib/email"
 
 export async function ActivationScreen({ businessName, email }: { businessName: string; email: string }) {
   const [system, trialDays, mode] = await Promise.all([getPublishedSystem("gestion"), getTrialDays(), getCheckoutMode()])
@@ -23,7 +24,7 @@ export async function ActivationScreen({ businessName, email }: { businessName: 
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">Activa tu prueba gratis, {businessName}</h1>
           <p className="text-muted-foreground">
-            Para empezar a usar el sistema, elige tu plan y registra tu tarjeta. No se te cobra nada durante los{" "}
+            Para empezar a usar el sistema, elige tu plan y autoriza el pago automático con PayPal. No se te cobra nada durante los{" "}
             {trialDays} días de prueba.
           </p>
         </div>
@@ -34,11 +35,17 @@ export async function ActivationScreen({ businessName, email }: { businessName: 
 
         <div className="rounded-3xl border bg-background p-6 md:p-8">
           {mode.ready && plan ? (
-            <PlanCheckout plan={plan} trialDays={trialDays} withTrial={mode.withTrial} businessName={businessName} />
+            <PlanCheckout
+              plan={plan}
+              trialDays={trialDays}
+              withTrial={mode.withTrial}
+              businessName={businessName}
+              remindsByEmail={emailConfigured()}
+            />
           ) : (
             <div className="space-y-4 text-sm">
               <p>
-                Los pagos con tarjeta se están configurando. Mientras tanto, escríbenos y activamos tu cuenta en el momento.
+                Los pagos automáticos se están configurando. Mientras tanto, escríbenos y activamos tu cuenta en el momento.
               </p>
               <a
                 href={whatsappUrl(`Hola, acabo de crear mi cuenta (${email}) para "${businessName}" y quiero activarla.`)}
