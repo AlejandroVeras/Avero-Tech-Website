@@ -14,7 +14,7 @@ export default async function TiendaPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
+      <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Mi tienda en línea</h1>
           <p className="text-muted-foreground mt-1">
@@ -29,7 +29,7 @@ export default async function TiendaPage() {
             La tienda en línea todavía no está habilitada en el sistema. Vuelve a intentarlo más tarde.
           </p>
         )}
-      </main>
+      </div>
     </div>
   )
 }

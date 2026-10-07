@@ -19,7 +19,7 @@ export default async function InvoicesPage() {
   return (
     <div className="min-h-screen bg-background">
 
-      <main className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
+      <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Facturas</h1>
@@ -34,7 +34,7 @@ export default async function InvoicesPage() {
         </div>
 
         <InvoicesList invoices={invoices} />
-      </main>
+      </div>
     </div>
   )
 }

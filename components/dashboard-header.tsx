@@ -1,6 +1,6 @@
 "use client"
 
-import { Bell, UserIcon, Menu } from "lucide-react"
+import { UserIcon, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -30,6 +30,7 @@ import {
   Ticket,
   Store,
   ShieldCheck,
+  Wallet,
 } from "lucide-react"
 
 interface DashboardHeaderProps {
@@ -57,6 +58,7 @@ export function DashboardHeader({ user, isAdmin = false }: DashboardHeaderProps)
     { name: "Tickets", href: "/dashboard/tickets", icon: Ticket },
     { name: "Reportes", href: "/dashboard/reports", icon: BarChart3 },
     { name: "Configuración", href: "/dashboard/settings", icon: Settings },
+    { name: "Mi suscripción", href: "/dashboard/suscripcion", icon: Wallet },
     ...(isAdmin ? [{ name: "Administración", href: "/admin", icon: ShieldCheck }] : []),
   ]
 
@@ -68,7 +70,7 @@ export function DashboardHeader({ user, isAdmin = false }: DashboardHeaderProps)
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle Menu</span>
+                <span className="sr-only">Abrir menú</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-72 p-0">
@@ -113,14 +115,10 @@ export function DashboardHeader({ user, isAdmin = false }: DashboardHeaderProps)
         <div className="flex items-center gap-3">
           <ThemeToggle />
 
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5 text-muted-foreground" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full" />
-          </Button>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full bg-secondary/50">
+              <Button variant="ghost" size="icon" className="rounded-full bg-secondary/50" aria-label="Menú de la cuenta">
                 <UserIcon className="h-5 w-5 text-secondary-foreground" />
               </Button>
             </DropdownMenuTrigger>

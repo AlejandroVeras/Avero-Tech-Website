@@ -19,7 +19,7 @@ export default async function ExpensesPage() {
   return (
     <div className="min-h-screen bg-background">
 
-      <main className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
+      <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Gastos</h1>
@@ -34,7 +34,7 @@ export default async function ExpensesPage() {
         </div>
 
         <ExpensesList expenses={expenses} />
-      </main>
+      </div>
     </div>
   )
 }

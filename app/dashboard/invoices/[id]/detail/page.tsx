@@ -72,7 +72,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="max-w-6xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
+      <div className="max-w-6xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
         
         {/* Encabezado Principal */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -283,7 +283,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
             </Card>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   )
 }
