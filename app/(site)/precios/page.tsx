@@ -48,11 +48,11 @@ export default async function PreciosPage() {
                       asChild
                     >
                       <a href={whatsappUrl(`Hola, quiero contratar el ${plan.name} del sistema de gestión.`)} target="_blank" rel="noopener noreferrer">
-                        Contratar por WhatsApp
+                        Pagar por transferencia
                       </a>
                     </Button>
                     <p className="text-[12px] text-pewter">
-                      Por ahora el pago se coordina por WhatsApp y activamos tu cuenta en el momento.
+                      El cobro es automático con tarjeta al terminar la prueba. ¿Prefieres transferencia? Escríbenos por WhatsApp.
                     </p>
                   </div>
                 }

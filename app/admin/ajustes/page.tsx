@@ -16,6 +16,10 @@ export default async function AjustesPage() {
           <CardDescription>
             Cada negocio nuevo empieza con esta cantidad de días con todas las funciones. Al terminar queda en solo lectura
             hasta que registres un pago. Las cuentas que ya están en prueba no cambian.
+            <strong className="block mt-2 text-foreground">
+              Con cobro automático, la prueba real la define Lemon Squeezy en la variante del producto: pon aquí el mismo
+              número de días para que la web muestre lo correcto.
+            </strong>
           </CardDescription>
         </CardHeader>
         <CardContent>

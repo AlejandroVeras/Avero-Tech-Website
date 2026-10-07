@@ -15,6 +15,7 @@ import {
   Ticket,
   Store,
   ShieldCheck,
+  Wallet,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -33,6 +34,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
     { name: "Tickets", href: "/dashboard/tickets", icon: Ticket },
     { name: "Reportes", href: "/dashboard/reports", icon: BarChart3 },
     { name: "Configuración", href: "/dashboard/settings", icon: Settings },
+    { name: "Mi suscripción", href: "/dashboard/suscripcion", icon: Wallet },
     ...(isAdmin ? [{ name: "Administración", href: "/admin", icon: ShieldCheck }] : []),
   ]
 

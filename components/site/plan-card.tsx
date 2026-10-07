@@ -81,7 +81,7 @@ export function PlanCard({
           </p>
           {trialDays ? (
             <p className={cn("text-[13px] mt-2", inverted ? "text-white/70" : "text-obsidian/80 dark:text-foreground/80")}>
-              Prueba gratis {trialDays} días, sin tarjeta.
+              Prueba gratis {trialDays} días: hoy no se cobra nada.
             </p>
           ) : null}
         </div>

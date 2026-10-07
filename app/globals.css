@@ -16,7 +16,7 @@
   --secondary: #e2e2e5; /* Ash Veil */
   --secondary-foreground: #1d1d1f;
   --muted: #ececee;
-  --muted-foreground: #707070; /* Pewter */
+  --muted-foreground: #636366; /* keeps AA contrast on muted panels too */
   --accent: #f5f5f7;
   --accent-foreground: #1d1d1f;
   --destructive: oklch(0.577 0.245 27.325);
@@ -39,7 +39,7 @@
   --sidebar-border: #d6d6d6;
   --sidebar-ring: #0071e3;
   --pale-mist: #d6d6d6;
-  --pewter: #707070;
+  --pewter: #636366;
 }
 
 .dark {

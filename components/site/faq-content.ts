@@ -14,16 +14,17 @@ export const SYSTEM_FAQ: FaqEntry[] = [
   {
     question: "¿Hay prueba gratis?",
     answer:
-      "Sí. Al crear tu cuenta empiezas una prueba gratis con todas las funciones, sin poner tarjeta. Desde el sistema ves cuántos días te quedan.",
+      "Sí. Al crear tu cuenta registras tu tarjeta y empiezas tu prueba gratis con todas las funciones. No se cobra nada mientras dura la prueba, te avisamos por correo antes del primer cobro y, si cancelas antes, no pagas nada.",
   },
   {
     question: "¿Cómo pago la suscripción?",
     answer:
-      "Por ahora coordinamos el pago por WhatsApp. Te indicamos los métodos disponibles y activamos tu cuenta.",
+      "Con tarjeta de crédito o débito: el cobro es automático cada mes o cada año, según tu plan. Si prefieres pagar por transferencia, escríbenos por WhatsApp.",
   },
   {
     question: "¿Puedo cancelar cuando quiera?",
-    answer: "Sí. No hay contratos de permanencia ni penalizaciones; solo avísanos por WhatsApp.",
+    answer:
+      "Sí, desde \"Mi suscripción\" dentro del sistema, sin contratos ni penalizaciones. Mantienes el acceso hasta el final del período que ya pagaste.",
   },
   {
     question: "¿Qué pasa con mis datos si dejo de pagar?",

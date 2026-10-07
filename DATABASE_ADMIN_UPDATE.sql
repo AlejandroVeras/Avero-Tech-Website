@@ -37,7 +37,14 @@ CREATE POLICY "Cada negocio ve sus pagos"
 
 
 -- ─── 2. LISTA DE NEGOCIOS (solo administradores) ─────────────────────
-CREATE OR REPLACE FUNCTION public.admin_list_accounts()
+-- Solo se crea si no existe: DATABASE_BILLING_UPDATE.sql la amplía con más
+-- columnas y Postgres no permite cambiar las columnas de una función existente,
+-- así que volver a correr este archivo no debe intentar redefinirla.
+DO $$
+BEGIN
+  IF to_regprocedure('public.admin_list_accounts()') IS NULL THEN
+    EXECUTE $create$
+CREATE FUNCTION public.admin_list_accounts()
 RETURNS TABLE (
   user_id UUID,
   email TEXT,
@@ -55,7 +62,7 @@ RETURNS TABLE (
   public_products INTEGER,
   last_payment_at TIMESTAMP WITH TIME ZONE
 )
-LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path = public AS $$
+LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path = public AS $fn$
 BEGIN
   IF NOT public.is_platform_admin() THEN
     RAISE EXCEPTION 'Solo administradores de plataforma' USING ERRCODE = '42501';
@@ -83,6 +90,10 @@ BEGIN
   LEFT JOIN public.subscriptions s
     ON s.user_id = u.id AND s.system_id = (SELECT sy.id FROM public.systems sy WHERE sy.slug = 'gestion')
   ORDER BY u.created_at DESC;
+END;
+$fn$;
+    $create$;
+  END IF;
 END;
 $$;
 

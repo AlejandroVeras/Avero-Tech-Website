@@ -16,6 +16,7 @@ const STATE_STYLES: Record<AccountState, string> = {
   pagando: "bg-green-100 text-green-900 dark:bg-green-900/40 dark:text-green-100",
   cortesia: "bg-blue-100 text-blue-900 dark:bg-blue-900/40 dark:text-blue-100",
   prueba: "bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-100",
+  pendiente: "bg-slate-200 text-slate-900 dark:bg-slate-800 dark:text-slate-100",
   vencido: "bg-red-100 text-red-900 dark:bg-red-900/40 dark:text-red-100",
 }
 
@@ -23,6 +24,7 @@ const FILTERS: { value: "todos" | AccountState; label: string }[] = [
   { value: "todos", label: "Todos" },
   { value: "pagando", label: "Pagando" },
   { value: "prueba", label: "En prueba" },
+  { value: "pendiente", label: "Sin tarjeta" },
   { value: "cortesia", label: "Cortesía" },
   { value: "vencido", label: "Vencidos" },
 ]
@@ -117,7 +119,14 @@ export default async function NegociosPage({ searchParams }: { searchParams: Pro
                       <td className="px-4 py-3">
                         <Badge className={cn("rounded-full border-0", STATE_STYLES[state])}>{STATE_LABELS[state]}</Badge>
                       </td>
-                      <td className="px-4 py-3">{a.planId ? PLAN_LABELS[a.planId] ?? a.planId : "—"}</td>
+                      <td className="px-4 py-3">
+                        {a.planId ? PLAN_LABELS[a.planId] ?? a.planId : "—"}
+                        {a.provider === "lemonsqueezy" && (
+                          <span className="block text-xs text-muted-foreground">
+                            Tarjeta{a.cardLastFour ? ` •${a.cardLastFour}` : ""}
+                          </span>
+                        )}
+                      </td>
                       <td className="px-4 py-3 whitespace-nowrap">{periodLabel(a.periodEnd)}</td>
                       <td className="px-4 py-3 text-right tabular-nums">
                         {a.products}

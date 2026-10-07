@@ -16,6 +16,9 @@ export interface AdminAccount {
   products: number
   publicProducts: number
   lastPaymentAt?: string
+  provider?: "manual" | "lemonsqueezy"
+  cardBrand?: string
+  cardLastFour?: string
 }
 
 export interface AdminPayment {
@@ -32,12 +35,13 @@ export interface AdminPayment {
   createdAt: string
 }
 
-export type AccountState = "pagando" | "cortesia" | "prueba" | "vencido"
+export type AccountState = "pagando" | "cortesia" | "prueba" | "pendiente" | "vencido"
 
 export const STATE_LABELS: Record<AccountState, string> = {
   pagando: "Pagando",
   cortesia: "Cortesía",
   prueba: "En prueba",
+  pendiente: "Sin tarjeta (pendiente)",
   vencido: "Vencido / suspendido",
 }
 
@@ -49,6 +53,7 @@ export const PLAN_LABELS: Record<string, string> = {
 }
 
 export function accountState(a: AdminAccount): AccountState {
+  if (a.status === "incomplete") return "pendiente"
   if (!a.hasAccess) return "vencido"
   if (a.status === "trialing") return "prueba"
   if (a.planId === "courtesy" || !a.planId) return "cortesia"

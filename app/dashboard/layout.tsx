@@ -4,6 +4,7 @@ import { getAccess, isPlatformAdmin } from "@/lib/data/access"
 import { DashboardHeader } from "@/components/dashboard-header"
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { SubscriptionBanner } from "@/components/subscription-banner"
+import { ActivationScreen } from "@/components/billing/activation-screen"
 import { redirect } from "next/navigation"
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -14,6 +15,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   const [access, isAdmin] = await Promise.all([getAccess(), isPlatformAdmin()])
+
+  // New accounts can't use the system until they register a card and start the trial.
+  if (access.kind === "incomplete" && !isAdmin) {
+    return <ActivationScreen businessName={user.businessName} email={user.email} />
+  }
 
   return (
     <div className="flex min-h-screen bg-muted/40">

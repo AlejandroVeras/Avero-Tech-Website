@@ -33,6 +33,14 @@ export default async function NegocioPage({ params }: { params: Promise<{ id: st
     ["Último acceso", account.lastSignInAt ? dateFormat.format(new Date(account.lastSignInAt)) : "Nunca"],
     ["Plan", account.planId ? PLAN_LABELS[account.planId] ?? account.planId : "Sin suscripción"],
     [
+      "Cobro",
+      account.provider === "lemonsqueezy"
+        ? `Automático con tarjeta${account.cardBrand ? ` ${account.cardBrand}` : ""}${account.cardLastFour ? ` •${account.cardLastFour}` : ""}`
+        : account.status === "incomplete"
+          ? "No ha registrado tarjeta"
+          : "Manual",
+    ],
+    [
       "Vence",
       account.periodEnd
         ? `${dateFormat.format(new Date(account.periodEnd))}${days !== null ? (days < 0 ? ` (hace ${-days} días)` : ` (en ${days} días)`) : ""}`

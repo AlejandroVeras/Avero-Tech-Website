@@ -167,7 +167,7 @@ export default async function SystemPage({ params }: Params) {
             <SectionHeading title="Empieza en tres pasos" className="mb-12" />
             <ol className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
               {[
-                { title: "Crea tu cuenta", text: trialDays ? `Gratis por ${trialDays} días, sin tarjeta.` : "En menos de un minuto." },
+                { title: "Crea tu cuenta", text: trialDays ? ` días gratis; no se cobra nada hasta que termina la prueba.` : "En menos de un minuto." },
                 { title: "Sube tus productos", text: "Con sus precios, existencias y fotos." },
                 { title: "Vende y comparte", text: "Factura, lleva tus cuentas y manda el link de tu catálogo." },
               ].map((s, i) => (
@@ -202,7 +202,7 @@ export default async function SystemPage({ params }: Params) {
                       </Button>
                       <Button size="lg" variant="outline" className={`w-full ${outlineOnDark}`} asChild>
                         <a href={whatsappUrl(`Hola, quiero contratar el ${plan.name} del ${system.name}.`)} target="_blank" rel="noopener noreferrer">
-                          Contratar por WhatsApp
+                          Pagar por transferencia
                         </a>
                       </Button>
                     </div>
