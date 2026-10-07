@@ -22,7 +22,7 @@ export function ProductGallery({ images, name, tech = true }: { images: string[]
 
   return (
     <div className="space-y-3">
-      <div className="relative aspect-square rounded-3xl bg-fog-white dark:bg-white/5 overflow-hidden">
+      <div className="relative aspect-square rounded-3xl bg-white overflow-hidden">
         <Image
           src={images[active]}
           alt={images.length > 1 ? `${name}, foto ${active + 1} de ${images.length}` : name}
@@ -42,7 +42,7 @@ export function ProductGallery({ images, name, tech = true }: { images: string[]
                 aria-label={`Ver foto ${i + 1}`}
                 aria-current={i === active}
                 className={cn(
-                  "relative block w-20 h-20 rounded-2xl overflow-hidden bg-fog-white dark:bg-white/5 border-2 transition-colors",
+                  "relative block w-20 h-20 rounded-2xl overflow-hidden bg-white border-2 transition-colors",
                   i === active ? "border-primary" : "border-transparent hover:border-pale-mist",
                 )}
               >

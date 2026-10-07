@@ -23,7 +23,13 @@ function Cover({
 }) {
   const Placeholder = tech ? Laptop : Package
   return (
-    <div className={cn("relative bg-fog-white dark:bg-white/5 flex items-center justify-center overflow-hidden", className)}>
+    <div
+      className={cn(
+        "relative flex items-center justify-center overflow-hidden",
+        product.coverUrl ? "bg-white" : "bg-fog-white dark:bg-white/5",
+        className,
+      )}
+    >
       {product.coverUrl ? (
         <Image
           src={product.coverUrl}
