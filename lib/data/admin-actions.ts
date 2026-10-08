@@ -119,6 +119,13 @@ const systemSchema = z.object({
   sortOrder: z.coerce.number().int().min(0).max(999),
   features: jsonField(z.array(featureSchema).max(24, "Máximo 24 funciones"), "Funciones"),
   plans: jsonField(z.array(planSchema).max(4, "Máximo 4 planes"), "Planes"),
+  externalUrl: z
+    .string()
+    .trim()
+    .max(200)
+    .refine((v) => v === "" || /^https:\/\/[a-z0-9.-]+\.[a-z]{2,}(\/\S*)?$/i.test(v), "El enlace externo debe empezar con https://")
+    .optional(),
+  hadExternalUrl: z.string().optional(),
 })
 
 export async function saveSystem(formData: FormData): Promise<Result> {
@@ -142,6 +149,8 @@ export async function saveSystem(formData: FormData): Promise<Result> {
     features: d.features,
     plans: d.plans.map((p, i) => ({ ...p, id: p.id || slugify(p.name) || `plan-${i + 1}` })),
     updated_at: new Date().toISOString(),
+    // Only sent when used, so editing systems keeps working before DATABASE_EXTERNAL_SYSTEMS.sql runs.
+    ...(d.externalUrl || d.hadExternalUrl === "true" ? { external_url: d.externalUrl || null } : {}),
   }
 
   const { data, error } = d.id

@@ -27,6 +27,12 @@ export interface SaasSystem {
   status: SystemStatus
   published: boolean
   sortOrder: number
+  // Systems that live on their own domain (e.g. condominios.averotechnology.com) link out instead of /sistemas/[slug].
+  externalUrl?: string
+}
+
+export function systemHref(system: Pick<SaasSystem, "slug" | "externalUrl">) {
+  return system.externalUrl ?? `/sistemas/${system.slug}`
 }
 
 export const DEFAULT_TRIAL_DAYS = 14
@@ -100,5 +106,6 @@ export function toSystem(row: Record<string, unknown>): SaasSystem {
     status: row.status === "disponible" ? "disponible" : "proximamente",
     published: !!row.published,
     sortOrder: Number(row.sort_order ?? 0),
+    externalUrl: typeof row.external_url === "string" && row.external_url.startsWith("https://") ? row.external_url : undefined,
   }
 }

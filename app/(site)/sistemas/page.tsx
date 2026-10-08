@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { SectionHeading } from "@/components/site/section-heading"
 import { SystemIcon } from "@/components/site/system-icon"
 import { getPublishedSystems, getTrialDays } from "@/lib/data/systems"
+import { systemHref } from "@/lib/systems"
 import { formatUSD, whatsappUrl } from "@/lib/site"
 
 export const metadata: Metadata = {
@@ -36,7 +37,7 @@ export default async function SistemasPage() {
               return (
                 <li key={s.id}>
                   <Link
-                    href={`/sistemas/${s.slug}`}
+                    href={systemHref(s)}
                     className="group flex h-full flex-col rounded-3xl border border-white/10 bg-white/[0.04] p-8 transition-colors hover:border-sky-signal/50 focus-visible:outline-2 focus-visible:outline-sky-signal"
                   >
                     <div className="flex items-start justify-between gap-4">
@@ -72,7 +73,7 @@ export default async function SistemasPage() {
                         <p className="text-[13px] text-white/60">En desarrollo</p>
                       )}
                       <span className="inline-flex items-center gap-1 text-[14px] text-sky-signal">
-                        Ver más
+                        {s.externalUrl ? "Abrir" : "Ver más"}
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
                       </span>
                     </div>

@@ -56,6 +56,7 @@ export function SystemForm({ system }: { system?: SaasSystem }) {
     setError("")
     const fd = new FormData(e.currentTarget)
     if (system) fd.set("id", system.id)
+    if (system?.externalUrl) fd.set("hadExternalUrl", "true")
     fd.set("status", status)
     fd.set("published", published ? "true" : "false")
     fd.set("slug", slug || slugify(name))
@@ -108,6 +109,11 @@ export function SystemForm({ system }: { system?: SaasSystem }) {
                 <Input id="slug" value={slug} placeholder={slugify(name) || "nombre-del-sistema"} onChange={(e) => setSlug(e.target.value)} className="border-0 shadow-none pl-0.5 focus-visible:ring-0" />
               </div>
             </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="externalUrl">Enlace externo (opcional)</Label>
+            <Input id="externalUrl" name="externalUrl" type="url" maxLength={200} defaultValue={system?.externalUrl} placeholder="https://condominios.averotechnology.com" aria-describedby="externalUrl-help" />
+            <p id="externalUrl-help" className="text-xs text-muted-foreground">Si el sistema vive en su propio sitio, la tarjeta lleva directo ahí en lugar de a /sistemas/.</p>
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="tagline">Frase corta</Label>

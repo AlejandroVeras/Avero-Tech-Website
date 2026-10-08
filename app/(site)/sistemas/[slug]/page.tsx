@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import { BookOpen, FileSpreadsheet, HelpCircle, Link2, MessageCircle, Store } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { SectionHeading } from "@/components/site/section-heading"
@@ -37,6 +37,7 @@ export default async function SystemPage({ params }: Params) {
   const { slug } = await params
   const [system, trialDays] = await Promise.all([getPublishedSystem(slug), getTrialDays()])
   if (!system) notFound()
+  if (system.externalUrl) redirect(system.externalUrl)
 
   const available = system.status === "disponible"
   // Pains, onboarding steps and FAQ are written for the management system only.

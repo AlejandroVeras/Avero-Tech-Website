@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { listAllSystems } from "@/lib/data/admin-queries"
 import { formatUSD } from "@/lib/site"
+import { systemHref } from "@/lib/systems"
 
 export const metadata = { title: "Sistemas" }
 
@@ -56,7 +57,7 @@ export default async function AdminSistemasPage() {
                   </Button>
                   {s.published && (
                     <Button variant="ghost" size="sm" asChild>
-                      <a href={`/sistemas/${s.slug}`} target="_blank" rel="noopener noreferrer">
+                      <a href={systemHref(s)} target="_blank" rel="noopener noreferrer">
                         <ExternalLink className="h-4 w-4" /> Ver
                       </a>
                     </Button>
