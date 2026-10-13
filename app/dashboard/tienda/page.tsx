@@ -2,7 +2,7 @@ import { redirect } from "next/navigation"
 import { getUser } from "@/lib/auth"
 import { getMyStore } from "@/lib/data/store"
 import { StoreSettingsForm } from "@/components/store-settings-form"
-import { SITE_URL } from "@/lib/site"
+import { APP_URL } from "@/lib/site"
 
 export const metadata = { title: "Mi tienda en línea" }
 
@@ -23,7 +23,7 @@ export default async function TiendaPage() {
         </div>
 
         {store ? (
-          <StoreSettingsForm store={store} userId={user.id} siteUrl={SITE_URL} />
+          <StoreSettingsForm store={store} userId={user.id} siteUrl={APP_URL} />
         ) : (
           <p className="rounded-lg border bg-muted/40 p-4 text-sm text-muted-foreground">
             La tienda en línea todavía no está habilitada en el sistema. Vuelve a intentarlo más tarde.

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { createServiceClient } from "@/lib/supabase/admin"
 import { emailConfigured, sendEmail, trialEndingEmail } from "@/lib/email"
 import { toSystem } from "@/lib/systems"
-import { SITE_URL, formatUSD } from "@/lib/site"
+import { appUrl, formatUSD } from "@/lib/site"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
@@ -51,7 +51,7 @@ export async function GET(request: Request) {
         chargeDate: dateFormat.format(new Date(sub.trial_ends_at)),
         amount,
         period: annual ? "año" : "mes",
-        manageUrl: `${SITE_URL}/dashboard/suscripcion`,
+        manageUrl: appUrl("/dashboard/suscripcion"),
       })
       await sendEmail({ to: email, ...message })
       await db.from("subscriptions").update({ trial_reminder_sent_at: new Date().toISOString() }).eq("id", sub.id)

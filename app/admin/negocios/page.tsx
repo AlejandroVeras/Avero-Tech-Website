@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { appUrl } from "@/lib/site"
 import { Search } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
@@ -134,7 +135,7 @@ export default async function NegociosPage({ searchParams }: { searchParams: Pro
                       </td>
                       <td className="px-4 py-3">
                         {a.storeEnabled && a.slug ? (
-                          <a href={`/t/${a.slug}`} target="_blank" rel="noopener noreferrer" className="text-primary dark:text-sky-signal hover:underline">
+                          <a href={appUrl(`/t/${a.slug}`)} target="_blank" rel="noopener noreferrer" className="text-primary dark:text-sky-signal hover:underline">
                             /t/{a.slug}
                           </a>
                         ) : (

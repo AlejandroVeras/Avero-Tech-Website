@@ -7,7 +7,7 @@ import { Faq } from "@/components/site/faq"
 import { SYSTEM_FAQ } from "@/components/site/faq-content"
 import { getPublishedSystem, getTrialDays } from "@/lib/data/systems"
 import { FALLBACK_GESTION } from "@/lib/systems"
-import { whatsappUrl } from "@/lib/site"
+import { appUrl, whatsappUrl } from "@/lib/site"
 
 export const metadata: Metadata = {
   title: "Planes y precios",
@@ -39,7 +39,7 @@ export default async function PreciosPage() {
                 cta={
                   <div className="space-y-3 pt-2">
                     <Button size="lg" className="w-full rounded-full text-[14px] font-normal" asChild>
-                      <Link href="/signup">Probar gratis {trialDays} días</Link>
+                      <Link href={appUrl("/signup")}>Probar gratis {trialDays} días</Link>
                     </Button>
                     <Button
                       variant="outline"

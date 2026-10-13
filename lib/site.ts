@@ -1,4 +1,10 @@
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://averotechnology.com").replace(/\/$/, "")
+// The customers' management system (login, dashboard, public stores) lives on its own subdomain.
+export const APP_URL = (process.env.NEXT_PUBLIC_APP_URL ?? "https://inventario.averotechnology.com").replace(/\/$/, "")
+
+export function appUrl(path: string) {
+  return `${APP_URL}${path}`
+}
 
 export const WHATSAPP_NUMBER = "18298122103"
 export const WHATSAPP_DISPLAY = "(829) 812-2103"

@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card"
 import Link from "next/link"
 
-export function LoginForm() {
+export function LoginForm({ next = "/dashboard" }: { next?: string }) {
   const router = useRouter()
   const [error, setError] = useState<string>("")
   const [loading, setLoading] = useState(false)
@@ -36,7 +36,7 @@ export function LoginForm() {
       setError(signInError.message)
       setLoading(false)
     } else {
-      router.push("/dashboard")
+      router.push(next)
       router.refresh()
     }
   }

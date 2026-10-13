@@ -9,7 +9,7 @@ import { PlanCard } from "@/components/site/plan-card"
 import { Faq } from "@/components/site/faq"
 import { SYSTEM_FAQ } from "@/components/site/faq-content"
 import { getPublishedSystem, getTrialDays } from "@/lib/data/systems"
-import { SITE_URL, whatsappUrl } from "@/lib/site"
+import { APP_URL, appUrl, whatsappUrl } from "@/lib/site"
 
 type Params = { params: Promise<{ slug: string }> }
 
@@ -66,7 +66,7 @@ export default async function SystemPage({ params }: Params) {
             {available ? (
               <>
                 <Button size="lg" className="rounded-full px-6 text-[14px] font-normal bg-white text-obsidian hover:bg-white/90" asChild>
-                  <Link href="/signup">{trialDays ? `Probar gratis ${trialDays} días` : "Crear cuenta"}</Link>
+                  <Link href={appUrl("/signup")}>{trialDays ? `Probar gratis ${trialDays} días` : "Crear cuenta"}</Link>
                 </Button>
                 <Button size="lg" variant="outline" className={outlineOnDark} asChild>
                   <a href={whatsappUrl(waMessage)} target="_blank" rel="noopener noreferrer">
@@ -141,7 +141,7 @@ export default async function SystemPage({ params }: Params) {
             <div className="rounded-3xl border border-pale-mist/70 bg-card p-6 space-y-4">
               <div className="flex items-center gap-3 rounded-full bg-fog-white dark:bg-white/5 px-4 py-2.5 text-[13px] text-obsidian dark:text-foreground">
                 <Link2 className="h-4 w-4 text-pewter shrink-0" aria-hidden />
-                <span className="truncate">{SITE_URL.replace(/^https?:\/\//, "")}/t/tu-negocio</span>
+                <span className="truncate">{APP_URL.replace(/^https?:\/\//, "")}/t/tu-negocio</span>
               </div>
               <ul className="space-y-3 text-[14px] text-obsidian dark:text-foreground">
                 <li className="flex items-start gap-3">
@@ -199,7 +199,7 @@ export default async function SystemPage({ params }: Params) {
                   cta={
                     <div className="space-y-3">
                       <Button size="lg" className="w-full rounded-full text-[14px] font-normal bg-white text-obsidian hover:bg-white/90" asChild>
-                        <Link href="/signup">{trialDays ? `Probar gratis ${trialDays} días` : "Crear cuenta"}</Link>
+                        <Link href={appUrl("/signup")}>{trialDays ? `Probar gratis ${trialDays} días` : "Crear cuenta"}</Link>
                       </Button>
                       <Button size="lg" variant="outline" className={`w-full ${outlineOnDark}`} asChild>
                         <a href={whatsappUrl(`Hola, quiero contratar el ${plan.name} del ${system.name}.`)} target="_blank" rel="noopener noreferrer">

@@ -5,7 +5,7 @@ import { listAccounts, listPayments } from "@/lib/data/admin-queries"
 import { getPublishedSystem } from "@/lib/data/systems"
 import { getFinancialSummary } from "@/lib/data/reports"
 import { saasMetrics, daysUntil } from "@/lib/admin"
-import { formatDOP, formatUSD } from "@/lib/site"
+import { appUrl, formatDOP, formatUSD } from "@/lib/site"
 
 export const metadata = { title: "Resumen" }
 
@@ -86,7 +86,7 @@ export default async function AdminHome() {
           <p className="text-sm text-muted-foreground">No se pudieron cargar las finanzas del negocio.</p>
         )}
         <p className="text-xs text-muted-foreground">
-          Las ventas de equipos se llevan en <Link href="/dashboard/reports" className="underline">Reportes</Link>. Los cobros del
+          Las ventas de equipos se llevan en <Link href={appUrl("/dashboard/reports")} className="underline">Reportes</Link>. Los cobros del
           SaaS de arriba son aparte y no se suman a estas cifras.
         </p>
       </section>

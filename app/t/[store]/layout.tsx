@@ -5,7 +5,11 @@ import { MessageCircle, Store } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { getStoreBySlug } from "@/lib/data/public-catalog"
-import { whatsappUrl } from "@/lib/site"
+import type { Metadata } from "next"
+import { APP_URL, whatsappUrl } from "@/lib/site"
+
+// Stores are served from the app domain, so their canonical and share URLs resolve there.
+export const metadata: Metadata = { metadataBase: new URL(APP_URL) }
 
 export default async function TenantStoreLayout({
   children,

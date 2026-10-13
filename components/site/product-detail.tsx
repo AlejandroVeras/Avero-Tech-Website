@@ -5,7 +5,7 @@ import { ProductGallery } from "@/components/site/product-gallery"
 import { AddToCartButton } from "@/components/site/add-to-cart-button"
 import { ProductCard } from "@/components/site/product-card"
 import { CONDITION_LABELS, warrantyLabel, type PublicProduct, type PublicProductDetail } from "@/lib/catalog"
-import { SITE_URL, formatDOP, whatsappUrl } from "@/lib/site"
+import { APP_URL, SITE_URL, formatDOP, whatsappUrl } from "@/lib/site"
 
 const CONDITION_SCHEMA = {
   nuevo: "https://schema.org/NewCondition",
@@ -30,7 +30,8 @@ export function ProductDetail({
   showCart: boolean
   deliveryNote?: string
 }) {
-  const url = `${SITE_URL}${basePath}/${product.slug}`
+  // Store pages live on the app domain; the Avero catalog lives on the main one.
+  const url = `${basePath.startsWith("/t/") ? APP_URL : SITE_URL}${basePath}/${product.slug}`
   const message = `Hola ${storeName}, me interesa el ${product.name} (${formatDOP(product.price)}).\n${url}`
   const warranty = warrantyLabel(product.warrantyMonths)
   const eyebrow = [product.brand, product.condition && CONDITION_LABELS[product.condition], product.category]

@@ -6,11 +6,14 @@ import { LoginForm } from "@/components/login-form"
 
 export const metadata = { title: "Iniciar sesión", robots: { index: false } }
 
-export default async function LoginPage() {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
+  const { next } = await searchParams
+  // Only same-site paths, so the login can't be used to bounce people to another site.
+  const target = next && /^\/(?!\/)/.test(next) ? next : "/dashboard"
   const user = await getUser()
 
   if (user) {
-    redirect("/dashboard")
+    redirect(target)
   }
 
   return (
@@ -18,7 +21,7 @@ export default async function LoginPage() {
       <Link href="/" aria-label="Avero Tech, inicio">
         <Logo className="h-10" />
       </Link>
-      <LoginForm />
+      <LoginForm next={target} />
     </main>
   )
 }

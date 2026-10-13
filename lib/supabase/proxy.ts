@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
+import { cookieOptions } from "./cookies"
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -10,6 +11,7 @@ export async function updateSession(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      cookieOptions,
       cookies: {
         getAll() {
           return request.cookies.getAll()
@@ -33,6 +35,7 @@ export async function updateSession(request: NextRequest) {
   if ((path.startsWith("/dashboard") || path.startsWith("/admin")) && !user) {
     const url = request.nextUrl.clone()
     url.pathname = "/login"
+    url.search = path.startsWith("/admin") ? `?next=${encodeURIComponent(path)}` : ""
     return NextResponse.redirect(url)
   }
 

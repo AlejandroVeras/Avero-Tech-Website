@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { MapPin, Phone, Mail } from "lucide-react"
 import { Logo } from "@/components/site/logo"
-import { NAV_LINKS, WHATSAPP_DISPLAY, CONTACT_EMAIL, LOCATION, whatsappUrl } from "@/lib/site"
+import { NAV_LINKS, appUrl, WHATSAPP_DISPLAY, CONTACT_EMAIL, LOCATION, whatsappUrl } from "@/lib/site"
 
 const SERVICE_LINKS = [
   { label: "Venta de equipos", href: "/catalogo" },
@@ -74,7 +74,7 @@ export function SiteFooter({ isLoggedIn }: { isLoggedIn: boolean }) {
         <div className="border-t border-pale-mist mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[11px] text-pewter">&copy; {new Date().getFullYear()} Avero Technology. Todos los derechos reservados.</p>
           <Link
-            href={isLoggedIn ? "/dashboard" : "/login"}
+            href={appUrl(isLoggedIn ? "/dashboard" : "/login")}
             className="text-[11px] text-sapphire dark:text-sky-signal hover:underline underline-offset-4"
           >
             {isLoggedIn ? "Dashboard" : "Iniciar sesión"}

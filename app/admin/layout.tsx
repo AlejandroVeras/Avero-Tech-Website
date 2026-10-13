@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { appUrl } from "@/lib/site"
 import { ArrowLeft, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -26,7 +27,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <div className="flex items-center gap-1">
             <ThemeToggle />
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/dashboard">
+              <Link href={appUrl("/dashboard")}>
                 <ArrowLeft className="h-4 w-4" /> Mi negocio
               </Link>
             </Button>

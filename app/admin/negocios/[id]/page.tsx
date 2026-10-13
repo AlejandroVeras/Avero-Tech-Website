@@ -8,7 +8,7 @@ import { RecordPaymentForm, StatusButtons } from "@/components/admin/subscriptio
 import { listAccounts, listPayments } from "@/lib/data/admin-queries"
 import { getPublishedSystem } from "@/lib/data/systems"
 import { accountState, daysUntil, PLAN_LABELS, STATE_LABELS } from "@/lib/admin"
-import { formatDOP, formatUSD } from "@/lib/site"
+import { appUrl, formatDOP, formatUSD } from "@/lib/site"
 
 export const metadata = { title: "Negocio" }
 
@@ -72,7 +72,7 @@ export default async function NegocioPage({ params }: { params: Promise<{ id: st
           </Button>
           {account.storeEnabled && account.slug && (
             <Button variant="outline" size="sm" asChild>
-              <a href={`/t/${account.slug}`} target="_blank" rel="noopener noreferrer">
+              <a href={appUrl(`/t/${account.slug}`)} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-4 w-4" /> Ver tienda
               </a>
             </Button>

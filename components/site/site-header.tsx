@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Logo } from "@/components/site/logo"
 import { CartSheet } from "@/components/site/cart-sheet"
-import { NAV_LINKS } from "@/lib/site"
+import { NAV_LINKS, appUrl } from "@/lib/site"
 import { cn } from "@/lib/utils"
 
 function isActive(pathname: string, href: string) {
@@ -56,7 +56,7 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
           <ThemeToggle />
           <CartSheet />
           <Button asChild size="sm" className="hidden sm:flex rounded-full">
-            <Link href={isLoggedIn ? "/dashboard" : "/login"}>{isLoggedIn ? "Dashboard" : "Mi cuenta"}</Link>
+            <Link href={appUrl(isLoggedIn ? "/dashboard" : "/login")}>{isLoggedIn ? "Dashboard" : "Mi cuenta"}</Link>
           </Button>
           <Button
             variant="ghost"
@@ -100,7 +100,7 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
                 )
               })}
               <Link
-                href={isLoggedIn ? "/dashboard" : "/login"}
+                href={appUrl(isLoggedIn ? "/dashboard" : "/login")}
                 className="block w-full px-3 py-2.5 text-body text-sapphire dark:text-sky-signal rounded-full hover:bg-muted"
               >
                 {isLoggedIn ? "Ir al Dashboard" : "Iniciar sesión"}
