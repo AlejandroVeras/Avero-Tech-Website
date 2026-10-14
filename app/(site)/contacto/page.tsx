@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/site/section-heading"
 import { CONTACT_EMAIL, LOCATION, WHATSAPP_DISPLAY, whatsappUrl } from "@/lib/site"
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/contacto" },
   title: "Contacto",
   description: "Escríbenos por WhatsApp o correo. Avero Technology, Santo Domingo, República Dominicana.",
 }

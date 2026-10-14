@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ChevronRight, MessageCircle, ShieldCheck, Truck, CheckCircle2, XCircle } from "lucide-react"
+import { ChevronRight, MessageCircle, ShieldCheck, Truck, CheckCircle2, XCircle, Wallet } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ProductGallery } from "@/components/site/product-gallery"
 import { AddToCartButton } from "@/components/site/add-to-cart-button"
@@ -128,6 +128,25 @@ export function ProductDetail({
                 {showCart && <AddToCartButton product={product} />}
               </div>
 
+              {/* Avero's own catalog: how buying works, so nobody has to ask before writing. */}
+              {basePath === "/catalogo" && (
+                <ul className="mt-6 space-y-2 rounded-2xl border border-pale-mist/70 p-4 text-[14px] text-pewter">
+                  <li className="flex items-center gap-2">
+                    <Wallet className="h-4 w-4 shrink-0 text-sapphire dark:text-sky-signal" aria-hidden />
+                    Pago por transferencia o en efectivo.
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 shrink-0 text-sapphire dark:text-sky-signal" aria-hidden />
+                    <span>
+                      Revisado antes de entregar.{" "}
+                      <Link href="/garantia" className="text-sapphire underline underline-offset-4 dark:text-sky-signal">
+                        Garantía y devoluciones
+                      </Link>
+                    </span>
+                  </li>
+                </ul>
+              )}
+
               {product.description && (
                 <div className="mt-10">
                   <h2 className="text-lg font-semibold text-obsidian dark:text-foreground">Descripción</h2>
@@ -152,6 +171,27 @@ export function ProductDetail({
           )}
         </div>
       </section>
+
+      {/* On phones the main action stays in reach while scrolling the specs. */}
+      {whatsapp && (
+        <>
+          <div aria-hidden className="h-20 md:hidden" />
+          <div className="fixed inset-x-0 bottom-0 z-40 border-t border-pale-mist/70 bg-background/95 px-4 py-3 backdrop-blur md:hidden">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="truncate text-[13px] text-pewter">{product.name}</p>
+                <p className="text-[17px] font-semibold text-obsidian dark:text-foreground">{formatDOP(product.price)}</p>
+              </div>
+              <Button className="shrink-0 rounded-full px-5 text-[14px] font-normal" asChild>
+                <a href={whatsappUrl(message, whatsapp)} target="_blank" rel="noopener noreferrer">
+                  <MessageCircle className="h-4 w-4" aria-hidden />
+                  Consultar
+                </a>
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
 
       {related.length > 0 && (
         <section className="py-16 md:py-24 bg-gradient-to-b from-fog-white to-background dark:from-white/[0.03]">

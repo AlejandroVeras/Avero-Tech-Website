@@ -6,6 +6,7 @@ import { STORE_FAQ } from "@/components/site/faq-content"
 import { getStoreProducts } from "@/lib/data/public-catalog"
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/catalogo" },
   title: "Catálogo de equipos",
   description: "Laptops, PCs y periféricos disponibles para entrega inmediata en Santo Domingo.",
 }

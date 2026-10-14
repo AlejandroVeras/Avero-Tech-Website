@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: '%s · Avero Technology',
   },
   description:
-    'Equipos tecnológicos, sistemas de gestión para pequeños negocios y soporte IT en Santo Domingo, República Dominicana.',
+    'Equipos tecnológicos, sistemas para pequeños negocios (inventario, citas y condominios) y soporte IT en Santo Domingo, República Dominicana.',
   openGraph: {
     type: 'website',
     locale: 'es_DO',

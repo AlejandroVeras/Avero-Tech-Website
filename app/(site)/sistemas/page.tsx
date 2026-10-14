@@ -9,6 +9,7 @@ import { isAnnualOnly, systemHref } from "@/lib/systems"
 import { formatUSD, whatsappUrl } from "@/lib/site"
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/sistemas" },
   title: "Sistemas",
   description:
     "Software para administrar tu negocio: inventario, ventas a crédito, facturas con ITBIS y catálogo en línea. Hecho en República Dominicana.",
@@ -30,7 +31,7 @@ export default async function SistemasPage() {
             className="mb-14"
           />
 
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-5xl mx-auto">
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
             {systems.map((s) => {
               const plan = s.plans[0]
               const freeDays = s.trialDays ?? trialDays
@@ -79,7 +80,7 @@ export default async function SistemasPage() {
                         <p className="text-[13px] text-white/60">En desarrollo</p>
                       )}
                       <span className="inline-flex items-center gap-1 text-[14px] text-sky-signal">
-                        {s.externalUrl ? "Abrir" : "Ver más"}
+                        Conocer
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
                       </span>
                     </div>

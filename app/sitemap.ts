@@ -21,6 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/precios`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/soporte`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${SITE_URL}/contacto`, changeFrequency: "yearly", priority: 0.5 },
+    ...["terminos", "privacidad", "garantia"].map((p) => ({ url: `${SITE_URL}/${p}`, changeFrequency: "yearly" as const, priority: 0.2 })),
     ...(sameDomain ? await storeEntries(SITE_URL) : []),
   ]
 }

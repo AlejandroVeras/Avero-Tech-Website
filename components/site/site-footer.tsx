@@ -5,9 +5,17 @@ import { NAV_LINKS, appUrl, WHATSAPP_DISPLAY, CONTACT_EMAIL, LOCATION, whatsappU
 
 const SERVICE_LINKS = [
   { label: "Venta de equipos", href: "/catalogo" },
-  { label: "Sistemas de gestión", href: "/sistemas" },
+  { label: "Avero Inventario", href: "/sistemas/gestion" },
+  { label: "Avero Citas", href: "https://citas.averotechnology.com" },
+  { label: "Avero Condominios", href: "https://condominios.averotechnology.com" },
   { label: "Soporte técnico", href: "/soporte" },
   { label: "Planes y precios", href: "/precios" },
+]
+
+const LEGAL_LINKS = [
+  { label: "Términos", href: "/terminos" },
+  { label: "Privacidad", href: "/privacidad" },
+  { label: "Garantía y devoluciones", href: "/garantia" },
 ]
 
 export function SiteFooter({ isLoggedIn }: { isLoggedIn: boolean }) {
@@ -73,11 +81,18 @@ export function SiteFooter({ isLoggedIn }: { isLoggedIn: boolean }) {
 
         <div className="border-t border-pale-mist mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[11px] text-pewter">&copy; {new Date().getFullYear()} Avero Technology. Todos los derechos reservados.</p>
+          <nav aria-label="Legal" className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+            {LEGAL_LINKS.map((l) => (
+              <Link key={l.href} href={l.href} className="text-[11px] text-pewter hover:text-obsidian dark:hover:text-foreground">
+                {l.label}
+              </Link>
+            ))}
+          </nav>
           <Link
             href={appUrl(isLoggedIn ? "/dashboard" : "/login")}
             className="text-[11px] text-sapphire dark:text-sky-signal hover:underline underline-offset-4"
           >
-            {isLoggedIn ? "Dashboard" : "Iniciar sesión"}
+            {isLoggedIn ? "Ir al sistema" : "Entrar al sistema"}
           </Link>
         </div>
       </div>

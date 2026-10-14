@@ -48,7 +48,7 @@ export const DEFAULT_TRIAL_DAYS = 30
 export const FALLBACK_GESTION: SaasSystem = {
   id: "gestion",
   slug: "gestion",
-  name: "Sistema de gestión",
+  name: "Avero Inventario",
   tagline: "Inventario, ventas a crédito, facturas y tu catálogo en línea, en un solo lugar.",
   description:
     "Deja la libreta y el Excel. Controla lo que tienes, lo que vendes, lo que te deben y lo que gastas, desde el navegador del celular o la computadora, sin instalar nada.",

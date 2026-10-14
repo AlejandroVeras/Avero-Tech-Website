@@ -5,7 +5,7 @@ import { getUser } from "@/lib/auth"
 import { SignupForm } from "@/components/signup-form"
 import { getTrialDays } from "@/lib/data/systems"
 
-export const metadata = { title: "Crear cuenta", description: "Registra tu negocio y prueba gratis el sistema de gestión de Avero Technology." }
+export const metadata = { title: "Crear cuenta", description: "Registra tu negocio y prueba gratis Avero Inventario: inventario, facturas con ITBIS y ventas a crédito." }
 
 export default async function SignupPage() {
   const user = await getUser()

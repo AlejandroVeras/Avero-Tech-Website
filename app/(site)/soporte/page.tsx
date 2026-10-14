@@ -6,6 +6,7 @@ import { Faq } from "@/components/site/faq"
 import { SUPPORT_FAQ } from "@/components/site/faq-content"
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/soporte" },
   title: "Soporte técnico IT",
   description: "Reparación, mantenimiento, redes, servidores y consultoría IT en Santo Domingo.",
 }

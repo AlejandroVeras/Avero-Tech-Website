@@ -56,7 +56,7 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
           <ThemeToggle />
           <CartSheet />
           <Button asChild size="sm" className="hidden sm:flex rounded-full">
-            <Link href={appUrl(isLoggedIn ? "/dashboard" : "/login")}>{isLoggedIn ? "Dashboard" : "Mi cuenta"}</Link>
+            <Link href={appUrl(isLoggedIn ? "/dashboard" : "/login")}>{isLoggedIn ? "Ir al sistema" : "Entrar al sistema"}</Link>
           </Button>
           <Button
             variant="ghost"
@@ -103,7 +103,7 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
                 href={appUrl(isLoggedIn ? "/dashboard" : "/login")}
                 className="block w-full px-3 py-2.5 text-body text-sapphire dark:text-sky-signal rounded-full hover:bg-muted"
               >
-                {isLoggedIn ? "Ir al Dashboard" : "Iniciar sesión"}
+                {isLoggedIn ? "Ir al sistema" : "Entrar al sistema"}
               </Link>
             </div>
           </motion.nav>

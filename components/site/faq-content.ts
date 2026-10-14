@@ -2,7 +2,7 @@ import type { FaqEntry } from "@/components/site/faq"
 
 export const SYSTEM_FAQ: FaqEntry[] = [
   {
-    question: "¿Cómo funciona el sistema de gestión?",
+    question: "¿Cómo funciona Avero Inventario?",
     answer:
       "Es una aplicación web: entras desde el navegador y tienes inventario, ventas a crédito, clientes, facturas y cotizaciones con ITBIS, gastos y reportes. Pagas una suscripción mensual o anual.",
   },
@@ -14,7 +14,7 @@ export const SYSTEM_FAQ: FaqEntry[] = [
   {
     question: "¿Hay prueba gratis?",
     answer:
-      "Sí. Al crear tu cuenta autorizas el pago automático con PayPal y empiezas tu prueba gratis con todas las funciones. No se cobra nada mientras dura la prueba y, si cancelas antes de que termine, no pagas nada.",
+      "Sí, 30 días con todas las funciones y sin tarjeta. Antes de que termine te avisamos para que elijas tu plan; si no sigues, no pagas nada.",
   },
   {
     question: "¿Cómo pago la suscripción?",
@@ -37,7 +37,7 @@ export const STORE_FAQ: FaqEntry[] = [
   {
     question: "¿Los equipos tienen garantía?",
     answer:
-      "Sí. Todos nuestros equipos nuevos y reacondicionados incluyen garantía. El período varía según el producto; te lo confirmamos al momento de la compra.",
+      "Sí. Todos nuestros equipos incluyen garantía. El período aparece en la página de cada equipo y en tu factura; los detalles están en nuestra política de garantía y devoluciones.",
   },
   {
     question: "¿Cómo compro un equipo?",

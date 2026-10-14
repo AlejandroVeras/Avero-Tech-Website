@@ -38,11 +38,11 @@ export function Hero({
         <div className="mx-auto max-w-[980px] text-center">
           <motion.div {...rise(0)}>
             <Link
-              href="/sistemas/gestion"
+              href="/sistemas"
               className="group inline-flex items-center gap-2 rounded-full border border-pale-mist/80 bg-card/70 px-3 py-1.5 text-[13px] text-obsidian dark:text-foreground backdrop-blur hover:border-sapphire/40"
             >
               <span className="rounded-full bg-primary px-2 py-0.5 text-[11px] font-medium text-primary-foreground">Nuevo</span>
-              Tu catálogo en línea, incluido en el sistema
+              Avero Citas y Avero Condominios ya disponibles
               <ArrowRight className="h-3.5 w-3.5 text-sapphire dark:text-sky-signal transition-transform group-hover:translate-x-0.5" aria-hidden />
             </Link>
           </motion.div>
@@ -58,7 +58,7 @@ export function Hero({
           </motion.h1>
 
           <motion.p {...rise(0.16)} className="mx-auto mt-5 max-w-2xl text-subheading text-pewter text-balance">
-            Equipos listos para trabajar, un sistema para administrar tu negocio y soporte IT cuando lo necesitas. Todo en un
+            Equipos listos para trabajar, sistemas para administrar tu negocio y soporte IT cuando lo necesitas. Todo en un
             solo lugar, en Santo Domingo.
           </motion.p>
 
@@ -72,7 +72,7 @@ export function Hero({
               className="h-12 rounded-full px-7 text-[15px] font-normal border-sapphire text-sapphire bg-transparent hover:bg-sapphire/5 hover:text-sapphire dark:border-sky-signal dark:text-sky-signal"
               asChild
             >
-              <Link href="/sistemas/gestion">Conocer el sistema</Link>
+              <Link href="/sistemas">Ver sistemas</Link>
             </Button>
           </motion.div>
 

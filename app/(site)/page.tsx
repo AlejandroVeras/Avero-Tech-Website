@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import {
@@ -24,9 +25,12 @@ import { Button } from "@/components/ui/button"
 import { SectionHeading } from "@/components/site/section-heading"
 import { ProductCard } from "@/components/site/product-card"
 import { Hero } from "@/components/site/home/hero"
+import { SystemsShowcase } from "@/components/site/systems-showcase"
 import { getStoreProducts } from "@/lib/data/public-catalog"
-import { getTrialDays } from "@/lib/data/systems"
+import { getPublishedSystems, getTrialDays } from "@/lib/data/systems"
 import { formatDOP, whatsappUrl } from "@/lib/site"
+
+export const metadata: Metadata = { alternates: { canonical: "/" } }
 
 const STEPS = [
   { icon: Search, title: "Elige tu equipo", text: "Mira el catálogo con fotos, especificaciones y precios en pesos." },
@@ -43,7 +47,7 @@ const VALUES = [
 const card = "group relative overflow-hidden rounded-[28px] border border-pale-mist/70 bg-card transition-colors hover:border-sapphire/40"
 
 export default async function HomePage() {
-  const [products, trialDays] = await Promise.all([getStoreProducts(), getTrialDays()])
+  const [products, trialDays, systems] = await Promise.all([getStoreProducts(), getTrialDays(), getPublishedSystems()])
   const available = products.filter((p) => p.inStock)
   const featured = available.slice(0, 4)
   const withPhotos = available.filter((p) => p.coverUrl)
@@ -102,7 +106,7 @@ export default async function HomePage() {
 
             <Link href="/sistemas/gestion" className={`${card} md:row-span-2 flex flex-col bg-obsidian text-white border-white/10 hover:border-sky-signal/50 dark:bg-white/[0.04]`}>
               <div className="flex flex-1 flex-col p-8">
-                <span className="text-caption uppercase tracking-[0.16em] text-white/50">Sistema de gestión</span>
+                <span className="text-caption uppercase tracking-[0.16em] text-white/50">Avero Inventario</span>
                 <h3 className="mt-3 text-heading-sm font-semibold leading-tight">Tu negocio, organizado</h3>
                 <p className="mt-2 text-[15px] text-white/70">
                   Inventario, ventas a crédito y facturas con ITBIS desde el celular o la computadora.
@@ -161,11 +165,33 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── Sistemas ── */}
+      <section className="py-20 md:py-28 bg-background">
+        <div className="container mx-auto px-4">
+          <SectionHeading
+            eyebrow="Sistemas"
+            title="Un sistema para cada tipo de negocio"
+            description="Web, en español y desde el celular. Pruébalos gratis, sin tarjeta."
+            className="mb-12"
+          />
+          <SystemsShowcase systems={systems} defaultTrialDays={trialDays} />
+          <p className="mt-10 text-center">
+            <Link href="/precios" className="inline-flex items-center gap-1 text-[15px] text-sapphire dark:text-sky-signal hover:underline underline-offset-4">
+              Ver planes y precios <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
+          </p>
+        </div>
+      </section>
+
       {/* ── Equipos disponibles ── */}
       {featured.length > 0 && (
-        <section className="py-20 md:py-28 bg-background">
+        <section className="py-20 md:py-28 bg-gradient-to-b from-fog-white to-background dark:from-white/[0.03]">
           <div className="container mx-auto px-4">
-            <SectionHeading title="Disponibles ahora" description="Listos para entrega inmediata." className="mb-10" />
+            <SectionHeading
+              title={featured.length === 1 ? "Disponible ahora" : "Disponibles ahora"}
+              description="Listos para entrega inmediata. ¿Buscas otro modelo? Te lo conseguimos."
+              className="mb-10"
+            />
             <ul className="mx-auto flex max-w-6xl flex-wrap justify-center gap-5">
               {featured.map((p) => (
                 <li key={p.id} className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]">
@@ -173,17 +199,25 @@ export default async function HomePage() {
                 </li>
               ))}
             </ul>
-            <p className="mt-10 text-center">
+            <p className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-center">
               <Link href="/catalogo" className="inline-flex items-center gap-1 text-[15px] text-sapphire dark:text-sky-signal hover:underline underline-offset-4">
                 Ver todo el catálogo <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>
+              <a
+                href={whatsappUrl("Hola Avero Technology, busco un equipo que no veo en el catálogo.")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[15px] text-sapphire dark:text-sky-signal hover:underline underline-offset-4"
+              >
+                <MessageCircle className="h-4 w-4" aria-hidden /> Pedir otro modelo por WhatsApp
+              </a>
             </p>
           </div>
         </section>
       )}
 
       {/* ── Cómo comprar ── */}
-      <section className="py-20 md:py-28 bg-gradient-to-b from-fog-white to-background dark:from-white/[0.03]">
+      <section className="py-20 md:py-28 bg-background">
         <div className="container mx-auto px-4">
           <SectionHeading title="Comprar es así de fácil" className="mb-12" />
           <ol className="mx-auto grid max-w-5xl grid-cols-1 gap-5 md:grid-cols-3">
