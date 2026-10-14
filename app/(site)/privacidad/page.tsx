@@ -42,22 +42,6 @@ export default function PrivacidadPage() {
           body: <p>Si usas uno de nuestros sistemas, la información de tus clientes, pacientes o propietarios es tuya. Tú decides qué registras; nosotros solo la guardamos y procesamos para prestarte el servicio, nunca la vendemos ni la usamos para otros fines.</p>,
         },
         {
-          title: "Con quién la compartimos",
-          body: (
-            <>
-              <p>No vendemos tus datos. Solo los compartimos con los proveedores que necesitamos para operar:</p>
-              <ul>
-                <li><strong>Supabase:</strong> base de datos y cuentas de usuario.</li>
-                <li><strong>Vercel:</strong> alojamiento del sitio y los sistemas.</li>
-                <li><strong>PayPal:</strong> procesamiento de pagos de suscripciones. No guardamos números de tarjeta.</li>
-                <li><strong>Resend:</strong> envío de correos del servicio.</li>
-                <li><strong>WhatsApp (Meta):</strong> cuando nos escribes por ese canal.</li>
-              </ul>
-              <p>Estos proveedores pueden almacenar datos fuera de la República Dominicana, con medidas de seguridad propias. También compartiremos información si una autoridad competente lo exige por ley.</p>
-            </>
-          ),
-        },
-        {
           title: "Cuánto tiempo la guardamos",
           body: <p>Mientras tengas una cuenta o una relación comercial con nosotros. Si cierras tu cuenta y nos pides borrar tus datos, los eliminamos en un plazo de 30 días, salvo lo que debamos conservar por obligaciones fiscales o legales.</p>,
         },
