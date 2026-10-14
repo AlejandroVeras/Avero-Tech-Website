@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Printer } from "lucide-react"
 import type { Payment } from "@/lib/data/payments"
 import type { Invoice } from "@/lib/data/invoices"
+import { parseDay } from "@/lib/dates"
 
 interface PaymentReceiptPDFProps {
   payment: Payment
@@ -21,7 +22,7 @@ export function PaymentReceiptPDF({ payment, invoice, businessName, balanceDue }
   }
 
   function formatDate(dateString: string) {
-    return new Date(dateString).toLocaleDateString("es-DO", {
+    return parseDay(dateString).toLocaleDateString("es-DO", {
       year: "numeric",
       month: "long",
       day: "numeric",

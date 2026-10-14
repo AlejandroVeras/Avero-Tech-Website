@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowLeft, Edit, CreditCard, History } from "lucide-react"
 import Link from "next/link"
+import { parseDay } from "@/lib/dates"
 
 export default async function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getUser()
@@ -45,7 +46,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
   }
 
   function formatDate(dateString: string) {
-    return new Date(dateString).toLocaleDateString("es-DO", {
+    return parseDay(dateString).toLocaleDateString("es-DO", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -254,7 +255,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                       <div key={p.id} className="flex items-center justify-between p-3 border rounded-lg bg-card shadow-sm">
                         <div className="space-y-1">
                           <p className="font-bold text-foreground">{formatCurrency(p.amount)}</p>
-                          <p className="text-[10px] text-muted-foreground uppercase font-semibold">{p.method} • {new Date(p.date).toLocaleDateString()}</p>
+                          <p className="text-[10px] text-muted-foreground uppercase font-semibold">{p.method} • {parseDay(p.date).toLocaleDateString("es-DO")}</p>
                         </div>
                         <PaymentReceiptPDF 
                           payment={p} 

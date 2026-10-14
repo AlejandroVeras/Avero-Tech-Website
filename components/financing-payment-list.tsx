@@ -9,6 +9,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { deleteFinancingPayment, type FinancingPayment } from "@/lib/data/financing-payments"
 import { Trash2, Download, FileText } from "lucide-react"
 import html2pdf from "html2pdf.js"
+import { parseDay } from "@/lib/dates"
 
 interface FinancingPaymentListProps {
   payments: FinancingPayment[]
@@ -37,7 +38,7 @@ export function FinancingPaymentList({ payments, customerName, customerEmail }: 
   }
 
   function formatDate(dateString: string) {
-    return new Date(dateString).toLocaleDateString("es-DO", {
+    return parseDay(dateString).toLocaleDateString("es-DO", {
       year: "numeric",
       month: "long",
       day: "numeric",

@@ -2,6 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { parseDay } from "@/lib/dates"
 import { Badge } from "@/components/ui/badge"
 import { Edit, Trash2, FileText, Eye } from "lucide-react"
 import type { Invoice } from "@/lib/data/invoices"
@@ -51,7 +52,7 @@ export function InvoicesList({ invoices }: InvoicesListProps) {
   }
 
   function formatDate(dateString: string) {
-    return new Date(dateString).toLocaleDateString("es-DO", {
+    return parseDay(dateString).toLocaleDateString("es-DO", {
       year: "numeric",
       month: "short",
       day: "numeric",

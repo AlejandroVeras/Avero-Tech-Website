@@ -5,6 +5,7 @@ import { Download, Mail } from "lucide-react"
 import type { Invoice } from "@/lib/data/invoices"
 
 import type { Profile } from "@/lib/data/profile"
+import { parseDay } from "@/lib/dates"
 
 interface InvoicePDFProps {
   invoice: Invoice
@@ -20,7 +21,7 @@ export function InvoicePDF({ invoice, profile }: InvoicePDFProps) {
   }
 
   function formatDate(dateString: string) {
-    return new Date(dateString).toLocaleDateString("es-DO", {
+    return parseDay(dateString).toLocaleDateString("es-DO", {
       year: "numeric",
       month: "long",
       day: "numeric",

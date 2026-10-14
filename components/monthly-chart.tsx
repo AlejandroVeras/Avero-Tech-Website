@@ -38,9 +38,9 @@ export function MonthlyChart({ data }: MonthlyChartProps) {
               }}
             />
             <Legend />
-            <Bar dataKey="income" fill="hsl(var(--chart-1))" name="Ingresos" radius={[8, 8, 0, 0]} />
-            <Bar dataKey="expenses" fill="hsl(var(--chart-5))" name="Gastos" radius={[8, 8, 0, 0]} />
-            <Bar dataKey="profit" fill="hsl(var(--chart-3))" name="Ganancia" radius={[8, 8, 0, 0]} />
+            <Bar dataKey="income" fill="var(--chart-1)" name="Ingresos" radius={[8, 8, 0, 0]} />
+            <Bar dataKey="expenses" fill="var(--chart-5)" name="Gastos" radius={[8, 8, 0, 0]} />
+            <Bar dataKey="profit" fill="var(--chart-3)" name="Ganancia" radius={[8, 8, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
