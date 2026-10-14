@@ -42,7 +42,7 @@ SET trial_days = 60,
     status = 'disponible',
     plans = '[
       {"id": "edificio", "name": "Edificio", "description": "Hasta 24 unidades", "monthly_usd": 0, "annual_usd": 320,
-       "features": ["Cuotas, gas común o medido y cargos extra", "Comprobantes de transferencia y recibos", "Gastos visibles para los propietarios", "Estado de cuenta de cada apartamento", "Propietarios entran con un código, sin contraseña"]},
+       "features": ["Cuotas, gas común o medido y cargos extra", "Comprobantes de transferencia y recibos", "Estado de cuenta de cada apartamento", "Propietarios entran con un código, sin contraseña"]},
       {"id": "torre", "name": "Torre", "description": "De 25 a 60 unidades", "monthly_usd": 0, "annual_usd": 560,
        "features": ["Todo lo del plan Edificio", "Te ayudamos a cargar las unidades"]},
       {"id": "residencial", "name": "Residencial", "description": "De 61 a 150 unidades", "monthly_usd": 0, "annual_usd": 960,
@@ -56,7 +56,7 @@ UPDATE public.systems
 SET features = '[
     {"icon": "receipt", "title": "Cuotas y gas", "description": "Mantenimiento, gas común o medido y cargos extra, en un clic."},
     {"icon": "credit-card", "title": "Pagos sin enredos", "description": "Comprobantes de transferencia conciliados y recibos al instante."},
-    {"icon": "bar-chart", "title": "Transparencia", "description": "Cada gasto con su factura, visible para los propietarios."},
+    {"icon": "bar-chart", "title": "Transparencia", "description": "Cada propietario ve sus facturas, pagos y saldo. Nada se borra."},
     {"icon": "users", "title": "Propietarios e inquilinos", "description": "Cada quien ve solo lo suyo, desde el celular."},
     {"icon": "file-text", "title": "Estado de cuenta", "description": "Saldo, facturas y el detalle del gas de cada apartamento."},
     {"icon": "calendar", "title": "Próximamente", "description": "Reservas de áreas sociales, averías y visitas."}
