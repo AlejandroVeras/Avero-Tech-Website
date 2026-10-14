@@ -16,7 +16,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   const [access, isAdmin] = await Promise.all([getAccess(), isPlatformAdmin()])
 
-  // New accounts can't use the system until they register a card and start the trial.
+  // Only accounts left waiting for a card under the old signup flow land here (DATABASE_TRIAL_NO_CARD.sql).
   if (access.kind === "incomplete" && !isAdmin) {
     return <ActivationScreen businessName={user.businessName} email={user.email} />
   }
