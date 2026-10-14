@@ -142,6 +142,10 @@ export function SystemForm({ system }: { system?: SaasSystem }) {
               <Label htmlFor="sortOrder">Orden</Label>
               <Input id="sortOrder" name="sortOrder" type="number" min={0} max={999} defaultValue={system?.sortOrder ?? 0} />
             </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="trialDays">Días gratis</Label>
+              <Input id="trialDays" name="trialDays" type="number" min={1} max={120} defaultValue={system?.trialDays} placeholder="Los generales" />
+            </div>
             <div className="flex items-center gap-2 h-9">
               <Checkbox id="published" checked={published} onCheckedChange={(c) => setPublished(c === true)} />
               <Label htmlFor="published">Publicado en la web</Label>
@@ -200,7 +204,7 @@ export function SystemForm({ system }: { system?: SaasSystem }) {
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor={`plan-monthly-${i}`}>US$/mes</Label>
-                  <Input id={`plan-monthly-${i}`} type="number" min={0} step="0.01" value={p.monthly_usd} onChange={(e) => updatePlan(i, { monthly_usd: e.target.value })} />
+                  <Input id={`plan-monthly-${i}`} type="number" min={0} step="0.01" placeholder="0 = solo anual" value={p.monthly_usd} onChange={(e) => updatePlan(i, { monthly_usd: e.target.value })} />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor={`plan-annual-${i}`}>US$/año</Label>

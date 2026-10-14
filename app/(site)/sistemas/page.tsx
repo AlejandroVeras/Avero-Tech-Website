@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { SectionHeading } from "@/components/site/section-heading"
 import { SystemIcon } from "@/components/site/system-icon"
 import { getPublishedSystems, getTrialDays } from "@/lib/data/systems"
-import { systemHref } from "@/lib/systems"
+import { isAnnualOnly, systemHref } from "@/lib/systems"
 import { formatUSD, whatsappUrl } from "@/lib/site"
 
 export const metadata: Metadata = {
@@ -33,6 +33,7 @@ export default async function SistemasPage() {
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-5xl mx-auto">
             {systems.map((s) => {
               const plan = s.plans[0]
+              const freeDays = s.trialDays ?? trialDays
               const available = s.status === "disponible"
               return (
                 <li key={s.id}>
@@ -66,8 +67,13 @@ export default async function SistemasPage() {
                     <div className="mt-auto pt-8 flex items-end justify-between gap-4">
                       {available && plan ? (
                         <p className="text-[13px] text-white/60">
-                          Desde <span className="text-lg font-semibold text-white">{formatUSD(plan.annual_usd ? plan.annual_usd / 12 : plan.monthly_usd)}</span>/mes
-                          {trialDays ? ` · ${trialDays} días gratis` : ""}
+                          Desde{" "}
+                          {isAnnualOnly(plan) ? (
+                            <><span className="text-lg font-semibold text-white">{formatUSD(plan.annual_usd!)}</span>/año</>
+                          ) : (
+                            <><span className="text-lg font-semibold text-white">{formatUSD(plan.annual_usd ? plan.annual_usd / 12 : plan.monthly_usd)}</span>/mes</>
+                          )}
+                          {freeDays ? ` · ${freeDays} días gratis` : ""}
                         </p>
                       ) : (
                         <p className="text-[13px] text-white/60">En desarrollo</p>

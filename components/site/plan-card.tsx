@@ -6,7 +6,7 @@ import { CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { formatUSD } from "@/lib/site"
-import type { SystemPlan } from "@/lib/systems"
+import { isAnnualOnly, type SystemPlan } from "@/lib/systems"
 
 export function PlanCard({
   plan,
@@ -21,10 +21,11 @@ export function PlanCard({
   cta?: React.ReactNode
   titleAs?: "h2" | "h3"
 }) {
+  const annualOnly = isAnnualOnly(plan)
   const hasAnnual = plan.annual_usd != null && plan.annual_usd > 0
   const [annual, setAnnual] = useState(hasAnnual)
   const perMonth = annual && hasAnnual ? plan.annual_usd! / 12 : plan.monthly_usd
-  const monthsFree = hasAnnual ? Math.round(12 - plan.annual_usd! / plan.monthly_usd) : 0
+  const monthsFree = hasAnnual && !annualOnly ? Math.round(12 - plan.annual_usd! / plan.monthly_usd) : 0
 
   const muted = inverted ? "text-white/50" : "text-pewter"
   const strong = inverted ? "text-white" : "text-obsidian dark:text-foreground"
@@ -32,7 +33,7 @@ export function PlanCard({
 
   return (
     <div className="max-w-md mx-auto">
-      {hasAnnual && (
+      {hasAnnual && !annualOnly && (
         <div className="flex items-center justify-center gap-3 mb-8">
           <span className={cn("text-[13px]", annual ? muted : strong)}>Mensual</span>
           <button
@@ -71,13 +72,13 @@ export function PlanCard({
         </div>
 
         <div>
-          {annual && hasAnnual && <p className={cn("line-through text-lg", muted)}>{formatUSD(plan.monthly_usd)}/mes</p>}
+          {annual && hasAnnual && !annualOnly && <p className={cn("line-through text-lg", muted)}>{formatUSD(plan.monthly_usd)}/mes</p>}
           <div className="flex items-baseline justify-center gap-1">
             <span className={cn("text-5xl font-semibold", strong)}>{formatUSD(perMonth)}</span>
             <span className={muted}>/mes</span>
           </div>
           <p className={cn("text-[13px] mt-1", accent)}>
-            {annual && hasAnnual ? `${formatUSD(plan.annual_usd!)} al año` : "Facturado cada mes"}
+            {annualOnly ? `${formatUSD(plan.annual_usd!)} al año, en un solo pago` : annual && hasAnnual ? `${formatUSD(plan.annual_usd!)} al año` : "Facturado cada mes"}
           </p>
           {trialDays ? (
             <p className={cn("text-[13px] mt-2", inverted ? "text-white/70" : "text-obsidian/80 dark:text-foreground/80")}>

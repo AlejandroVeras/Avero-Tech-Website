@@ -6,14 +6,14 @@
 //   PAYPAL_ENV=sandbox PAYPAL_CLIENT_ID=... PAYPAL_CLIENT_SECRET=... \
 //   node scripts/paypal-setup.mjs --webhook-url https://averotechnology.com/api/webhooks/paypal
 //
-// Opciones: --monthly 15 --annual 150 --trial-days 14 --currency USD --webhook-url <url>
+// Opciones: --monthly 12 --annual 120 --trial-days 30 --currency USD --webhook-url <url>
 
 const args = Object.fromEntries(
   process.argv.slice(2).reduce((pairs, arg, i, all) => (arg.startsWith("--") ? [...pairs, [arg.slice(2), all[i + 1]]] : pairs), []),
 )
-const monthly = String(args.monthly ?? "15")
-const annual = String(args.annual ?? "150")
-const trialDays = Number(args["trial-days"] ?? 14)
+const monthly = String(args.monthly ?? "12")
+const annual = String(args.annual ?? "120")
+const trialDays = Number(args["trial-days"] ?? 30)
 const currency = String(args.currency ?? "USD")
 const webhookUrl = args["webhook-url"]
 

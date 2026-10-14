@@ -27,15 +27,22 @@ export interface SaasSystem {
   status: SystemStatus
   published: boolean
   sortOrder: number
+  // Free days before the first charge; falls back to the platform-wide setting.
+  trialDays?: number
   // Systems that live on their own domain (e.g. condominios.averotechnology.com) link out instead of /sistemas/[slug].
   externalUrl?: string
+}
+
+// A plan with no monthly price is sold only by the year.
+export function isAnnualOnly(plan: Pick<SystemPlan, "monthly_usd" | "annual_usd">) {
+  return !plan.monthly_usd && !!plan.annual_usd
 }
 
 export function systemHref(system: Pick<SaasSystem, "slug" | "externalUrl">) {
   return system.externalUrl ?? `/sistemas/${system.slug}`
 }
 
-export const DEFAULT_TRIAL_DAYS = 14
+export const DEFAULT_TRIAL_DAYS = 30
 
 // Mirrors the seed row in DATABASE_SYSTEMS_UPDATE.sql; used only if the table can't be read.
 export const FALLBACK_GESTION: SaasSystem = {
@@ -62,8 +69,8 @@ export const FALLBACK_GESTION: SaasSystem = {
       id: "profesional",
       name: "Plan Profesional",
       description: "Todo lo que necesitas para administrar tu negocio",
-      monthly_usd: 15,
-      annual_usd: 150,
+      monthly_usd: 12,
+      annual_usd: 120,
       features: [
         "Inventario con control de stock",
         "Ventas a crédito y cobros",
@@ -106,6 +113,7 @@ export function toSystem(row: Record<string, unknown>): SaasSystem {
     status: row.status === "disponible" ? "disponible" : "proximamente",
     published: !!row.published,
     sortOrder: Number(row.sort_order ?? 0),
+    trialDays: Number.isInteger(row.trial_days) && Number(row.trial_days) > 0 ? Number(row.trial_days) : undefined,
     externalUrl: typeof row.external_url === "string" && row.external_url.startsWith("https://") ? row.external_url : undefined,
   }
 }

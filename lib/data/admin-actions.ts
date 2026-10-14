@@ -117,6 +117,12 @@ const systemSchema = z.object({
   status: z.enum(["disponible", "proximamente"]),
   published: z.string().optional().transform((v) => v === "true"),
   sortOrder: z.coerce.number().int().min(0).max(999),
+  trialDays: z
+    .string()
+    .trim()
+    .optional()
+    .transform((v) => (v ? Number(v) : null))
+    .refine((v) => v === null || (Number.isInteger(v) && v >= 1 && v <= 120), "Los días gratis van de 1 a 120"),
   features: jsonField(z.array(featureSchema).max(24, "Máximo 24 funciones"), "Funciones"),
   plans: jsonField(z.array(planSchema).max(4, "Máximo 4 planes"), "Planes"),
   externalUrl: z
@@ -146,6 +152,7 @@ export async function saveSystem(formData: FormData): Promise<Result> {
     status: d.status,
     published: d.published,
     sort_order: d.sortOrder,
+    trial_days: d.trialDays,
     features: d.features,
     plans: d.plans.map((p, i) => ({ ...p, id: p.id || slugify(p.name) || `plan-${i + 1}` })),
     updated_at: new Date().toISOString(),

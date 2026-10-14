@@ -35,9 +35,10 @@ const outlineOnDark =
 
 export default async function SystemPage({ params }: Params) {
   const { slug } = await params
-  const [system, trialDays] = await Promise.all([getPublishedSystem(slug), getTrialDays()])
+  const [system, defaultTrialDays] = await Promise.all([getPublishedSystem(slug), getTrialDays()])
   if (!system) notFound()
   if (system.externalUrl) redirect(system.externalUrl)
+  const trialDays = system.trialDays ?? defaultTrialDays
 
   const available = system.status === "disponible"
   // Pains, onboarding steps and FAQ are written for the management system only.
