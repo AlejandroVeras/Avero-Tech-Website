@@ -68,12 +68,15 @@ export async function createSubscription(input: {
   businessName: string
   returnUrl: string
   cancelUrl: string
+  /** First charge date; used to honor the free days left of a trial that started without PayPal. */
+  startTime?: Date
 }): Promise<string> {
   const res = await ppFetch<{ id: string; links: { rel: string; href: string }[] }>("/v1/billing/subscriptions", {
     method: "POST",
     headers: { Prefer: "return=representation" },
     body: JSON.stringify({
       plan_id: input.planId,
+      ...(input.startTime ? { start_time: input.startTime.toISOString() } : {}),
       custom_id: input.userId,
       subscriber: { email_address: input.email, name: { given_name: input.businessName.slice(0, 140) } },
       application_context: {

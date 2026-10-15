@@ -29,7 +29,7 @@ async function baseUrl() {
 async function mySubscription(supabase: Awaited<ReturnType<typeof createClient>>, userId: string) {
   const { data } = await supabase
     .from("subscriptions")
-    .select("status, provider, external_subscription_id, systems!inner(slug)")
+    .select("status, plan_id, provider, external_subscription_id, trial_ends_at, current_period_end, systems!inner(slug)")
     .eq("user_id", userId)
     .eq("systems.slug", "gestion")
     .maybeSingle()
@@ -42,10 +42,22 @@ async function trialEligible(supabase: Awaited<ReturnType<typeof createClient>>,
   return !sub || sub.status === "incomplete"
 }
 
-export async function getCheckoutMode(): Promise<{ ready: boolean; withTrial: boolean }> {
+// Accounts start their trial without a card. If they subscribe before it ends, PayPal's first charge
+// waits for the trial's last day so nobody loses free days they already have.
+function trialEnd(sub: Awaited<ReturnType<typeof mySubscription>>): Date | null {
+  if (!sub || sub.status !== "trialing" || sub.plan_id !== "trial" || sub.external_subscription_id) return null
+  const end = new Date((sub.trial_ends_at ?? sub.current_period_end) as string)
+  // PayPal needs the start a little in the future; with less than a day left, charge now.
+  return end.getTime() - Date.now() > 86_400_000 ? end : null
+}
+
+export async function getCheckoutMode(): Promise<{ ready: boolean; withTrial: boolean; firstChargeAt?: string }> {
   const config = paypalConfig()
   const { supabase, user } = await currentUser()
-  const eligible = await trialEligible(supabase, user.id)
+  const sub = await mySubscription(supabase, user.id)
+  const freeUntil = trialEnd(sub)
+  if (freeUntil) return { ready: config.ready, withTrial: true, firstChargeAt: freeUntil.toISOString() }
+  const eligible = !sub || sub.status === "incomplete"
   const hasNoTrialPlans = !!(config.plansNoTrial.monthly || config.plansNoTrial.annual)
   // Without no-trial plans PayPal would still grant the trial, so say so honestly.
   return { ready: config.ready, withTrial: eligible || !hasNoTrialPlans }
@@ -59,8 +71,13 @@ export async function startCheckout(formData: FormData): Promise<{ error?: strin
   }
 
   const { supabase, user } = await currentUser()
-  const group = (await trialEligible(supabase, user.id)) ? config.plans : config.plansNoTrial
-  const planId = group[plan] ?? group.monthly ?? group.annual ?? config.plans[plan] ?? config.plans.monthly ?? config.plans.annual
+  const sub = await mySubscription(supabase, user.id)
+  const freeUntil = trialEnd(sub)
+  // Mid-trial: a plan without PayPal's own trial, starting when ours ends.
+  const group = freeUntil ? config.plansNoTrial : (await trialEligible(supabase, user.id)) ? config.plans : config.plansNoTrial
+  const fromGroup = group[plan] ?? group.monthly ?? group.annual
+  // Never fall back to a PayPal-trial plan mid-trial: it would add a second free period.
+  const planId = freeUntil ? fromGroup : fromGroup ?? config.plans[plan] ?? config.plans.monthly ?? config.plans.annual
   if (!planId) return { error: "No hay un plan configurado para cobrar. Escríbenos por WhatsApp." }
   const { data: profile } = await supabase.from("profiles").select("business_name").eq("id", user.id).maybeSingle()
 
@@ -74,6 +91,7 @@ export async function startCheckout(formData: FormData): Promise<{ error?: strin
       businessName: profile?.business_name ?? "Mi negocio",
       returnUrl: `${base}/dashboard/suscripcion?paypal=ok`,
       cancelUrl: `${base}/dashboard/suscripcion?paypal=cancelado`,
+      startTime: freeUntil ?? undefined,
     })
   } catch (e) {
     console.error("startCheckout:", e)

@@ -14,12 +14,15 @@ export function PlanCheckout({
   plan,
   trialDays,
   withTrial = true,
+  firstChargeAt,
   businessName,
   remindsByEmail = false,
 }: {
   plan: SystemPlan
   trialDays: number
   withTrial?: boolean
+  /** When the account is already in its free trial, the day PayPal will first charge. */
+  firstChargeAt?: string
   businessName: string
   remindsByEmail?: boolean
 }) {
@@ -29,7 +32,8 @@ export function PlanCheckout({
   const [error, setError] = useState("")
 
   const price = choice === "annual" && plan.annual_usd ? plan.annual_usd : plan.monthly_usd
-  const firstCharge = new Date(Date.now() + trialDays * 86_400_000)
+  const firstCharge = firstChargeAt ? new Date(firstChargeAt) : new Date(Date.now() + trialDays * 86_400_000)
+  const freeDays = firstChargeAt ? Math.max(1, Math.ceil((firstCharge.getTime() - Date.now()) / 86_400_000)) : trialDays
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -93,7 +97,7 @@ export function PlanCheckout({
         <div className="rounded-2xl bg-muted/60 p-4 text-sm space-y-1.5">
           <p className="font-medium">Hoy no se te cobra nada.</p>
           <p className="text-muted-foreground">
-            Tienes {trialDays} días gratis con todas las funciones. Si no cancelas antes, el{" "}
+            Tienes {freeDays} días gratis con todas las funciones. Si no cancelas antes, el{" "}
             <strong className="text-foreground">{dateFormat.format(firstCharge)}</strong> se cobrarán{" "}
             <strong className="text-foreground">{formatUSD(price)}</strong> con PayPal y luego cada{" "}
             {choice === "annual" ? "año" : "mes"}.{remindsByEmail ? " Te avisamos por correo unos días antes del cobro." : ""}
