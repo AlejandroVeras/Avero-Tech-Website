@@ -67,7 +67,7 @@ export async function startCheckout(formData: FormData): Promise<{ error?: strin
   const plan = formData.get("plan") === "annual" ? "annual" : "monthly"
   const config = paypalConfig()
   if (!config.ready) {
-    return { error: "Los pagos automáticos todavía no están activos. Escríbenos por WhatsApp y te activamos la cuenta." }
+    return { error: "Los pagos automáticos no están disponibles en este momento. Intenta de nuevo en unos minutos." }
   }
 
   const { supabase, user } = await currentUser()

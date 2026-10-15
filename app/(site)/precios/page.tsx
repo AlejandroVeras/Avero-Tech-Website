@@ -13,7 +13,7 @@ import { appUrl, formatUSD, whatsappUrl } from "@/lib/site"
 export const metadata: Metadata = {
   alternates: { canonical: "/precios" },
   title: "Planes y precios",
-  description: "Precios de Avero Inventario, Avero Citas y Avero Condominios: prueba gratis sin tarjeta y pago mensual o anual.",
+  description: "Precios de Avero Inventario, Avero Citas y Avero Condominios: prueba gratis y pago mensual o anual.",
 }
 
 // Section anchors, in the order the systems appear on the page.
@@ -32,7 +32,7 @@ export default async function PreciosPage() {
             as="h1"
             eyebrow="Planes y precios"
             title="Prueba gratis, paga solo si te sirve"
-            description="Sin tarjeta para empezar y sin contratos de permanencia. Al terminar la prueba eliges tu plan."
+            description="Sin contratos de permanencia. Usa el sistema completo durante la prueba y sigue solo si te sirve."
           />
           <nav aria-label="Sistemas" className="mt-8 flex flex-wrap justify-center gap-2">
             {systems.map((s) => (
@@ -86,17 +86,7 @@ function GestionPlans({ system, trialDays }: { system: SaasSystem; trialDays: nu
                 <Button size="lg" className="w-full rounded-full text-[14px] font-normal" asChild>
                   <Link href={appUrl("/signup")}>Probar gratis {trialDays} días</Link>
                 </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="w-full rounded-full text-[14px] font-normal border-sapphire text-sapphire hover:bg-sapphire/5 hover:text-sapphire dark:border-sky-signal dark:text-sky-signal"
-                  asChild
-                >
-                  <a href={whatsappUrl(`Hola, quiero contratar el ${plan.name} de Avero Inventario.`)} target="_blank" rel="noopener noreferrer">
-                    Pagar por transferencia
-                  </a>
-                </Button>
-                <p className="text-[12px] text-pewter">Al terminar la prueba pagas con PayPal, automático cada mes o cada año. ¿Prefieres transferencia? Escríbenos.</p>
+                <p className="text-[12px] text-pewter">Al crear tu cuenta autorizas el pago con PayPal. No se cobra nada durante la prueba; después el cobro es automático cada mes o cada año.</p>
               </div>
             }
           />

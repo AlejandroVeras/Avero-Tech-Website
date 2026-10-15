@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Loader2, Lock, Wallet } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { startCheckout } from "@/lib/data/billing"
-import { formatUSD, whatsappUrl } from "@/lib/site"
+import { formatUSD } from "@/lib/site"
 import { cn } from "@/lib/utils"
 import type { SystemPlan } from "@/lib/systems"
 
@@ -15,7 +15,6 @@ export function PlanCheckout({
   trialDays,
   withTrial = true,
   firstChargeAt,
-  businessName,
   remindsByEmail = false,
 }: {
   plan: SystemPlan
@@ -23,7 +22,6 @@ export function PlanCheckout({
   withTrial?: boolean
   /** When the account is already in its free trial, the day PayPal will first charge. */
   firstChargeAt?: string
-  businessName: string
   remindsByEmail?: boolean
 }) {
   const hasAnnual = !!plan.annual_usd
@@ -128,18 +126,7 @@ export function PlanCheckout({
         )}
       </Button>
       <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
-        <Lock className="h-3.5 w-3.5" aria-hidden /> Pago seguro con PayPal: con tu cuenta PayPal o, donde PayPal lo permita, con tarjeta. Avero no ve ni guarda tus datos de pago.
-      </p>
-      <p className="text-center text-xs text-muted-foreground">
-        ¿Prefieres pagar por transferencia?{" "}
-        <a
-          href={whatsappUrl(`Hola, quiero activar el sistema para mi negocio "${businessName}" pagando por transferencia.`)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline underline-offset-4 text-sapphire dark:text-sky-signal"
-        >
-          Escríbenos por WhatsApp
-        </a>
+        <Lock className="h-3.5 w-3.5" aria-hidden /> Pago seguro con PayPal. Si no tienes cuenta, PayPal te deja crearla en el mismo paso con tu tarjeta. Avero no ve ni guarda tus datos de pago.
       </p>
     </form>
   )

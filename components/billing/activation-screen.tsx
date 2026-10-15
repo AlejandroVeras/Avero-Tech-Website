@@ -39,7 +39,6 @@ export async function ActivationScreen({ businessName, email }: { businessName: 
               plan={plan}
               trialDays={trialDays}
               withTrial={mode.withTrial}
-              businessName={businessName}
               remindsByEmail={emailConfigured()}
             />
           ) : (

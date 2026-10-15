@@ -53,7 +53,7 @@ export function SignupForm({ trialDays }: { trialDays?: number }) {
         <h1 className="text-2xl font-bold leading-none">Crear cuenta</h1>
         <CardDescription>
           {trialDays
-            ? `Registra tu negocio y prueba el sistema gratis por ${trialDays} días. No necesitas tarjeta: al terminar decides si te quedas.`
+            ? `Registra tu negocio y prueba el sistema gratis por ${trialDays} días. Después autorizas el pago con PayPal; no se cobra nada hasta que termine la prueba.`
             : "Registra tu negocio en Avero Technology"}
         </CardDescription>
       </CardHeader>

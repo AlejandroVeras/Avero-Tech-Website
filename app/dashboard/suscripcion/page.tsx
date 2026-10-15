@@ -137,7 +137,6 @@ export default async function SuscripcionPage() {
                 trialDays={trialDays}
                 withTrial={mode.withTrial}
                 firstChargeAt={mode.firstChargeAt}
-                businessName={user.businessName}
                 remindsByEmail={emailConfigured()}
               />
             </CardContent>

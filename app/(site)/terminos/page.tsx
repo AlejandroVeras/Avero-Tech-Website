@@ -38,8 +38,8 @@ export default function TerminosPage() {
           title: "Suscripciones a los sistemas",
           body: (
             <ul>
-              <li><strong>Prueba gratis:</strong> cada sistema incluye días gratis (los indicados en su página). No se pide tarjeta para empezar la prueba.</li>
-              <li><strong>Cobro:</strong> al terminar la prueba eliges un plan. El pago es automático por PayPal según el período del plan (mensual o anual), o por transferencia si lo acordamos.</li>
+              <li><strong>Prueba gratis:</strong> cada sistema incluye días gratis (los indicados en su página). En Avero Inventario autorizas el pago con PayPal al crear la cuenta, sin cobro durante la prueba.</li>
+              <li><strong>Cobro:</strong> al terminar la prueba eliges un plan. El pago es automático por PayPal según el período del plan (mensual o anual).</li>
               <li><strong>Cancelación:</strong> puedes cancelar cuando quieras, sin penalidad. Mantienes el acceso hasta el final del período pagado. No hacemos reembolsos parciales de períodos ya iniciados.</li>
               <li><strong>Falta de pago:</strong> si la suscripción vence, la cuenta pasa a modo solo lectura: puedes ver tu información, pero no crear ni editar. Al renovar, todo sigue como lo dejaste.</li>
               <li><strong>Precios:</strong> si cambiamos el precio de un plan, te avisamos con al menos 30 días de anticipación. El cambio aplica desde tu siguiente renovación.</li>

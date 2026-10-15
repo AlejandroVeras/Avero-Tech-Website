@@ -16,7 +16,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   const [access, isAdmin] = await Promise.all([getAccess(), isPlatformAdmin()])
 
-  // Only accounts left waiting for a card under the old signup flow land here (DATABASE_TRIAL_NO_CARD.sql).
+  // New accounts authorize PayPal before using the system (DATABASE_TRIAL_WITH_PAYPAL.sql).
   if (access.kind === "incomplete" && !isAdmin) {
     return <ActivationScreen businessName={user.businessName} email={user.email} />
   }

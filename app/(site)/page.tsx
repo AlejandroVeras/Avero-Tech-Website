@@ -171,7 +171,7 @@ export default async function HomePage() {
           <SectionHeading
             eyebrow="Sistemas"
             title="Un sistema para cada tipo de negocio"
-            description="Web, en español y desde el celular. Pruébalos gratis, sin tarjeta."
+            description="Web, en español y desde el celular. Pruébalos gratis antes de pagar."
             className="mb-12"
           />
           <SystemsShowcase systems={systems} defaultTrialDays={trialDays} />

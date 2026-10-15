@@ -202,11 +202,6 @@ export default async function SystemPage({ params }: Params) {
                       <Button size="lg" className="w-full rounded-full text-[14px] font-normal bg-white text-obsidian hover:bg-white/90" asChild>
                         <Link href={appUrl("/signup")}>{trialDays ? `Probar gratis ${trialDays} días` : "Crear cuenta"}</Link>
                       </Button>
-                      <Button size="lg" variant="outline" className={`w-full ${outlineOnDark}`} asChild>
-                        <a href={whatsappUrl(`Hola, quiero contratar el ${plan.name} del ${system.name}.`)} target="_blank" rel="noopener noreferrer">
-                          Pagar por transferencia
-                        </a>
-                      </Button>
                     </div>
                   }
                 />
