@@ -101,7 +101,17 @@ Agrega todas las variables de la sección "Asistente de ventas por WhatsApp" de 
    - Escribe al número de prueba desde tu celular.
    - El pedido sale con la marca "Prueba" en `/admin/pedidos`.
 
-## 6. Operación diaria
+## 6. Chat de la página web
+
+Mientras WhatsApp no esté conectado, el mismo asistente atiende la burbuja de chat de averotechnology.com (`components/site/chat-widget.tsx` → `/api/chat`).
+
+- **Lo que necesita:** solo `OPENAI_API_KEY` y `SUPABASE_SECRET_KEY` en Vercel. No usa Meta.
+- **Cómo identifica a cada visitante:** una cookie aleatoria `av_chat` que dura 30 días. La conversación se guarda en `wa_conversations` con `phone = web:<cookie>`.
+- **Pedidos:** antes de confirmar, el asistente pide el WhatsApp del cliente. El pedido sale en `/admin/pedidos` con ese número.
+- **Pasar a una persona:** aparece el botón "Seguir por WhatsApp". También puedes contestar desde `/admin/pedidos/<pedido>`, y la burbuja muestra tu respuesta en unos segundos.
+- **Límites:** son los mismos del asistente de WhatsApp, incluido el tope de gasto diario.
+
+## 7. Operación diaria
 
 - **Atender tú:** en `/admin/pedidos/<pedido>`, botón **Pausar el asistente y atender yo**. Si escribes desde el panel, el asistente se pausa solo. **Devolver al asistente** lo reactiva.
 - **Límites del asistente:**

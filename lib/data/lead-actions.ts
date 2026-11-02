@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server"
 import { isPlatformAdmin } from "@/lib/data/access"
 import { sendText, whatsappConfigured } from "@/lib/whatsapp/cloud"
 import { LEAD_STATUSES } from "@/lib/data/leads"
+import { isWebPhone } from "@/lib/chat/phone"
 
 async function adminClient() {
   if (!(await isPlatformAdmin())) throw new Error("Solo administradores de plataforma")
@@ -31,18 +32,20 @@ export async function setBotStatus(formData: FormData) {
   revalidatePath("/admin/pedidos", "layout")
 }
 
-// Free-form replies only work inside the 24-hour window that opens with each customer message.
+// Free-form WhatsApp replies only work inside the 24-hour window that opens with each customer message.
+// Web chat replies are just stored; the bubble on the site polls for them.
 export async function sendHumanReply(formData: FormData) {
   const conversationId = uuid.parse(formData.get("conversationId"))
   const text = z.string().trim().min(1).max(1000).parse(formData.get("text"))
   const supabase = await adminClient()
-  if (!whatsappConfigured()) throw new Error("WhatsApp no está configurado")
   const { data: conv } = await supabase.from("wa_conversations").select("phone, last_inbound_at").eq("id", conversationId).single()
   if (!conv) throw new Error("Conversación no encontrada")
-  if (Date.now() - new Date(conv.last_inbound_at).getTime() > 24 * 3600_000) {
+  const web = isWebPhone(conv.phone)
+  if (!web && !whatsappConfigured()) throw new Error("WhatsApp no está configurado")
+  if (!web && Date.now() - new Date(conv.last_inbound_at).getTime() > 24 * 3600_000) {
     throw new Error("Pasaron más de 24 horas desde el último mensaje del cliente: solo se pueden enviar plantillas")
   }
-  const waId = await sendText(conv.phone, text)
+  const waId = web ? null : await sendText(conv.phone, text)
   await supabase.from("wa_conversations").update({ status: "humano", last_message_at: new Date().toISOString() }).eq("id", conversationId)
   await supabase.from("wa_messages").insert({ conversation_id: conversationId, direction: "out", type: "text", content: text, wa_message_id: waId, author: "humano" })
   revalidatePath("/admin/pedidos", "layout")

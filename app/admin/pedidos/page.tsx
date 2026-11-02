@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { LEAD_STATUSES, LEAD_STATUS_LABELS, LEAD_STYLES, listLeads, usageSummary, type LeadStatus } from "@/lib/data/leads"
 import { formatDOP, formatUSD } from "@/lib/site"
+import { displayPhone } from "@/lib/chat/phone"
 import { cn } from "@/lib/utils"
 
 export const metadata = { title: "Pedidos de WhatsApp" }
@@ -68,7 +69,7 @@ export default async function PedidosPage({ searchParams }: { searchParams: Prom
                 <Link href={`/admin/pedidos/${l.id}`} className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 hover:bg-muted/40">
                   <div className="min-w-[200px] flex-1">
                     <div className="flex items-center gap-2 font-medium">
-                      {l.code} · {l.customerName ?? `+${l.phone}`}
+                      {l.code} · {l.customerName ?? displayPhone(l.phone)}
                       {l.isTest && <Badge variant="outline">Prueba</Badge>}
                     </div>
                     <div className="text-xs text-muted-foreground">

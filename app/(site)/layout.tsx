@@ -1,6 +1,7 @@
 import { getUser } from "@/lib/auth"
 import { SiteHeader } from "@/components/site/site-header"
 import { SiteFooter } from "@/components/site/site-footer"
+import { ChatWidget } from "@/components/site/chat-widget"
 import { CONTACT_EMAIL, SITE_URL, WHATSAPP_NUMBER } from "@/lib/site"
 
 // Lets Google show the business (name, phone, area served) in local results and Maps.
@@ -34,6 +35,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <SiteHeader isLoggedIn={isLoggedIn} />
       <main id="contenido" className="flex-1">{children}</main>
       <SiteFooter isLoggedIn={isLoggedIn} />
+      <ChatWidget />
     </div>
   )
 }

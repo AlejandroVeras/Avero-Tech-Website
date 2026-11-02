@@ -1,6 +1,7 @@
 import "server-only"
 
 import { requireAdmin } from "@/lib/data/admin-queries"
+import { isWebPhone } from "@/lib/chat/phone"
 
 // Orders and chats from the WhatsApp sales bot (DATABASE_WHATSAPP_LEADS.sql). Admin only.
 
@@ -115,7 +116,7 @@ export async function getLead(id: string) {
   if (!data) return null
   const lead = toLead(data as LeadRow)
   const { data: conv } = lead.conversationId
-    ? await supabase.from("wa_conversations").select("last_inbound_at").eq("id", lead.conversationId).maybeSingle()
+    ? await supabase.from("wa_conversations").select("phone, last_inbound_at").eq("id", lead.conversationId).maybeSingle()
     : { data: null }
   const { data: messages }: { data: { id: string; direction: "in" | "out"; type: string; content: string; author: string; created_at: string }[] | null } = lead.conversationId
     ? await supabase
@@ -128,7 +129,9 @@ export async function getLead(id: string) {
   const lastInbound = conv?.last_inbound_at ? new Date(conv.last_inbound_at as string).getTime() : 0
   return {
     lead,
-    windowOpen: Date.now() - lastInbound < 24 * 3600_000,
+    isWebChat: !!conv && isWebPhone(conv.phone as string),
+    // The web chat has no 24-hour rule.
+    windowOpen: (!!conv && isWebPhone(conv.phone as string)) || Date.now() - lastInbound < 24 * 3600_000,
     messages: (messages ?? []).map(
       (m): ChatMessage => ({ id: m.id, direction: m.direction, type: m.type, content: m.content, author: m.author, createdAt: m.created_at }),
     ),

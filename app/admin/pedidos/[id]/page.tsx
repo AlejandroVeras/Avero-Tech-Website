@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { LEAD_STATUSES, LEAD_STATUS_LABELS, LEAD_STYLES, getLead } from "@/lib/data/leads"
 import { sendHumanReply, setBotStatus, setLeadStatus } from "@/lib/data/lead-actions"
 import { formatDOP, whatsappUrl } from "@/lib/site"
+import { displayPhone, isWebPhone } from "@/lib/chat/phone"
 import { cn } from "@/lib/utils"
 
 export const metadata = { title: "Pedido" }
@@ -18,11 +19,12 @@ export default async function PedidoPage({ params }: { params: Promise<{ id: str
   const { id } = await params
   const data = await getLead(id)
   if (!data) notFound()
-  const { lead, messages, windowOpen } = data
+  const { lead, messages, windowOpen, isWebChat } = data
 
   const rows: [string, string | null][] = [
     ["Cliente", lead.customerName],
-    ["Teléfono", `+${lead.phone}`],
+    ["Teléfono", displayPhone(lead.phone)],
+    ["Canal", isWebChat ? "Chat de la página web" : "WhatsApp"],
     ["Dirección", [lead.address, lead.sector, lead.city].filter(Boolean).join(", ") || null],
     ["Referencia", lead.landmark],
     ["Horario", lead.deliveryWindow],
@@ -119,11 +121,13 @@ export default async function PedidoPage({ params }: { params: Promise<{ id: str
                   </Button>
                 </form>
               )}
+              {!isWebPhone(lead.phone) && (
               <Button variant="outline" size="sm" asChild>
                 <a href={whatsappUrl(undefined, lead.phone)} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="h-4 w-4" /> Abrir en WhatsApp
                 </a>
               </Button>
+              )}
             </div>
           </CardHeader>
           <CardContent className="flex flex-1 flex-col gap-4">
