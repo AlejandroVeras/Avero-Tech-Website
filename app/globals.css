@@ -75,8 +75,8 @@
 }
 
 @theme inline {
-  --font-sans: "Geist", "Geist Fallback";
-  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", ui-sans-serif, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", ui-sans-serif, "Segoe UI", Roboto, sans-serif;
   --font-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", ui-sans-serif, "Segoe UI", Roboto, sans-serif;
 
