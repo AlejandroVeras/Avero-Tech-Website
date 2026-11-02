@@ -7,7 +7,8 @@ import { bubbleGapMs, cleanForWhatsApp, splitBubbles, typingDelayMs } from "@/li
 import { estimateCost, openaiConfigured, transcribe, type InputItem } from "@/lib/ai/openai"
 import { loadCatalog } from "@/lib/ai/catalog-tools"
 import { customerConfirmed, priceOrder } from "@/lib/ai/order"
-import { runSalesAgent, type OrderArgs } from "@/lib/ai/sales-agent"
+import { includesPrivacyNotice, runSalesAgent, type OrderArgs } from "@/lib/ai/sales-agent"
+import { displayPhone, isWebPhone, normalizePhone } from "@/lib/chat/phone"
 import { emailConfigured, sendEmail } from "@/lib/email"
 import { CONTACT_EMAIL, SITE_URL, formatDOP } from "@/lib/site"
 
@@ -18,7 +19,7 @@ const MAX_REPLIES_PER_DAY = 30
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-type Conversation = {
+export type Conversation = {
   id: string
   phone: string
   name: string | null
@@ -131,17 +132,8 @@ async function reply(supabase: SupabaseClient, conv: Conversation, msg: WaInboun
   const result = await runSalesAgent({
     history,
     products,
-    isFirstMessage: !conv.privacy_notice_sent,
-    memory: conv.memory ?? {},
-    effects: {
-      registerInterest: (slug) => registerInterest(supabase, conv, slug),
-      remember: async (facts) => {
-        const memory = { ...conv.memory, ...Object.fromEntries(Object.entries(facts).filter(([, v]) => v != null)) }
-        await supabase.from("wa_conversations").update({ memory, ...(facts.nombre ? { name: facts.nombre } : {}) }).eq("id", conv.id)
-      },
-      createOrder: (args) => createConfirmedOrder(supabase, conv, args, lastText),
-      handoff: (reason) => handoff(supabase, conv, reason),
-    },
+    context: { channel: "whatsapp", privacyNoticeSent: conv.privacy_notice_sent, memory: conv.memory ?? {} },
+    effects: agentEffects(supabase, conv, lastText),
   })
 
   const cost = estimateCost(result.model, result.usage)
@@ -166,15 +158,32 @@ async function reply(supabase: SupabaseClient, conv: Conversation, msg: WaInboun
 
   await supabase
     .from("wa_conversations")
-    .update({ last_message_at: new Date().toISOString(), privacy_notice_sent: true, updated_at: new Date().toISOString() })
+    .update({
+      last_message_at: new Date().toISOString(),
+      privacy_notice_sent: conv.privacy_notice_sent || includesPrivacyNotice(result.text),
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", conv.id)
   await supabase.rpc("wa_add_usage", { p_tokens_in: result.usage.input, p_tokens_out: result.usage.output, p_cost: cost, p_messages: bubbles.length })
+}
+
+// What the agent's tools do to the database. Shared by WhatsApp and the web chat.
+export function agentEffects(supabase: SupabaseClient, conv: Conversation, lastCustomerText: string) {
+  return {
+    registerInterest: (slug: string) => registerInterest(supabase, conv, slug),
+    remember: async (facts: Record<string, string | number | null>) => {
+      const memory = { ...conv.memory, ...Object.fromEntries(Object.entries(facts).filter(([, v]) => v != null)) }
+      await supabase.from("wa_conversations").update({ memory, ...(facts.nombre ? { name: facts.nombre } : {}) }).eq("id", conv.id)
+    },
+    createOrder: (args: OrderArgs) => createConfirmedOrder(supabase, conv, args, lastCustomerText),
+    handoff: (reason: string) => handoff(supabase, conv, reason),
+  }
 }
 
 type UserContent = string | ({ type: "input_text"; text: string } | { type: "input_image"; image_url: string })[]
 
 // The last messages as Responses API input. Voice notes are transcribed once and the text is saved.
-async function buildHistory(supabase: SupabaseClient, conversationId: string): Promise<InputItem[]> {
+export async function buildHistory(supabase: SupabaseClient, conversationId: string): Promise<InputItem[]> {
   const { data } = await supabase
     .from("wa_messages")
     .select("id, direction, type, content, author")
@@ -255,6 +264,9 @@ async function createConfirmedOrder(supabase: SupabaseClient, conv: Conversation
   if (args.confirmado !== true || !customerConfirmed(lastCustomerText)) {
     return { ok: false as const, error: "El cliente todavía no confirmó el resumen. Envía el resumen y espera un sí claro." }
   }
+  // The web chat has no phone of its own, so the customer's WhatsApp is required there.
+  const phone = isWebPhone(conv.phone) ? normalizePhone(args.telefono) : conv.phone
+  if (!phone) return { ok: false as const, error: "Falta un número de WhatsApp válido del cliente para coordinar la entrega. Pídeselo." }
   const catalog = new Map((await loadCatalog(supabase)).map((p) => [p.slug, p]))
   const priced = priceOrder(args.items, catalog)
   if (priced.problems.length) return { ok: false as const, error: priced.problems.join(". ") }
@@ -262,7 +274,7 @@ async function createConfirmedOrder(supabase: SupabaseClient, conv: Conversation
   const now = new Date().toISOString()
   const row = {
     conversation_id: conv.id,
-    phone: conv.phone,
+    phone,
     status: "confirmado",
     items: priced.items,
     total: priced.total,
@@ -288,16 +300,21 @@ async function createConfirmedOrder(supabase: SupabaseClient, conv: Conversation
   return { ok: true as const, code: data.code as string, total: priced.total }
 }
 
-async function handoff(supabase: SupabaseClient, conv: Conversation, reason: string) {
+export async function handoff(supabase: SupabaseClient, conv: Conversation, reason: string) {
   await supabase.from("wa_conversations").update({ status: "humano", updated_at: new Date().toISOString() }).eq("id", conv.id)
+  // /admin/pedidos lists leads, so a chat without one would be invisible there.
+  if (!(await openLead(supabase, conv))) {
+    await supabase.from("leads").insert({ conversation_id: conv.id, phone: conv.phone, customer_name: conv.name, status: "nuevo", is_test: conv.is_test })
+  }
   await logSystem(supabase, conv.id, `Pasó a una persona: ${reason}`)
   const link = `${SITE_URL}/admin/pedidos?chat=${conv.id}`
   const owner = process.env.OWNER_WHATSAPP
-  if (owner) await sendTemplate(owner, "aviso_pasar_a_humano", [conv.name ?? "Cliente", `+${conv.phone}`, reason, link]).catch((e) => console.error("[whatsapp] aviso humano", e))
-  await notifyByEmail(`Un cliente pidió hablar con una persona (+${conv.phone})`, `${conv.name ?? "Cliente"} (+${conv.phone})\nMotivo: ${reason}\n\nAbrir: ${link}`)
+  if (owner) await sendTemplate(owner, "aviso_pasar_a_humano", [conv.name ?? "Cliente", displayPhone(conv.phone), reason, link]).catch((e) => console.error("[whatsapp] aviso humano", e))
+  const who = `${conv.name ?? "Cliente"} (${displayPhone(conv.phone)})`
+  await notifyByEmail(`Un cliente pidió hablar con una persona: ${who}`, `${who}\nMotivo: ${reason}\n\nAbrir: ${link}`)
 }
 
-async function logSystem(supabase: SupabaseClient, conversationId: string, content: string) {
+export async function logSystem(supabase: SupabaseClient, conversationId: string, content: string) {
   await supabase.from("wa_messages").insert({ conversation_id: conversationId, direction: "out", type: "system", content, author: "sistema" })
 }
 

@@ -16,6 +16,7 @@ export type OrderArgs = {
   metodo_pago: string
   horario: string | null
   notas: string | null
+  telefono: string | null
   confirmado: boolean
 }
 
@@ -109,9 +110,10 @@ const TOOLS: FunctionTool[] = [
         metodo_pago: { type: "string" },
         horario: nullable("string"),
         notas: nullable("string"),
+        telefono: { ...nullable("string"), description: "WhatsApp o teléfono del cliente para coordinar la entrega; null si ya escribe por WhatsApp" },
         confirmado: { type: "boolean", description: "true solo si el cliente confirmó el resumen con sus palabras" },
       },
-      required: ["items", "nombre", "direccion", "sector", "ciudad", "referencia", "metodo_pago", "horario", "notas", "confirmado"],
+      required: ["items", "nombre", "direccion", "sector", "ciudad", "referencia", "metodo_pago", "horario", "notas", "telefono", "confirmado"],
       additionalProperties: false,
     },
   },
@@ -130,11 +132,27 @@ const TOOLS: FunctionTool[] = [
   },
 ]
 
-export function salesInstructions(products: BotProduct[], ctx: { isFirstMessage: boolean; memory: Record<string, unknown> }) {
+export type Channel = "whatsapp" | "web"
+
+export type ConversationContext = {
+  channel: Channel
+  privacyNoticeSent: boolean
+  memory: Record<string, unknown>
+  // Web only: the page the customer is looking at, e.g. /catalogo/demo-macbook-air-m2-13
+  page?: string | null
+}
+
+const PRIVACY_NOTICE = {
+  es: "Usamos sus datos solo para atender su pedido. Más detalles: averotechnology.com/privacidad",
+  en: "We only use your details to handle your order. More: averotechnology.com/privacidad",
+}
+
+export function salesInstructions(products: BotProduct[], ctx: ConversationContext) {
+  const web = ctx.channel === "web"
   const payment = process.env.BOT_PAYMENT_METHODS ?? "efectivo contra entrega o transferencia bancaria"
   const delivery = process.env.BOT_DELIVERY_INFO ?? "Coordinamos la entrega por este chat después de confirmar el pedido."
   // Stable part first (cacheable), per-conversation details at the end.
-  return `Eres parte del equipo de ventas de Avero Technology, una tienda de tecnología en Santo Domingo, República Dominicana. Atiendes por WhatsApp.
+  return `Eres parte del equipo de ventas de Avero Technology, una tienda de tecnología en Santo Domingo, República Dominicana. ${web ? "Atiendes el chat de la página web averotechnology.com. El chat ya saludó al cliente, así que no vuelvas a saludar." : "Atiendes por WhatsApp."}
 
 CÓMO ESCRIBES
 - Español dominicano neutro y profesional, de "usted", cálido y directo. Como un vendedor amable por chat, no como un robot ni un folleto.
@@ -157,9 +175,11 @@ REGLAS QUE NO SE ROMPEN
 
 CÓMO VENDES
 - Primero entiende para qué lo quiere (trabajo, estudios, juegos…) y recomienda lo que encaje, con una razón concreta.
-- Si algo está agotado, dilo y ofrece una alternativa disponible parecida.
-- Cuando el cliente quiera comprar, pide uno a uno lo que falte: nombre, sector y ciudad con un punto de referencia, horario preferido y forma de pago.
-- Antes de registrar, envía UN resumen con productos, cantidades, total en RD$, entrega y pago, y pregunta si está todo correcto. Solo si responde que sí, llama crear_pedido_confirmado con confirmado=true. Luego dale el código del pedido y dile que en breve le escriben para coordinar.
+- Si algo está agotado, dilo y ofrece una alternativa disponible parecida. Si no hay alternativa que le sirva, ofrece UNA vez pasar con alguien del equipo; si acepta o insiste en el producto agotado, llama pasar_a_humano. No pidas datos de entrega para algo que no se puede vender ni repitas que está agotado.
+- Si el cliente dice que lo va a pensar o que consultará con alguien, responde corto y amable, sin repetir el producto, el precio ni la garantía.
+- Cuando el cliente quiera comprar, pide uno a uno lo que falte: nombre, sector y ciudad con un punto de referencia, horario preferido y forma de pago.${web ? " Pide también su número de WhatsApp para coordinar la entrega y ponlo en telefono." : ""}
+- Antes de registrar, envía UN resumen con productos, cantidades, total en RD$, entrega y pago, y pregunta si está todo correcto. Solo si responde que sí, llama crear_pedido_confirmado con confirmado=true. Luego dale el código del pedido y dile que en breve le escriben${web ? " por WhatsApp" : ""} para coordinar.
+- Después de pasar la conversación a una persona, no vuelvas a llamar pasar_a_humano ni repitas la misma frase.
 - Si la herramienta devuelve un error (precio cambió, agotado), explícalo y ofrece opciones.
 
 EJEMPLOS DEL TONO
@@ -178,19 +198,26 @@ CATÁLOGO ACTUAL (slug | nombre | precio | condición | garantía | disponibilid
 ${catalogDigest(products)}
 
 ESTA CONVERSACIÓN
-${ctx.isFirstMessage ? 'Es el primer mensaje de este cliente: al final de tu respuesta agrega en una línea aparte "Usamos sus datos solo para atender su pedido. Más detalles: averotechnology.com/privacidad".' : "Ya hablaron antes; no repitas el aviso de privacidad."}
+${privacyLine(ctx)}${ctx.page ? `\nEl cliente escribe desde esta página del sitio: ${ctx.page}` : ""}
 Lo que sabemos del cliente: ${JSON.stringify(ctx.memory)}`
 }
+
+// The web chat shows the notice under the input box; WhatsApp sends it once, when personal data is first asked.
+function privacyLine(ctx: ConversationContext) {
+  if (ctx.channel === "web" || ctx.privacyNoticeSent) return "No menciones el aviso de privacidad."
+  return `La primera vez que le pidas un dato personal (nombre, dirección o teléfono), agrega al final, en una línea aparte, este aviso en el idioma del cliente: "${PRIVACY_NOTICE.es}" o "${PRIVACY_NOTICE.en}". Mientras no pidas datos, no lo envíes.`
+}
+
+export const includesPrivacyNotice = (text: string) => text.includes("averotechnology.com/privacidad")
 
 export async function runSalesAgent(input: {
   history: InputItem[]
   products: BotProduct[]
-  isFirstMessage: boolean
-  memory: Record<string, unknown>
+  context: ConversationContext
   effects: AgentEffects
   model?: string
 }): Promise<AgentResult> {
-  const instructions = salesInstructions(input.products, { isFirstMessage: input.isFirstMessage, memory: input.memory })
+  const instructions = salesInstructions(input.products, input.context)
   const bySlug = new Map(input.products.map((p) => [p.slug, p]))
   const items: InputItem[] = [...input.history]
   const usage: Usage = { input: 0, cached: 0, output: 0 }
@@ -242,7 +269,13 @@ export async function runSalesAgent(input: {
           case "pasar_a_humano":
             await input.effects.handoff(String(args.motivo ?? ""))
             handedOff = true
-            output = { ok: true, nota: "Dile al cliente que alguien del equipo le escribe en breve." }
+            output = {
+              ok: true,
+              nota:
+                input.context.channel === "web"
+                  ? "Dile en tus palabras, una sola vez, que puede seguir con una persona por WhatsApp con el botón que aparece en el chat."
+                  : "Dile en tus palabras, una sola vez, que alguien del equipo le escribe por aquí.",
+            }
             break
           default:
             output = { error: "Herramienta desconocida" }

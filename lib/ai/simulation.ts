@@ -2,7 +2,7 @@ import "server-only"
 
 import { createResponse, estimateCost, type InputItem } from "@/lib/ai/openai"
 import { customerConfirmed, priceOrder } from "@/lib/ai/order"
-import { runSalesAgent } from "@/lib/ai/sales-agent"
+import { includesPrivacyNotice, runSalesAgent } from "@/lib/ai/sales-agent"
 import type { BotProduct } from "@/lib/ai/catalog-tools"
 import { splitBubbles, cleanForWhatsApp, styleIssues } from "@/lib/whatsapp/humanize"
 
@@ -30,16 +30,16 @@ export async function simulate(products: BotProduct[], model: string, ids?: stri
     const history: InputItem[] = []
     const turns: SimTurn[] = []
     let memory: Record<string, unknown> = {}
+    let privacyNoticeSent = false
     let cost = 0
-    for (const [i, customer] of s.turns.entries()) {
+    for (const customer of s.turns) {
       history.push({ role: "user", content: customer })
       const t0 = Date.now()
       const r = await runSalesAgent({
         history,
         products,
         model,
-        isFirstMessage: i === 0,
-        memory,
+        context: { channel: "whatsapp", privacyNoticeSent, memory },
         effects: {
           registerInterest: async () => {},
           remember: async (facts) => {
@@ -54,6 +54,7 @@ export async function simulate(products: BotProduct[], model: string, ids?: stri
         },
       })
       cost += estimateCost(r.model, r.usage)
+      privacyNoticeSent ||= includesPrivacyNotice(r.text)
       const bubbles = splitBubbles(cleanForWhatsApp(r.text), r.orderCode ? 3 : 2)
       history.push({ role: "assistant", content: bubbles.join("\n\n") })
       turns.push({ customer, bubbles, calls: r.calls, issues: bubbles.flatMap(styleIssues), ms: Date.now() - t0 })
