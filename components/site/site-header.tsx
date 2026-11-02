@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
@@ -18,11 +18,9 @@ function isActive(pathname: string, href: string) {
 
 export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
   const pathname = usePathname()
-  const [menuOpen, setMenuOpen] = useState(false)
-
-  useEffect(() => {
-    setMenuOpen(false)
-  }, [pathname])
+  // The menu belongs to the page it was opened on, so navigating closes it without an effect.
+  const [openOn, setOpenOn] = useState<string | null>(null)
+  const menuOpen = openOn === pathname
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-xl backdrop-saturate-150">
@@ -65,7 +63,7 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
             aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
-            onClick={() => setMenuOpen((o) => !o)}
+            onClick={() => setOpenOn(menuOpen ? null : pathname)}
           >
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>

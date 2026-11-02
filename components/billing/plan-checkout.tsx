@@ -28,10 +28,12 @@ export function PlanCheckout({
   const [choice, setChoice] = useState<"monthly" | "annual">(hasAnnual ? "annual" : "monthly")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  // Read the clock once so re-renders don't move the dates around.
+  const [now] = useState(() => Date.now())
 
   const price = choice === "annual" && plan.annual_usd ? plan.annual_usd : plan.monthly_usd
-  const firstCharge = firstChargeAt ? new Date(firstChargeAt) : new Date(Date.now() + trialDays * 86_400_000)
-  const freeDays = firstChargeAt ? Math.max(1, Math.ceil((firstCharge.getTime() - Date.now()) / 86_400_000)) : trialDays
+  const firstCharge = firstChargeAt ? new Date(firstChargeAt) : new Date(now + trialDays * 86_400_000)
+  const freeDays = firstChargeAt ? Math.max(1, Math.ceil((firstCharge.getTime() - now) / 86_400_000)) : trialDays
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
