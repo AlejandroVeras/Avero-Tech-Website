@@ -34,6 +34,7 @@ export interface TicketMessage {
 }
 
 // ─── Helpers ──────────────────────────────────────────
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- raw Supabase row with joined columns
 function mapTicket(row: any): Ticket {
   return {
     id: row.id,
@@ -54,6 +55,7 @@ function mapTicket(row: any): Ticket {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- raw Supabase row
 function mapMessage(row: any): TicketMessage {
   return {
     id: row.id,

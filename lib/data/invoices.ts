@@ -38,7 +38,7 @@ export interface Invoice {
 }
 
 // Función auxiliar para actualizar inventario de forma segura
-async function updateProductStock(supabase: any, productId: string, quantityChange: number) {
+async function updateProductStock(supabase: Awaited<ReturnType<typeof createClient>>, productId: string, quantityChange: number) {
   // quantityChange negativo para restar (venta), positivo para devolver (anulación/borrado)
   
   // 1. Obtener producto actual
@@ -62,7 +62,7 @@ async function updateProductStock(supabase: any, productId: string, quantityChan
 }
 
 // Función auxiliar para actualizar financiamiento del cliente
-async function updateCustomerFinancing(supabase: any, customerId: string, amountChange: number) {
+async function updateCustomerFinancing(supabase: Awaited<ReturnType<typeof createClient>>, customerId: string, amountChange: number) {
   // amountChange positivo para aumentar deuda, negativo para disminuir
   
   // 1. Obtener cliente actual

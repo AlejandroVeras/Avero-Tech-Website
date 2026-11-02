@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { FileText, DollarSign, Users, Receipt } from "lucide-react"
+import { FileText, DollarSign, Users, Receipt, type LucideIcon } from "lucide-react"
 import { getInvoices } from "@/lib/data/invoices"
 import { getCustomers } from "@/lib/data/customers"
 import { getExpenses } from "@/lib/data/expenses"
@@ -12,7 +12,7 @@ type Activity = {
   amount?: string
   time: string
   dateObj: Date
-  icon: any
+  icon: LucideIcon
 }
 
 export async function RecentActivity() {
