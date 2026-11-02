@@ -108,8 +108,8 @@ export function InvoicesList({ invoices }: InvoicesListProps) {
         {invoices.map((invoice) => (
           <Card key={invoice.id} className="hover:shadow-md transition-shadow">
             <CardContent className="p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-start gap-4 flex-1 min-w-0">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="flex items-start gap-4 flex-1 min-w-[220px]">
                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <FileText className="h-6 w-6 text-blue-600" />
                   </div>
@@ -125,7 +125,7 @@ export function InvoicesList({ invoices }: InvoicesListProps) {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 ml-auto">
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">Total</p>
                     <p className="text-xl font-bold text-foreground">{formatCurrency(invoice.total)}</p>
