@@ -15,11 +15,14 @@ function Cover({
   className,
   sizes,
   tech,
+  priority,
 }: {
   product: PublicProduct
   className?: string
   sizes: string
   tech: boolean
+  /** The first cards on screen hold the page's largest image: load them right away. */
+  priority?: boolean
 }) {
   const Placeholder = tech ? Laptop : Package
   return (
@@ -36,6 +39,7 @@ function Cover({
           alt={product.name}
           fill
           sizes={sizes}
+          priority={priority}
           className="object-contain p-3 transition-transform duration-500 group-hover:scale-105"
         />
       ) : (
@@ -84,7 +88,7 @@ export function ProductCard({
   const href = `${basePath}/${product.slug}`
   return (
     <article className="group relative h-full flex flex-col overflow-hidden rounded-3xl border border-pale-mist/70 bg-card hover:border-sapphire/40 transition-colors duration-300">
-      <Cover product={product} tech={basePath === "/catalogo"} className="aspect-[4/3]" sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw" />
+      <Cover product={product} priority={priority} tech={basePath === "/catalogo"} className="aspect-[4/3]" sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw" />
       <div className="absolute top-3 left-3 right-3 flex justify-between gap-2 pointer-events-none">
         {product.featured ? <Badge className="rounded-full text-[10px] bg-obsidian text-white dark:bg-white dark:text-obsidian">Destacado</Badge> : <span />}
         <Badge className="rounded-full text-[10px]" variant={product.inStock ? "default" : "destructive"}>
