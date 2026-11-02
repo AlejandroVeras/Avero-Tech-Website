@@ -1,0 +1,1001 @@
+{
+ "_note": "Inventario de prueba (Fase 1 del QA). Todo lleva el prefijo demo- y se borra con: node scripts/seed-demo-images.mjs --rollback",
+ "products": [
+  {
+   "slug": "demo-lenovo-ideapad-flex-14",
+   "name": "Lenovo IdeaPad Flex 14 2 en 1 Core i5",
+   "brand": "Lenovo",
+   "category": "Laptop",
+   "condition": "reacondicionado",
+   "price": 32900,
+   "warranty_months": 6,
+   "featured": true,
+   "stock_quantity": 3,
+   "description": "Laptop convertible con pantalla táctil que gira 360°: úsala como laptop o como tablet. Revisada, con batería en buen estado y Windows 11 activado.",
+   "specs": [
+    {
+     "label": "Procesador",
+     "value": "Intel Core i5-8265U"
+    },
+    {
+     "label": "Memoria",
+     "value": "8 GB DDR4"
+    },
+    {
+     "label": "Almacenamiento",
+     "value": "256 GB SSD"
+    },
+    {
+     "label": "Pantalla",
+     "value": "14\" Full HD táctil"
+    },
+    {
+     "label": "Sistema",
+     "value": "Windows 11 Home"
+    },
+    {
+     "label": "Peso",
+     "value": "1.65 kg"
+    }
+   ],
+   "images": [
+    {
+     "file": "Lenovo IdeaPad Flex14 laptop.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Lenovo_IdeaPad_Flex14_laptop.jpg",
+     "license": "CC0",
+     "author": "Info-farmer"
+    },
+    {
+     "file": "Lenovo IdeaPad Flex14 laptop (Leftside).jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Lenovo_IdeaPad_Flex14_laptop_(Leftside).jpg",
+     "license": "CC0",
+     "author": "Info-farmer"
+    },
+    {
+     "file": "Lenovo IdeaPad Flex14 laptop (rightside).jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Lenovo_IdeaPad_Flex14_laptop_(rightside).jpg",
+     "license": "CC0",
+     "author": "Info-farmer"
+    }
+   ]
+  },
+  {
+   "slug": "demo-hp-probook-14-core-i5",
+   "name": "HP ProBook 14\" Core i5",
+   "brand": "HP",
+   "category": "Laptop",
+   "condition": "usado",
+   "price": 14500,
+   "warranty_months": 3,
+   "featured": false,
+   "stock_quantity": 2,
+   "description": "Laptop de oficina resistente, ideal para facturar, navegar y trabajar con Office. Tiene marcas de uso en la tapa.",
+   "specs": [
+    {
+     "label": "Procesador",
+     "value": "Intel Core i5 (2.ª generación)"
+    },
+    {
+     "label": "Memoria",
+     "value": "8 GB DDR3"
+    },
+    {
+     "label": "Almacenamiento",
+     "value": "240 GB SSD"
+    },
+    {
+     "label": "Pantalla",
+     "value": "14\" HD"
+    },
+    {
+     "label": "Sistema",
+     "value": "Windows 10 Pro"
+    }
+   ],
+   "images": [
+    {
+     "file": "IMG-20190927-WA0014.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:IMG-20190927-WA0014.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "Allan Kibe"
+    },
+    {
+     "file": "HP-probook-6450b-01.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:HP-probook-6450b-01.jpg",
+     "license": "CC0",
+     "author": "Rakoon"
+    }
+   ]
+  },
+  {
+   "slug": "demo-macbook-air-m2-13",
+   "name": "MacBook Air M2 13\" 256 GB",
+   "brand": "Apple",
+   "category": "Laptop",
+   "condition": "nuevo",
+   "price": 69900,
+   "warranty_months": 12,
+   "featured": true,
+   "stock_quantity": 2,
+   "description": "La MacBook Air con chip M2: rápida, silenciosa (no tiene ventilador) y con batería para todo el día. Sellada en su caja.",
+   "specs": [
+    {
+     "label": "Chip",
+     "value": "Apple M2 de 8 núcleos"
+    },
+    {
+     "label": "Memoria",
+     "value": "8 GB unificada"
+    },
+    {
+     "label": "Almacenamiento",
+     "value": "256 GB SSD"
+    },
+    {
+     "label": "Pantalla",
+     "value": "13.6\" Liquid Retina"
+    },
+    {
+     "label": "Batería",
+     "value": "Hasta 18 horas"
+    },
+    {
+     "label": "Peso",
+     "value": "1.24 kg"
+    },
+    {
+     "label": "Puertos",
+     "value": "2 × Thunderbolt, MagSafe 3"
+    }
+   ],
+   "images": [
+    {
+     "file": "M2 Macbook Air Starlight model.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:M2_Macbook_Air_Starlight_model.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "KKPCW（Kyu3）"
+    },
+    {
+     "file": "MacBook Air (A2681) rear.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:MacBook_Air_(A2681)_rear.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "メイド理世"
+    },
+    {
+     "file": "MacBook Air (A2681) front.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:MacBook_Air_(A2681)_front.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "メイド理世"
+    }
+   ]
+  },
+  {
+   "slug": "demo-hp-laptop-15-da1xxx-core-i5-16gb-512gb",
+   "name": "HP Laptop 15-da1xxx Intel Core i5 de 8.ª generación con 16 GB de RAM, 512 GB SSD y Windows 11 Home, color negro jet",
+   "brand": "HP",
+   "category": "Laptop",
+   "condition": "nuevo",
+   "price": 36500,
+   "warranty_months": 12,
+   "featured": false,
+   "stock_quantity": 4,
+   "description": "Laptop de 15.6\" para estudios y trabajo, con teclado numérico completo.",
+   "specs": [
+    {
+     "label": "Procesador",
+     "value": "Intel Core i5-8265U"
+    },
+    {
+     "label": "Memoria",
+     "value": "16 GB DDR4"
+    },
+    {
+     "label": "Almacenamiento",
+     "value": "512 GB SSD"
+    },
+    {
+     "label": "Pantalla",
+     "value": "15.6\" HD"
+    },
+    {
+     "label": "Sistema",
+     "value": "Windows 11 Home"
+    },
+    {
+     "label": "Teclado",
+     "value": "Con teclado numérico"
+    }
+   ],
+   "images": [
+    {
+     "file": "HP Laptop 15-da1xxx (1).jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:HP_Laptop_15-da1xxx_(1).jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "খাঁ শুভেন্দু"
+    },
+    {
+     "file": "HP Laptop 15-da1xxx.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:HP_Laptop_15-da1xxx.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "খাঁ শুভেন্দু"
+    }
+   ]
+  },
+  {
+   "slug": "demo-samsung-galaxy-a15-128gb",
+   "name": "Samsung Galaxy A15 128 GB",
+   "brand": "Samsung",
+   "category": "Celular",
+   "condition": "nuevo",
+   "price": 11900,
+   "warranty_months": 12,
+   "featured": false,
+   "stock_quantity": 6,
+   "description": "Pantalla Super AMOLED grande y batería de 5,000 mAh que dura todo el día. Desbloqueado para cualquier compañía.",
+   "specs": [
+    {
+     "label": "Pantalla",
+     "value": "6.5\" Super AMOLED 90 Hz"
+    },
+    {
+     "label": "Almacenamiento",
+     "value": "128 GB"
+    },
+    {
+     "label": "Memoria",
+     "value": "4 GB"
+    },
+    {
+     "label": "Batería",
+     "value": "5,000 mAh"
+    },
+    {
+     "label": "Cámara",
+     "value": "50 MP"
+    },
+    {
+     "label": "Red",
+     "value": "4G, desbloqueado"
+    }
+   ],
+   "images": [
+    {
+     "file": "Samsung Galaxy A40 und Samsung Galaxy A15 20240529 HOF7494 RAW-Export cens (cropped).png",
+     "page": "https://commons.wikimedia.org/wiki/File:Samsung_Galaxy_A40_und_Samsung_Galaxy_A15_20240529_HOF7494_RAW-Export_cens_(cropped).png",
+     "license": "CC BY 4.0",
+     "author": "PantheraLeo1359531"
+    },
+    {
+     "file": "Samsung Galaxy A40 und Samsung Galaxy A15 20240529 HOF7504 RAW-Export cens.png",
+     "page": "https://commons.wikimedia.org/wiki/File:Samsung_Galaxy_A40_und_Samsung_Galaxy_A15_20240529_HOF7504_RAW-Export_cens.png",
+     "license": "CC BY 4.0",
+     "author": "PantheraLeo1359531"
+    }
+   ]
+  },
+  {
+   "slug": "demo-samsung-galaxy-a54-5g-128gb",
+   "name": "Samsung Galaxy A54 5G 128 GB",
+   "brand": "Samsung",
+   "category": "Celular",
+   "condition": "nuevo",
+   "price": 21900,
+   "warranty_months": 12,
+   "featured": true,
+   "stock_quantity": 4,
+   "description": "Gama media alta con 5G, cámara estabilizada y resistencia al agua IP67.",
+   "specs": [
+    {
+     "label": "Pantalla",
+     "value": "6.4\" Super AMOLED 120 Hz"
+    },
+    {
+     "label": "Almacenamiento",
+     "value": "128 GB"
+    },
+    {
+     "label": "Memoria",
+     "value": "8 GB"
+    },
+    {
+     "label": "Cámara",
+     "value": "50 MP con OIS"
+    },
+    {
+     "label": "Batería",
+     "value": "5,000 mAh"
+    },
+    {
+     "label": "Resistencia",
+     "value": "IP67"
+    },
+    {
+     "label": "Red",
+     "value": "5G, desbloqueado"
+    }
+   ],
+   "images": [
+    {
+     "file": "Samsung Galaxy A54 5G 2023.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Samsung_Galaxy_A54_5G_2023.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "Captainmorlypogi1959"
+    },
+    {
+     "file": "Back of the Samsung Galaxy A54 5G.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Back_of_the_Samsung_Galaxy_A54_5G.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "Hajoon0102"
+    }
+   ]
+  },
+  {
+   "slug": "demo-iphone-13-pro-128gb",
+   "name": "iPhone 13 Pro 128 GB",
+   "brand": "Apple",
+   "category": "Celular",
+   "condition": "reacondicionado",
+   "price": 39900,
+   "warranty_months": 6,
+   "featured": true,
+   "stock_quantity": 2,
+   "description": "Reacondicionado con batería por encima del 85 % de salud. Pantalla y cámaras sin detalles.",
+   "specs": [
+    {
+     "label": "Pantalla",
+     "value": "6.1\" Super Retina XDR 120 Hz"
+    },
+    {
+     "label": "Chip",
+     "value": "A15 Bionic"
+    },
+    {
+     "label": "Almacenamiento",
+     "value": "128 GB"
+    },
+    {
+     "label": "Cámaras",
+     "value": "Triple de 12 MP"
+    },
+    {
+     "label": "Salud de batería",
+     "value": "85 % o más"
+    },
+    {
+     "label": "Red",
+     "value": "5G, desbloqueado"
+    }
+   ],
+   "images": [
+    {
+     "file": "Back of the iPhone 13 Pro.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Back_of_the_iPhone_13_Pro.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "Hajoon0102"
+    },
+    {
+     "file": "Apple iPhone 13 Pro and 13 Pro Max.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Apple_iPhone_13_Pro_and_13_Pro_Max.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "SimonWaldherr"
+    }
+   ]
+  },
+  {
+   "slug": "demo-xiaomi-redmi-note-11-128gb",
+   "name": "Xiaomi Redmi Note 11 128 GB",
+   "brand": "Xiaomi",
+   "category": "Celular",
+   "condition": "nuevo",
+   "price": 12500,
+   "warranty_months": 12,
+   "featured": false,
+   "stock_quantity": 5,
+   "description": "Buen balance entre precio y rendimiento, con carga rápida de 33 W.",
+   "specs": [
+    {
+     "label": "Pantalla",
+     "value": "6.43\" AMOLED 90 Hz"
+    },
+    {
+     "label": "Almacenamiento",
+     "value": "128 GB"
+    },
+    {
+     "label": "Memoria",
+     "value": "4 GB"
+    },
+    {
+     "label": "Batería",
+     "value": "5,000 mAh, carga de 33 W"
+    },
+    {
+     "label": "Cámara",
+     "value": "50 MP"
+    }
+   ],
+   "images": [
+    {
+     "file": "Redmi Note 11 back.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Redmi_Note_11_back.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "Maksdroider"
+    },
+    {
+     "file": "Redmi Note 11 front.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Redmi_Note_11_front.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "Maksdroider"
+    }
+   ]
+  },
+  {
+   "slug": "demo-samsung-galaxy-s21-ultra-256gb",
+   "name": "Samsung Galaxy S21 Ultra 256 GB",
+   "brand": "Samsung",
+   "category": "Celular",
+   "condition": "usado",
+   "price": 24900,
+   "warranty_months": 3,
+   "featured": false,
+   "stock_quantity": 0,
+   "description": "Usado en buen estado, con leves marcas en el marco. Incluye cargador.",
+   "specs": [
+    {
+     "label": "Pantalla",
+     "value": "6.8\" Dynamic AMOLED 120 Hz"
+    },
+    {
+     "label": "Almacenamiento",
+     "value": "256 GB"
+    },
+    {
+     "label": "Memoria",
+     "value": "12 GB"
+    },
+    {
+     "label": "Cámara",
+     "value": "108 MP con zoom 10×"
+    },
+    {
+     "label": "Batería",
+     "value": "5,000 mAh"
+    }
+   ],
+   "images": [
+    {
+     "file": "SAMSUNG Galaxy S21 Ultra(1).jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:SAMSUNG_Galaxy_S21_Ultra(1).jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "Dinkun Chen"
+    },
+    {
+     "file": "GalaxyS21.png",
+     "page": "https://commons.wikimedia.org/wiki/File:GalaxyS21.png",
+     "license": "CC BY 4.0",
+     "author": "Marcusph"
+    }
+   ]
+  },
+  {
+   "slug": "demo-ipad-10-generacion-64gb",
+   "name": "iPad (10.ª generación) 64 GB Wi-Fi",
+   "brand": "Apple",
+   "category": "Tablet",
+   "condition": "nuevo",
+   "price": 26900,
+   "warranty_months": 12,
+   "featured": false,
+   "stock_quantity": 3,
+   "description": "El iPad de 10.9\" con USB-C, ideal para clases, lectura y ventas en mostrador.",
+   "specs": [
+    {
+     "label": "Pantalla",
+     "value": "10.9\" Liquid Retina"
+    },
+    {
+     "label": "Chip",
+     "value": "A14 Bionic"
+    },
+    {
+     "label": "Almacenamiento",
+     "value": "64 GB"
+    },
+    {
+     "label": "Conexión",
+     "value": "Wi-Fi 6"
+    },
+    {
+     "label": "Puerto",
+     "value": "USB-C"
+    },
+    {
+     "label": "Cámara frontal",
+     "value": "12 MP horizontal"
+    }
+   ],
+   "images": [
+    {
+     "file": "Ipadtenthgen.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Ipadtenthgen.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "Wiikiipediia"
+    },
+    {
+     "file": "IPad 10.png",
+     "page": "https://commons.wikimedia.org/wiki/File:IPad_10.png",
+     "license": "CC BY-SA 4.0",
+     "author": "Riski394"
+    },
+    {
+     "file": "About iPad (10th generation).jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:About_iPad_(10th_generation).jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "メイド理世"
+    }
+   ]
+  },
+  {
+   "slug": "demo-monitor-dell-20-pulgadas",
+   "name": "Monitor Dell 20\"",
+   "brand": "Dell",
+   "category": "Monitor",
+   "condition": "usado",
+   "price": 4500,
+   "warranty_months": 3,
+   "featured": false,
+   "stock_quantity": 0,
+   "description": "Monitor de oficina con base ajustable en altura. Perfecto como segunda pantalla.",
+   "specs": [
+    {
+     "label": "Tamaño",
+     "value": "20\""
+    },
+    {
+     "label": "Resolución",
+     "value": "1600 × 1200"
+    },
+    {
+     "label": "Entradas",
+     "value": "VGA y DVI"
+    },
+    {
+     "label": "Base",
+     "value": "Ajustable en altura y giro"
+    }
+   ],
+   "images": [
+    {
+     "file": "Dell Computer Monitor.png",
+     "page": "https://commons.wikimedia.org/wiki/File:Dell_Computer_Monitor.png",
+     "license": "CC BY-SA 4.0",
+     "author": "IT Photography"
+    },
+    {
+     "file": "Dell monitor and keyboard.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Dell_monitor_and_keyboard.jpg",
+     "license": "CC BY-SA 2.0",
+     "author": "Takuya Oikawa"
+    }
+   ]
+  },
+  {
+   "slug": "demo-logitech-mx-master-3s",
+   "name": "Mouse Logitech MX Master 3S",
+   "brand": "Logitech",
+   "category": "Accesorio",
+   "condition": "nuevo",
+   "price": 6400,
+   "warranty_months": 12,
+   "featured": false,
+   "stock_quantity": 8,
+   "description": "Mouse inalámbrico ergonómico con clics silenciosos y rueda electromagnética. Se conecta hasta a 3 equipos.",
+   "specs": [
+    {
+     "label": "Conexión",
+     "value": "Bluetooth y receptor Logi Bolt"
+    },
+    {
+     "label": "Sensor",
+     "value": "8,000 DPI"
+    },
+    {
+     "label": "Batería",
+     "value": "Recargable, hasta 70 días"
+    },
+    {
+     "label": "Carga",
+     "value": "USB-C"
+    },
+    {
+     "label": "Compatibilidad",
+     "value": "Windows, macOS, Linux, iPad"
+    }
+   ],
+   "images": [
+    {
+     "file": "Logitech MX Master 3S HS03.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Logitech_MX_Master_3S_HS03.jpg",
+     "license": "CC BY 4.0",
+     "author": "Hayden Schiff"
+    },
+    {
+     "file": "Logitech MX Master 3S HS05.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Logitech_MX_Master_3S_HS05.jpg",
+     "license": "CC BY 4.0",
+     "author": "Hayden Schiff"
+    },
+    {
+     "file": "Logitech MX Master 3S HS11.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Logitech_MX_Master_3S_HS11.jpg",
+     "license": "CC BY 4.0",
+     "author": "Hayden Schiff"
+    }
+   ]
+  },
+  {
+   "slug": "demo-logitech-k380",
+   "name": "Teclado Logitech K380 Bluetooth",
+   "brand": "Logitech",
+   "category": "Accesorio",
+   "condition": "nuevo",
+   "price": 2700,
+   "warranty_months": 6,
+   "featured": false,
+   "stock_quantity": 10,
+   "description": null,
+   "specs": [
+    {
+     "label": "Conexión",
+     "value": "Bluetooth, hasta 3 equipos"
+    },
+    {
+     "label": "Baterías",
+     "value": "2 × AAA, hasta 24 meses"
+    },
+    {
+     "label": "Color",
+     "value": "Blanco"
+    },
+    {
+     "label": "Peso",
+     "value": "423 g"
+    }
+   ],
+   "images": [
+    {
+     "file": "Logitech K380 CJK Keyboard.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Logitech_K380_CJK_Keyboard.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "Cangjie6"
+    },
+    {
+     "file": "Logicool K380 Japanese bluetooth keyboard.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Logicool_K380_Japanese_bluetooth_keyboard.jpg",
+     "license": "CC BY 4.0",
+     "author": "Darklanlan"
+    }
+   ]
+  },
+  {
+   "slug": "demo-cargador-apple-usb-c-96w",
+   "name": "Cargador Apple USB-C de 96 W",
+   "brand": "Apple",
+   "category": "Accesorio",
+   "condition": "nuevo",
+   "price": 3900,
+   "warranty_months": 0,
+   "featured": false,
+   "stock_quantity": 7,
+   "description": "Adaptador original para MacBook Pro y MacBook Air. El cable USB-C se vende por separado.",
+   "specs": [
+    {
+     "label": "Potencia",
+     "value": "96 W"
+    },
+    {
+     "label": "Conector",
+     "value": "USB-C"
+    },
+    {
+     "label": "Compatibilidad",
+     "value": "MacBook Air, MacBook Pro, iPad Pro"
+    },
+    {
+     "label": "Incluye",
+     "value": "Solo el adaptador"
+    }
+   ],
+   "images": [
+    {
+     "file": "Apple USB-C (USB Type C) 87W Power Adapter for MacBook Pro (48979218053).jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Apple_USB-C_(USB_Type_C)_87W_Power_Adapter_for_MacBook_Pro_(48979218053).jpg",
+     "license": "CC BY-SA 2.0",
+     "author": "Tony Webster from Minneapolis, Minnesota, United States"
+    },
+    {
+     "file": "Apple 96W USB Type-C Power Adapter for new 16 inch MacBook Pro (49165128252).jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Apple_96W_USB_Type-C_Power_Adapter_for_new_16_inch_MacBook_Pro_(49165128252).jpg",
+     "license": "CC BY 2.0",
+     "author": "Tony Webster from Minneapolis, Minnesota, United States"
+    }
+   ]
+  },
+  {
+   "slug": "demo-jbl-flip-3",
+   "name": "Bocina JBL Flip 3",
+   "brand": "JBL",
+   "category": "Audio",
+   "condition": "reacondicionado",
+   "price": 3500,
+   "warranty_months": 3,
+   "featured": false,
+   "stock_quantity": 3,
+   "description": "Bocina portátil resistente a salpicaduras con sonido potente para su tamaño.",
+   "specs": [
+    {
+     "label": "Conexión",
+     "value": "Bluetooth 4.1"
+    },
+    {
+     "label": "Batería",
+     "value": "Hasta 10 horas"
+    },
+    {
+     "label": "Resistencia",
+     "value": "A salpicaduras"
+    },
+    {
+     "label": "Micrófono",
+     "value": "Sí, para llamadas"
+    }
+   ],
+   "images": [
+    {
+     "file": "JBL Flip 3 bluetooth speaker (DSCF2653).jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:JBL_Flip_3_bluetooth_speaker_(DSCF2653).jpg",
+     "license": "CC BY 4.0",
+     "author": "Trougnouf"
+    },
+    {
+     "file": "Głośnik JBL Flip 3.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:G%C5%82o%C5%9Bnik_JBL_Flip_3.jpg",
+     "license": "CC BY-SA 3.0",
+     "author": "Przemek Pietrak"
+    }
+   ]
+  },
+  {
+   "slug": "demo-apple-airpods-pro-2",
+   "name": "Apple AirPods Pro (2.ª generación)",
+   "brand": "Apple",
+   "category": "Audio",
+   "condition": "nuevo",
+   "price": 14900,
+   "warranty_months": 12,
+   "featured": false,
+   "stock_quantity": 0,
+   "description": "Cancelación activa de ruido y estuche de carga MagSafe con USB-C.",
+   "specs": [
+    {
+     "label": "Cancelación de ruido",
+     "value": "Activa"
+    },
+    {
+     "label": "Batería",
+     "value": "Hasta 6 horas (30 con estuche)"
+    },
+    {
+     "label": "Estuche",
+     "value": "MagSafe con USB-C"
+    },
+    {
+     "label": "Resistencia",
+     "value": "IP54"
+    },
+    {
+     "label": "Chip",
+     "value": "Apple H2"
+    }
+   ],
+   "images": [
+    {
+     "file": "AirPods Pro (2nd generation).jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:AirPods_Pro_(2nd_generation).jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "Hajoon0102"
+    },
+    {
+     "file": "AirPods Pro 1.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:AirPods_Pro_1.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "— aconcagua (talk)"
+    }
+   ]
+  },
+  {
+   "slug": "demo-tp-link-tl-wr740n",
+   "name": "Router TP-Link TL-WR740N",
+   "brand": "TP-Link",
+   "category": "Redes",
+   "condition": "nuevo",
+   "price": 1450,
+   "warranty_months": 12,
+   "featured": false,
+   "stock_quantity": 12,
+   "description": "Router Wi-Fi sencillo para casa u oficina pequeña.",
+   "specs": [
+    {
+     "label": "Velocidad",
+     "value": "150 Mbps"
+    },
+    {
+     "label": "Banda",
+     "value": "2.4 GHz"
+    },
+    {
+     "label": "Puertos",
+     "value": "4 LAN + 1 WAN"
+    },
+    {
+     "label": "Antena",
+     "value": "1 fija de 5 dBi"
+    }
+   ],
+   "images": [
+    {
+     "file": "TP-Link TL-WR740N router HS1 transparent.png",
+     "page": "https://commons.wikimedia.org/wiki/File:TP-Link_TL-WR740N_router_HS1_transparent.png",
+     "license": "CC BY 4.0",
+     "author": "Hayden Schiff"
+    },
+    {
+     "file": "TP-Link TL-WR740N router HS5.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:TP-Link_TL-WR740N_router_HS5.jpg",
+     "license": "CC BY 4.0",
+     "author": "Hayden Schiff"
+    },
+    {
+     "file": "TP-Link TL-WR740N router HS2.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:TP-Link_TL-WR740N_router_HS2.jpg",
+     "license": "CC BY 4.0",
+     "author": "Hayden Schiff"
+    }
+   ]
+  },
+  {
+   "slug": "demo-tp-link-deco-mesh",
+   "name": "Sistema Wi-Fi Mesh TP-Link Deco",
+   "brand": "TP-Link",
+   "category": "Redes",
+   "condition": "nuevo",
+   "price": 6900,
+   "warranty_months": 12,
+   "featured": false,
+   "stock_quantity": 4,
+   "description": "Cubre toda la casa con una sola red Wi-Fi, sin zonas muertas. Se configura desde la app Deco.",
+   "specs": [
+    {
+     "label": "Tipo",
+     "value": "Wi-Fi mesh de doble banda"
+    },
+    {
+     "label": "Velocidad",
+     "value": "Hasta 1,200 Mbps"
+    },
+    {
+     "label": "Cobertura",
+     "value": "Hasta 190 m² por unidad"
+    },
+    {
+     "label": "Puertos",
+     "value": "2 Gigabit por unidad"
+    },
+    {
+     "label": "Configuración",
+     "value": "App Deco"
+    }
+   ],
+   "images": [
+    {
+     "file": "Wifi mesh TP-link deco m4r.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Wifi_mesh_TP-link_deco_m4r.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "Willmeial"
+    },
+    {
+     "file": "Wi-Fi mesh system Deco M9 Plus.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Wi-Fi_mesh_system_Deco_M9_Plus.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "Project Kei"
+    }
+   ]
+  },
+  {
+   "slug": "demo-samsung-980-pro-1tb",
+   "name": "SSD Samsung 980 PRO 1 TB NVMe",
+   "brand": "Samsung",
+   "category": "Componente",
+   "condition": "nuevo",
+   "price": 7900,
+   "warranty_months": 12,
+   "featured": false,
+   "stock_quantity": 5,
+   "description": "Disco de estado sólido PCIe 4.0 de alto rendimiento para PC o laptop compatible.",
+   "specs": [
+    {
+     "label": "Capacidad",
+     "value": "1 TB"
+    },
+    {
+     "label": "Interfaz",
+     "value": "PCIe 4.0 NVMe M.2 2280"
+    },
+    {
+     "label": "Lectura",
+     "value": "Hasta 7,000 MB/s"
+    },
+    {
+     "label": "Escritura",
+     "value": "Hasta 5,000 MB/s"
+    },
+    {
+     "label": "Garantía del fabricante",
+     "value": "5 años"
+    }
+   ],
+   "images": [
+    {
+     "file": "Samsung 980 PRO PCIe 4.0 NVMe SSD 1TB-top PNr°0915.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Samsung_980_PRO_PCIe_4.0_NVMe_SSD_1TB-top_PNr%C2%B00915.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "D-Kuru"
+    },
+    {
+     "file": "Samsung 980 PRO PCIe 4.0 NVMe SSD 1TB-bottom PNr°0916.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:Samsung_980_PRO_PCIe_4.0_NVMe_SSD_1TB-bottom_PNr%C2%B00916.jpg",
+     "license": "CC BY-SA 4.0",
+     "author": "D-Kuru"
+    }
+   ]
+  },
+  {
+   "slug": "demo-kingston-hyperx-fury-8gb-ddr3",
+   "name": "Memoria Kingston HyperX Fury 8 GB DDR3",
+   "brand": "Kingston",
+   "category": "Componente",
+   "condition": "usado",
+   "price": 1200,
+   "warranty_months": 1,
+   "featured": false,
+   "stock_quantity": 6,
+   "description": "Módulo de memoria para PC de escritorio, probado y funcionando.",
+   "specs": [
+    {
+     "label": "Capacidad",
+     "value": "8 GB"
+    },
+    {
+     "label": "Tipo",
+     "value": "DDR3 1866 MHz"
+    },
+    {
+     "label": "Formato",
+     "value": "DIMM de escritorio"
+    },
+    {
+     "label": "Modelo",
+     "value": "HX318C10FB/8"
+    }
+   ],
+   "images": [
+    {
+     "file": "HX318C10FB-8 rear 20160503.jpg",
+     "page": "https://commons.wikimedia.org/wiki/File:HX318C10FB-8_rear_20160503.jpg",
+     "license": "CC BY-SA 2.0",
+     "author": "Kenming Wang"
+    }
+   ]
+  }
+ ]
+}

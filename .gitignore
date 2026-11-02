@@ -26,3 +26,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Fotos del inventario de prueba descargadas por scripts/seed-demo-images.mjs
+scripts/.demo-cache/
