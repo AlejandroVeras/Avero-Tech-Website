@@ -148,7 +148,7 @@ export function InvoicesList({ invoices }: InvoicesListProps) {
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button size="icon" variant="ghost" onClick={() => setDeleteId(invoice.id)}>
+                    <Button aria-label="Eliminar" size="icon" variant="ghost" onClick={() => setDeleteId(invoice.id)}>
                       <Trash2 className="h-4 w-4 text-red-500" />
                     </Button>
                   </div>

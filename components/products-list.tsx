@@ -75,10 +75,10 @@ export function ProductsList({ products }: ProductsListProps) {
                   </div>
                 </div>
                 <div className="flex gap-1 flex-shrink-0">
-                  <Button size="icon" variant="ghost" onClick={() => router.push(`/dashboard/products/${product.id}`)}>
+                  <Button aria-label="Editar" size="icon" variant="ghost" onClick={() => router.push(`/dashboard/products/${product.id}`)}>
                     <Edit className="h-4 w-4" />
                   </Button>
-                  <Button size="icon" variant="ghost" onClick={() => setDeleteId(product.id)}>
+                  <Button aria-label="Eliminar" size="icon" variant="ghost" onClick={() => setDeleteId(product.id)}>
                     <Trash2 className="h-4 w-4 text-red-500" />
                   </Button>
                 </div>

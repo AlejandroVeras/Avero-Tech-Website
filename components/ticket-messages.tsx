@@ -83,7 +83,7 @@ export function TicketMessages({ ticketId, messages }: TicketMessagesProps) {
               }
             }}
           />
-          <Button onClick={handleSend} disabled={sending || !newMessage.trim()} size="icon" className="shrink-0 h-auto">
+          <Button aria-label="Enviar mensaje" onClick={handleSend} disabled={sending || !newMessage.trim()} size="icon" className="shrink-0 h-auto">
             <Send className="h-4 w-4" />
           </Button>
         </div>

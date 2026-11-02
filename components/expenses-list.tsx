@@ -166,14 +166,14 @@ export function ExpensesList({ expenses }: ExpensesListProps) {
                             <p className="text-lg font-bold text-foreground">{formatCurrency(expense.amount)}</p>
                           </div>
                           <div className="flex gap-1">
-                            <Button
+                            <Button aria-label="Editar"
                               size="icon"
                               variant="ghost"
                               onClick={() => router.push(`/dashboard/expenses/${expense.id}`)}
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
-                            <Button size="icon" variant="ghost" onClick={() => setDeleteId(expense.id)}>
+                            <Button aria-label="Eliminar" size="icon" variant="ghost" onClick={() => setDeleteId(expense.id)}>
                               <Trash2 className="h-4 w-4 text-red-500" />
                             </Button>
                           </div>

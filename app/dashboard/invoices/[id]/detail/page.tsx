@@ -78,7 +78,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
         {/* Encabezado Principal */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <Button variant="outline" size="icon" asChild>
+            <Button aria-label="Volver" variant="outline" size="icon" asChild>
               <Link href="/dashboard/invoices">
                 <ArrowLeft className="h-4 w-4" />
               </Link>

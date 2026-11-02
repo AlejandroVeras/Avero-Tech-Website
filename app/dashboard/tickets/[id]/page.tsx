@@ -44,7 +44,7 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
   return (
     <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
+        <Button aria-label="Volver" variant="ghost" size="icon" asChild>
           <Link href="/dashboard/tickets"><ArrowLeft className="h-4 w-4" /></Link>
         </Button>
         <div className="flex-1">

@@ -304,7 +304,7 @@ export function QuoteForm({ quote, customers, products }: QuoteFormProps) {
                 </div>
 
                 <div className="col-span-2 md:col-span-1 flex items-end justify-end pb-1 md:pb-0 h-full">
-                  <Button
+                  <Button aria-label="Eliminar"
                     type="button"
                     size="icon"
                     variant="ghost"

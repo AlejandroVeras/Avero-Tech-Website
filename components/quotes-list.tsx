@@ -133,7 +133,7 @@ export function QuotesList({ quotes }: QuotesListProps) {
                     
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="-mr-2 h-8 w-8">
+                        <Button aria-label="Más opciones" variant="ghost" size="icon" className="-mr-2 h-8 w-8">
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>

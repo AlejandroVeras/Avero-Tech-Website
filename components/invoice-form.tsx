@@ -370,7 +370,7 @@ export function InvoiceForm({ invoice, customers, products }: InvoiceFormProps) 
                 </div>
 
                 <div className="col-span-1 flex items-end justify-end">
-                  <Button
+                  <Button aria-label="Eliminar"
                     type="button"
                     size="icon"
                     variant="ghost"

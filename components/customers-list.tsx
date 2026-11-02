@@ -76,14 +76,14 @@ export function CustomersList({ customers }: CustomersListProps) {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button
+                    <Button aria-label="Editar"
                       size="icon"
                       variant="ghost"
                       onClick={() => router.push(`/dashboard/customers/${customer.id}`)}
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button size="icon" variant="ghost" onClick={() => setDeleteId(customer.id)}>
+                    <Button aria-label="Eliminar" size="icon" variant="ghost" onClick={() => setDeleteId(customer.id)}>
                       <Trash2 className="h-4 w-4 text-red-500" />
                     </Button>
                   </div>
