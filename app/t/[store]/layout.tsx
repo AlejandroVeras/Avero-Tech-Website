@@ -63,7 +63,7 @@ export default async function TenantStoreLayout({
           <p>
             &copy; {new Date().getFullYear()} {store.name}
           </p>
-          <Link href="/sistemas/gestion" className="hover:text-obsidian dark:hover:text-foreground">
+          <Link href="/sistemas/inventario" className="hover:text-obsidian dark:hover:text-foreground">
             Catálogo hecho con <span className="font-semibold">Avero</span> — crea el tuyo
           </Link>
         </div>

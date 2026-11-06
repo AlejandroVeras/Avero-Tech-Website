@@ -104,7 +104,7 @@ export default async function HomePage() {
               </div>
             </Link>
 
-            <Link href="/sistemas/gestion" className={`${card} md:row-span-2 flex flex-col bg-obsidian text-white border-white/10 hover:border-sky-signal/50 dark:bg-white/[0.04]`}>
+            <Link href="/sistemas/inventario" className={`${card} md:row-span-2 flex flex-col bg-obsidian text-white border-white/10 hover:border-sky-signal/50 dark:bg-white/[0.04]`}>
               <div className="flex flex-1 flex-col p-8">
                 <span className="text-caption uppercase tracking-[0.16em] text-white/50">Avero Inventario</span>
                 <h3 className="mt-3 text-heading-sm font-semibold leading-tight">Tu negocio, organizado</h3>
@@ -132,7 +132,7 @@ export default async function HomePage() {
               </div>
             </Link>
 
-            <Link href="/soporte" className={`${card} p-8 flex flex-col`}>
+            <Link href="/servicios/soporte-tecnico" className={`${card} p-8 flex flex-col`}>
               <div className="flex gap-2 text-sapphire dark:text-sky-signal">
                 {[Monitor, Wifi, Server, Wrench].map((Icon, i) => (
                   <span key={i} className="flex h-10 w-10 items-center justify-center rounded-full bg-fog-white dark:bg-white/5">
@@ -148,7 +148,7 @@ export default async function HomePage() {
               </span>
             </Link>
 
-            <Link href="/sistemas/gestion" className={`${card} p-8 flex flex-col bg-gradient-to-br from-ice-wash/50 to-card dark:from-sky-signal/15 dark:to-card`}>
+            <Link href="/sistemas/inventario" className={`${card} p-8 flex flex-col bg-gradient-to-br from-ice-wash/50 to-card dark:from-sky-signal/15 dark:to-card`}>
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-card text-sapphire dark:text-sky-signal">
                 <QrCode className="h-5 w-5" aria-hidden />
               </span>

@@ -93,7 +93,7 @@ function GestionPlans({ system, trialDays }: { system: SaasSystem; trialDays: nu
         ))}
       </div>
       <p className="text-center mt-8">
-        <Link href="/sistemas/gestion" className="text-[14px] text-sapphire dark:text-sky-signal hover:underline underline-offset-4">
+        <Link href="/sistemas/inventario" className="text-[14px] text-sapphire dark:text-sky-signal hover:underline underline-offset-4">
           Ver todo lo que incluye Avero Inventario &gt;
         </Link>
       </p>

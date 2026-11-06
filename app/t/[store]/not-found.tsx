@@ -10,7 +10,7 @@ export default function TenantNotFound() {
         <p className="mt-3 text-body text-pewter">
           Puede que el producto ya no esté disponible o que la tienda haya cambiado su dirección.
         </p>
-        <Link href="/sistemas/gestion" className="mt-8 inline-block text-[14px] text-sapphire dark:text-sky-signal hover:underline underline-offset-4">
+        <Link href="/sistemas/inventario" className="mt-8 inline-block text-[14px] text-sapphire dark:text-sky-signal hover:underline underline-offset-4">
           ¿Tienes un negocio? Crea tu catálogo en línea &gt;
         </Link>
       </div>

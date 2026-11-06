@@ -12,7 +12,12 @@ const nextConfig = {
       : [],
   },
   async redirects() {
-    return [{ source: "/pricing", destination: "/precios", permanent: true }]
+    return [
+      { source: "/pricing", destination: "/precios", permanent: true },
+      // Support became a service; the management system is now called Avero Inventario.
+      { source: "/soporte", destination: "/servicios/soporte-tecnico", statusCode: 301 },
+      { source: "/sistemas/gestion", destination: "/sistemas/inventario", statusCode: 301 },
+    ]
   },
   // Clickjacking, MIME sniffing and downgrade protection for every page (sitio, inventario y tiendas).
   async headers() {

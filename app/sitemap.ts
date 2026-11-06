@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next"
 import { headers } from "next/headers"
 import { getProductsForStore, getStoreProducts, listPublicStores } from "@/lib/data/public-catalog"
-import { getPublishedSystems } from "@/lib/data/systems"
+import { CONTENT_DATES } from "@/lib/content-dates"
 import { APP_URL, SITE_URL } from "@/lib/site"
 
 // Each domain lists only its own pages: the customers' stores on the app domain, the rest on the main one.
@@ -11,17 +11,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sameDomain = appHost === new URL(SITE_URL).host
   if (host === appHost && !sameDomain) return storeEntries(APP_URL)
 
-  const [products, systems] = await Promise.all([getStoreProducts(), getPublishedSystems()])
+  const products = await getStoreProducts()
+  // Static pages carry their real last edit (lib/content-dates.ts); products use their own date.
   return [
-    { url: SITE_URL, changeFrequency: "weekly", priority: 1 },
-    { url: `${SITE_URL}/catalogo`, changeFrequency: "daily", priority: 0.9 },
-    ...products.map((p) => ({ url: `${SITE_URL}/catalogo/${p.slug}`, lastModified: p.createdAt, priority: 0.8 })),
-    { url: `${SITE_URL}/sistemas`, changeFrequency: "monthly", priority: 0.8 },
-    ...systems.filter((s) => !s.externalUrl).map((s) => ({ url: `${SITE_URL}/sistemas/${s.slug}`, changeFrequency: "monthly" as const, priority: 0.7 })),
-    { url: `${SITE_URL}/precios`, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/soporte`, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${SITE_URL}/contacto`, changeFrequency: "yearly", priority: 0.5 },
-    ...["terminos", "privacidad", "garantia"].map((p) => ({ url: `${SITE_URL}/${p}`, changeFrequency: "yearly" as const, priority: 0.2 })),
+    ...Object.entries(CONTENT_DATES).map(([path, date]) => ({ url: path === "/" ? SITE_URL : `${SITE_URL}${path}`, lastModified: new Date(`${date}T00:00:00Z`) })),
+    ...products.map((p) => ({ url: `${SITE_URL}/catalogo/${p.slug}`, lastModified: p.createdAt })),
     ...(sameDomain ? await storeEntries(SITE_URL) : []),
   ]
 }
