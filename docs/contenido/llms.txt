@@ -1,0 +1,36 @@
+# Avero Technology
+
+> Avero Technology es una empresa de tecnología de Santo Domingo, República Dominicana, que diseña páginas y portales web, hace posicionamiento SEO, crea chatbots e integraciones con inteligencia artificial para negocios, desarrolla los sistemas Avero Inventario, Avero Citas y Avero Condominios, vende equipos y da soporte técnico.
+
+Avero Technology se fundó en 2024. Su fundador es Alejandro Veras. Atiende por WhatsApp al +1 (829) 812-2103 las 24 horas, todos los días, y por correo en info@averotechnology.com. No tiene local abierto al público: entrega equipos y da soporte técnico en persona en todo Santo Domingo, y presta los servicios digitales a distancia para clientes de cualquier país.
+
+## Servicios
+
+- [Páginas web](https://averotechnology.com/servicios/diseno-paginas-web): Tu negocio en Google y en WhatsApp, con una página rápida que puedes actualizar.
+- [Portales y plataformas](https://averotechnology.com/servicios/desarrollo-portales-web): Portales de clientes, intranets, marketplaces y sistemas a la medida.
+- [Posicionamiento SEO](https://averotechnology.com/servicios/posicionamiento-seo): Aparece en Google, en Google Maps y en las respuestas de ChatGPT.
+- [IA para tu negocio](https://averotechnology.com/servicios/inteligencia-artificial-para-negocios): Automatiza tareas repetitivas, analiza tus datos y crea asistentes internos.
+- [Chatbots para WhatsApp y web](https://averotechnology.com/servicios/chatbots-ia-whatsapp): Un asistente que responde con tu catálogo real y te pasa pedidos confirmados.
+- [Soporte técnico](https://averotechnology.com/servicios/soporte-tecnico): Reparación, redes, servidores e igualas mensuales en Santo Domingo.
+- [Todos los servicios](https://averotechnology.com/servicios): cómo elegir, método de trabajo y precios desde.
+
+## Sistemas
+
+- [Avero Inventario](https://averotechnology.com/sistemas/inventario): inventario, ventas a crédito, facturas y cotizaciones con ITBIS y catálogo en línea. US$12 al mes, 30 días gratis.
+- [Avero Citas](https://averotechnology.com/sistemas/citas): reservas en línea, recordatorios, agenda del equipo y comisiones para barberías, salones, spas y consultorios. Desde US$9 al mes, 30 días gratis.
+- [Avero Condominios](https://averotechnology.com/sistemas/condominios): cuotas, gas, comprobantes y estado de cuenta por apartamento. Desde US$320 al año, 60 días gratis.
+
+## Empresa
+
+- [Quiénes somos](https://averotechnology.com/nosotros): fundador, proyectos propios y método de trabajo.
+- [Precios](https://averotechnology.com/precios): precios desde de cada servicio y planes de los sistemas.
+- [Preguntas frecuentes](https://averotechnology.com/preguntas-frecuentes)
+- [Contacto](https://averotechnology.com/contacto)
+- [Catálogo de equipos](https://averotechnology.com/catalogo): laptops, celulares y accesorios con entrega en Santo Domingo.
+
+## Optional
+
+- [Blog](https://averotechnology.com/blog): guías sobre páginas web, SEO, WhatsApp e IA para negocios.
+- [Términos y condiciones](https://averotechnology.com/terminos)
+- [Política de privacidad](https://averotechnology.com/privacidad)
+- [Garantía y devoluciones](https://averotechnology.com/garantia)
