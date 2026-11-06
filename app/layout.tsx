@@ -8,11 +8,11 @@ import { SITE_URL } from '@/lib/site'
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Avero Technology — Equipos, sistemas y soporte IT',
-    template: '%s · Avero Technology',
+    default: 'Avero Technology: webs, SEO e IA en Santo Domingo',
+    template: '%s | Avero Technology',
   },
   description:
-    'Equipos tecnológicos, sistemas para pequeños negocios (inventario, citas y condominios) y soporte IT en Santo Domingo, República Dominicana.',
+    'Diseñamos páginas y portales web, hacemos SEO y creamos chatbots con IA para negocios en RD. También vendemos equipos y damos soporte técnico.',
   openGraph: {
     type: 'website',
     locale: 'es_DO',

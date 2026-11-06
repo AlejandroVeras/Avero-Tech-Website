@@ -2,22 +2,9 @@ import { getUser } from "@/lib/auth"
 import { SiteHeader } from "@/components/site/site-header"
 import { SiteFooter } from "@/components/site/site-footer"
 import { ChatWidget } from "@/components/site/chat-widget"
-import { CONTACT_EMAIL, SITE_URL, WHATSAPP_NUMBER } from "@/lib/site"
+import { JsonLd } from "@/components/site/blocks/structure"
+import { organizationGraph } from "@/lib/schema"
 
-// Lets Google show the business (name, phone, area served) in local results and Maps.
-const BUSINESS_JSON_LD = {
-  "@context": "https://schema.org",
-  "@type": "ComputerStore",
-  name: "Avero Technology",
-  url: SITE_URL,
-  logo: `${SITE_URL}/LOGO.png`,
-  image: `${SITE_URL}/LOGO.png`,
-  email: CONTACT_EMAIL,
-  telephone: `+${WHATSAPP_NUMBER}`,
-  address: { "@type": "PostalAddress", addressLocality: "Santo Domingo", addressCountry: "DO" },
-  areaServed: { "@type": "Country", name: "República Dominicana" },
-  priceRange: "RD$",
-}
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const user = await getUser()
@@ -31,7 +18,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       >
         Saltar al contenido
       </a>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(BUSINESS_JSON_LD) }} />
+      {/* Organization, WebSite and founder, once for the whole site; pages reference them by @id. */}
+      <JsonLd data={organizationGraph()} />
       <SiteHeader isLoggedIn={isLoggedIn} />
       <main id="contenido" className="flex-1">{children}</main>
       <SiteFooter isLoggedIn={isLoggedIn} />
