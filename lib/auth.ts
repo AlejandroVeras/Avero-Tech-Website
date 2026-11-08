@@ -1,5 +1,6 @@
 "use server"
 import { createClient } from "@/lib/supabase/server"
+import { checkPassword, isStrongPassword, weakPasswordMessage } from "@/lib/password-policy"
 
 export interface User {
   id: string
@@ -14,6 +15,10 @@ export async function signUp(formData: FormData) {
 
   if (!email || !password || !businessName) {
     return { error: "All fields are required" }
+  }
+  const checks = checkPassword(password, { email, name: businessName })
+  if (!isStrongPassword(checks)) {
+    return { error: weakPasswordMessage(checks) }
   }
 
   const supabase = await createClient()
