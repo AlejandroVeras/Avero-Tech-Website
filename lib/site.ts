@@ -2,6 +2,10 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://averotechn
 // The customers' management system (login, dashboard, public stores) lives on its own subdomain.
 export const APP_URL = (process.env.NEXT_PUBLIC_APP_URL ?? "https://inventario.averotechnology.com").replace(/\/$/, "")
 
+// Customer logins of the three systems (each app keeps its own account).
+export const CITAS_URL = (process.env.NEXT_PUBLIC_CITAS_URL ?? "https://citas.averotechnology.com").replace(/\/$/, "")
+export const CONDOMINIOS_URL = (process.env.NEXT_PUBLIC_CONDOMINIOS_URL ?? "https://condominios.averotechnology.com").replace(/\/$/, "")
+
 export function appUrl(path: string) {
   return `${APP_URL}${path}`
 }

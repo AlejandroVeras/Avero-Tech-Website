@@ -10,7 +10,8 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { Logo } from "@/components/site/logo"
 import { CartSheet } from "@/components/site/cart-sheet"
 import { MegaMenuMobile, MegaMenuPanel } from "@/components/site/mega-menu"
-import { NAV_LINKS, appUrl, whatsappUrl } from "@/lib/site"
+import { SystemsMenu, systemLogins } from "@/components/site/systems-menu"
+import { NAV_LINKS, whatsappUrl } from "@/lib/site"
 import { cn } from "@/lib/utils"
 
 function isActive(pathname: string, href: string) {
@@ -58,21 +59,19 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
     }
   }, [megaOpen])
 
-  const systemHref = appUrl(isLoggedIn ? "/dashboard" : "/login")
-  const systemLabel = isLoggedIn ? "Ir al sistema" : "Entrar al sistema"
-
   return (
     <header ref={wrapRef} className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-xl backdrop-saturate-150">
-      <div className="container mx-auto px-4 h-14 flex items-center justify-between gap-4">
-        <Link href="/" aria-label="Avero Technology, inicio" className="shrink-0" onClick={closeAll}>
+      {/* Three equal side columns keep the menu centered on the page, whatever the width of the logo or the actions. */}
+      <div className="container mx-auto px-4 h-14 flex items-center justify-between gap-4 lg:grid lg:grid-cols-[1fr_auto_1fr]">
+        <Link href="/" aria-label="Avero Technology, inicio" className="shrink-0 lg:justify-self-start" onClick={closeAll}>
           <Logo className="h-8" />
         </Link>
 
-        <nav aria-label="Principal" className="hidden lg:flex items-center gap-1">
+        <nav aria-label="Principal" className="hidden lg:flex items-center gap-0.5 xl:gap-1 lg:justify-self-center">
           {NAV_LINKS.map((link) => {
             const active = isActive(pathname, link.href)
             const cls = cn(
-              "px-3 py-2 text-caption transition-colors",
+              "px-2.5 xl:px-3 py-2 text-caption transition-colors",
               active || (link.href === "/servicios" && megaOpen)
                 ? "text-obsidian dark:text-foreground font-semibold"
                 : "text-obsidian/70 dark:text-foreground/70 hover:text-obsidian dark:hover:text-foreground",
@@ -104,15 +103,13 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
           })}
         </nav>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 lg:justify-self-end">
           <ThemeToggle />
           <CartSheet />
-          <Link href={systemHref} className="hidden lg:block px-3 py-2 text-caption text-obsidian/70 dark:text-foreground/70 hover:text-obsidian dark:hover:text-foreground">
-            {systemLabel}
-          </Link>
-          <Button asChild size="sm" className="hidden sm:flex rounded-full">
+          <SystemsMenu isLoggedIn={isLoggedIn} className="hidden lg:inline-flex" />
+          <Button asChild size="sm" className="hidden sm:flex rounded-full lg:max-xl:w-8 lg:max-xl:px-0">
             <a href={QUOTE_URL} target="_blank" rel="noopener noreferrer">
-              <MessageCircle className="h-3.5 w-3.5" aria-hidden /> Cotizar
+              <MessageCircle className="h-3.5 w-3.5" aria-hidden /> <span className="lg:max-xl:sr-only">Cotizar</span>
             </a>
           </Button>
           <Button
@@ -178,9 +175,20 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
               <a href={QUOTE_URL} target="_blank" rel="noopener noreferrer" className="mt-2 flex items-center justify-center gap-2 rounded-full bg-primary px-3 py-3 text-body text-primary-foreground">
                 <MessageCircle className="h-4 w-4" aria-hidden /> Cotizar por WhatsApp
               </a>
-              <Link href={systemHref} className="block w-full px-3 py-2.5 text-body text-sapphire dark:text-sky-signal rounded-full hover:bg-muted">
-                {systemLabel}
-              </Link>
+              <div className="mt-3 border-t border-pale-mist/60 pt-3">
+                <p className="px-3 pb-1 text-caption uppercase tracking-[0.14em] text-pewter">Entrar a tu sistema</p>
+                {systemLogins(isLoggedIn).map((s) => (
+                  <a key={s.name} href={s.href} className="flex items-center gap-3 rounded-2xl px-3 py-2.5 hover:bg-muted">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-sapphire dark:bg-sky-signal/15 dark:text-sky-signal">
+                      <s.icon className="h-4 w-4" aria-hidden />
+                    </span>
+                    <span>
+                      <span className="block text-body">{s.name}</span>
+                      <span className="block text-caption text-pewter">{s.line}</span>
+                    </span>
+                  </a>
+                ))}
+              </div>
             </div>
           </motion.nav>
         )}
