@@ -21,7 +21,10 @@ const only = args.includes("--only") ? args[args.indexOf("--only") + 1] : null
 const PUBLIC = [
   "/", "/catalogo", "/catalogo/demo-macbook-air-m2-13", "/catalogo/demo-samsung-galaxy-s21-ultra-256gb",
   "/catalogo/demo-hp-laptop-15-da1xxx-core-i5-16gb-512gb", "/catalogo/demo-logitech-k380",
-  "/sistemas", "/sistemas/gestion", "/precios", "/soporte", "/contacto", "/garantia", "/terminos", "/privacidad",
+  "/servicios", "/servicios/diseno-paginas-web", "/servicios/desarrollo-portales-web", "/servicios/posicionamiento-seo",
+  "/servicios/inteligencia-artificial-para-negocios", "/servicios/chatbots-ia-whatsapp", "/servicios/soporte-tecnico",
+  "/sistemas", "/sistemas/inventario", "/sistemas/citas", "/sistemas/condominios", "/precios", "/nosotros",
+  "/preguntas-frecuentes", "/blog", "/contacto", "/garantia", "/terminos", "/privacidad",
   "/esta-pagina-no-existe", "/login", "/signup",
 ]
 const PRIVATE = ["/dashboard", "/dashboard/products", "/dashboard/products/new", "/dashboard/tienda", "/dashboard/invoices", "/dashboard/customers", "/dashboard/reports", "/dashboard/suscripcion"]
