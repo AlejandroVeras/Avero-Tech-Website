@@ -4,6 +4,9 @@ const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Render <title>, description, canonical and Open Graph inside <head> for every visitor, not streamed at the
+  // end of <body>: crawlers and AI fetchers that are not on Next's bot list would otherwise miss them.
+  htmlLimitedBots: /.*/,
   images: {
     // Product photos are resized to WebP in the browser before upload, so Next's optimizer isn't needed.
     unoptimized: true,
