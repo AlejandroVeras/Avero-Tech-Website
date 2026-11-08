@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation"
-import Link from "next/link"
-import { Logo } from "@/components/site/logo"
+import { AuthShell } from "@/components/auth-shell"
 import { getUser } from "@/lib/auth"
 import { LoginForm } from "@/components/login-form"
 
@@ -17,11 +16,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-8 bg-background p-4">
-      <Link href="/" aria-label="Avero Tech, inicio">
-        <Logo className="h-10" />
-      </Link>
+    <AuthShell title="Entrar a Avero Inventario" description="Tu inventario, tus facturas y lo que te deben, desde cualquier dispositivo.">
       <LoginForm next={target} />
-    </main>
+    </AuthShell>
   )
 }

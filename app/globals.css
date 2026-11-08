@@ -232,3 +232,45 @@
   .hero-grid, .hero-float, .marquee-track { animation: none; }
   .hero-tilt { transform: none; transition: none; }
 }
+
+/* ───────── Login and sign-up screens: perspective grid, dot texture and entrance ───────── */
+@layer components {
+  .auth-grid {
+    --grid-line: rgba(0, 113, 227, 0.16);
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 52px 52px;
+    transform: perspective(520px) rotateX(62deg);
+    transform-origin: center top;
+    mask-image: linear-gradient(to bottom, transparent, black 30%, black 65%, transparent);
+    animation: auth-grid-move 6s linear infinite;
+  }
+  .dark .auth-grid {
+    --grid-line: rgba(41, 151, 255, 0.22);
+  }
+  .auth-dots {
+    background-image: radial-gradient(rgba(0, 113, 227, 0.12) 1px, transparent 1px);
+    background-size: 22px 22px;
+    mask-image: radial-gradient(ellipse at 70% 20%, black, transparent 70%);
+  }
+  .dark .auth-dots {
+    background-image: radial-gradient(rgba(41, 151, 255, 0.14) 1px, transparent 1px);
+  }
+  .auth-rise {
+    animation: auth-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@keyframes auth-grid-move {
+  from { background-position: 0 0; }
+  to { background-position: 0 52px; }
+}
+@keyframes auth-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-grid, .auth-rise { animation: none; }
+}

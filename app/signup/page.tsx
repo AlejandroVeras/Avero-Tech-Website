@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation"
-import Link from "next/link"
-import { Logo } from "@/components/site/logo"
+import { AuthShell } from "@/components/auth-shell"
 import { getUser } from "@/lib/auth"
 import { SignupForm } from "@/components/signup-form"
 import { getTrialDays } from "@/lib/data/systems"
@@ -14,12 +13,17 @@ export default async function SignupPage() {
     redirect("/dashboard")
   }
 
+  const trialDays = await getTrialDays()
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-8 bg-background p-4">
-      <Link href="/" aria-label="Avero Tech, inicio">
-        <Logo className="h-10" />
-      </Link>
-      <SignupForm trialDays={await getTrialDays()} />
-    </main>
+    <AuthShell
+      title="Crea tu cuenta"
+      description={
+        trialDays
+          ? `Prueba Avero Inventario gratis ${trialDays} días. Después autorizas el pago con PayPal; no se cobra nada hasta que termine la prueba.`
+          : "Registra tu negocio en Avero Inventario."
+      }
+    >
+      <SignupForm />
+    </AuthShell>
   )
 }
