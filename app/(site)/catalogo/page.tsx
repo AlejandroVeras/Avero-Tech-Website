@@ -11,6 +11,7 @@ import { ShieldCheck, Tag, Truck } from "lucide-react"
 import { getStoreProducts } from "@/lib/data/public-catalog"
 import { pageGraph } from "@/lib/schema"
 import { SITE_URL, whatsappUrl } from "@/lib/site"
+import { CHAT_ENABLED } from "@/lib/features"
 
 const PATH = "/catalogo"
 const TITLE = "Laptops y equipos en Santo Domingo"
@@ -54,7 +55,7 @@ export default async function CatalogoPage() {
             description="Laptops, celulares y accesorios con precio en pesos dominicanos, condición y garantía en cada ficha. Entregamos en todo Santo Domingo. Pregunta por disponibilidad o arma tu pedido y envíalo por WhatsApp."
             className="mb-4"
           />
-          <p className="mb-10 text-center text-[13px] text-pewter">¿Dudas sobre un equipo? Abre el chat: nuestro asistente responde con el precio y la disponibilidad reales, a cualquier hora.</p>
+          <p className="mb-10 text-center text-[13px] text-pewter">{CHAT_ENABLED ? "¿Dudas sobre un equipo? Abre el chat: nuestro asistente responde con el precio y la disponibilidad reales, a cualquier hora." : "¿Dudas sobre un equipo? Escríbenos por WhatsApp: respondemos al momento, a cualquier hora."}</p>
           <Catalog products={products} />
         </div>
       </section>

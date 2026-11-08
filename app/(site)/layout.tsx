@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/site/site-footer"
 import { ChatWidget } from "@/components/site/chat-widget"
 import { JsonLd } from "@/components/site/blocks/structure"
 import { organizationGraph } from "@/lib/schema"
+import { CHAT_ENABLED } from "@/lib/features"
 
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -23,7 +24,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <SiteHeader isLoggedIn={isLoggedIn} />
       <main id="contenido" className="flex-1">{children}</main>
       <SiteFooter isLoggedIn={isLoggedIn} />
-      <ChatWidget />
+      {CHAT_ENABLED && <ChatWidget />}
     </div>
   )
 }

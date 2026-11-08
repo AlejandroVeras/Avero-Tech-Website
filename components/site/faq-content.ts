@@ -21,6 +21,6 @@ export const STORE_FAQ: FaqEntry[] = [
   },
   {
     question: "¿A qué hora puedo preguntar?",
-    answer: "A cualquier hora. Respondemos por WhatsApp las 24 horas, y el asistente del sitio contesta al momento con el catálogo real.",
+    answer: "A cualquier hora. Respondemos por WhatsApp al momento, las 24 horas, todos los días.",
   },
 ]

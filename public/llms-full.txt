@@ -56,7 +56,7 @@ CASO REAL
 
 ## Un asistente de ventas que no inventa precios
 
-Construimos nuestro propio asistente con IA para WhatsApp y para la burbuja de este sitio. Responde con el catálogo real, arma el pedido y solo lo registra cuando el cliente confirma. En 10 conversaciones de prueba, la IA costó US$0.0046 en total. Puedes probarlo ahora en el catálogo.
+Construimos nuestro propio asistente con IA para WhatsApp y para la burbuja de este sitio. Responde con el catálogo real, arma el pedido y solo lo registra cuando el cliente confirma. En 10 conversaciones de prueba, la IA costó US$0.0046 en total.
 
 ## Sistemas para administrar tu negocio
 
@@ -848,7 +848,7 @@ CHATBOTS CON IA
 # Chatbots con IA para WhatsApp y tu página web
 
 Creamos asistentes que atienden a tus clientes por WhatsApp y en tu web a cualquier hora, con tus precios y tu inventario reales, y que te pasan solo los pedidos que el cliente confirmó. No inventan precios, no presionan y pasan la conversación a una persona cuando el cliente lo pide.
-La burbuja de chat de este sitio la atiende nuestro propio asistente. Pruébalo.
+Respondemos al momento, 24/7.
 Por Alejandro Veras, fundador de Avero Technology · Actualizado el 5 de noviembre de 2026
 
 ## ¿Qué es un chatbot con IA para WhatsApp?
@@ -996,11 +996,10 @@ Sí. Transcribe la nota de voz y responde por escrito. Si no se entiende, pide a
 ### ¿Sirve también para mi página web?
 
 Sí. El mismo asistente funciona como burbuja de chat en tu web, con el mismo catálogo y las mismas reglas.
-Prueba el asistente en nuestro catálogo
 
-## Pruébalo antes de decidir
+## Un asistente para tu negocio
 
-Abre la burbuja de chat de nuestro catálogo y pregúntale lo que te preguntan tus clientes. Si te convence, escríbenos y lo adaptamos a tu negocio.
+Cuéntanos qué te preguntan tus clientes por WhatsApp. Te decimos qué podría hacer un asistente con IA en tu negocio y cuánto costaría.
 Respondemos al momento, 24/7.
 
 ## Servicios relacionados

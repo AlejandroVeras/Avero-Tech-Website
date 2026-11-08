@@ -3,6 +3,7 @@ import { AssistantFlow, ChatBubbles } from "@/components/site/illustrations"
 import { PENDING, SERVICE_PRICES, hasPrice, priceInline, priceLabel } from "@/lib/business"
 import { serviceNode } from "@/lib/schema"
 import { whatsappUrl } from "@/lib/site"
+import { CHAT_ENABLED } from "@/lib/features"
 
 const PATH = "/servicios/chatbots-ia-whatsapp"
 const WANT = whatsappUrl("Hola, quiero un chatbot para mi negocio")
@@ -26,8 +27,8 @@ const spec: PageSpec = {
     h1: "Chatbots con IA para WhatsApp y tu página web",
     intro: "Creamos asistentes que atienden a tus clientes por WhatsApp y en tu web a cualquier hora, con tus precios y tu inventario reales, y que te pasan solo los pedidos que el cliente confirmó. No inventan precios, no presionan y pasan la conversación a una persona cuando el cliente lo pide.",
     primary: { label: "Quiero un asistente para mi negocio", href: WANT },
-    secondary: { label: "Probar el de Avero", href: "/catalogo" },
-    micro: "La burbuja de chat de este sitio la atiende nuestro propio asistente. Pruébalo.",
+    secondary: CHAT_ENABLED ? { label: "Probar el de Avero", href: "/catalogo" } : { label: "Ver el caso real", href: "#caso" },
+    micro: CHAT_ENABLED ? "La burbuja de chat de este sitio la atiende nuestro propio asistente. Pruébalo." : "Respondemos al momento, 24/7.",
     visual: <ChatBubbles className="mx-auto max-w-[420px]" />,
   },
   schemaNodes: [serviceNode(PATH, "Chatbots con IA para WhatsApp y web", "Desarrollo de chatbots con inteligencia artificial", "Asistentes con inteligencia artificial para WhatsApp y páginas web que responden con datos reales del negocio, toman pedidos confirmados y pasan la conversación a una persona cuando hace falta.", { priceFrom: SERVICE_PRICES.botCreacion?.from })],
@@ -240,13 +241,15 @@ const spec: PageSpec = {
       ],
       visual: <ChatBubbles className="mx-auto max-w-[420px]" />,
     },
-    { k: "faq", title: "Preguntas frecuentes sobre chatbots de WhatsApp", after: { href: "/catalogo", label: "Prueba el asistente en nuestro catálogo" } },
+    { k: "faq", title: "Preguntas frecuentes sobre chatbots de WhatsApp", ...(CHAT_ENABLED ? { after: { href: "/catalogo", label: "Prueba el asistente en nuestro catálogo" } } : {}) },
     {
       k: "cta",
-      title: "Pruébalo antes de decidir",
-      text: "Abre la burbuja de chat de nuestro catálogo y pregúntale lo que te preguntan tus clientes. Si te convence, escríbenos y lo adaptamos a tu negocio.",
+      title: CHAT_ENABLED ? "Pruébalo antes de decidir" : "Un asistente para tu negocio",
+      text: CHAT_ENABLED
+        ? "Abre la burbuja de chat de nuestro catálogo y pregúntale lo que te preguntan tus clientes. Si te convence, escríbenos y lo adaptamos a tu negocio."
+        : "Cuéntanos qué te preguntan tus clientes por WhatsApp. Te decimos qué podría hacer un asistente con IA en tu negocio y cuánto costaría.",
       primary: { label: "Quiero uno para mi negocio", href: WANT },
-      secondary: { label: "Ir al catálogo", href: "/catalogo" },
+      secondary: CHAT_ENABLED ? { label: "Ir al catálogo", href: "/catalogo" } : { label: "Ver todos los servicios", href: "/servicios" },
     },
     {
       k: "related",

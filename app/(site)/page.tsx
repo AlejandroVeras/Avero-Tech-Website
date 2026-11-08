@@ -13,6 +13,7 @@ import { ChatBubbles, WebsiteMockup } from "@/components/site/illustrations"
 import { getStoreProducts } from "@/lib/data/public-catalog"
 import { getPublishedSystems, getTrialDays } from "@/lib/data/systems"
 import { PENDING, hasPrice, priceInline } from "@/lib/business"
+import { CHAT_ENABLED } from "@/lib/features"
 import { pageGraph } from "@/lib/schema"
 import { ENTITY_DEFINITION, FOUNDER, SERVICES, whatsappUrl } from "@/lib/site"
 
@@ -158,11 +159,11 @@ export default async function HomePage() {
                   <p className="text-caption uppercase tracking-[0.16em] text-white/50">Caso real</p>
                   <h2 className="mt-3 text-3xl md:text-heading-lg font-semibold tracking-[-0.02em] text-balance">Un asistente de ventas que no inventa precios</h2>
                   <p className="mt-5 text-[17px] leading-relaxed text-white/75">
-                    Construimos nuestro propio asistente con IA para WhatsApp y para la burbuja de este sitio. Responde con el catálogo real, arma el pedido y solo lo registra cuando el cliente confirma. En 10 conversaciones de prueba, la IA costó US$0.0046 en total. Puedes probarlo ahora en el catálogo.
+                    Construimos nuestro propio asistente con IA para WhatsApp y para la burbuja de este sitio. Responde con el catálogo real, arma el pedido y solo lo registra cuando el cliente confirma. En 10 conversaciones de prueba, la IA costó US$0.0046 en total.{CHAT_ENABLED && " Puedes probarlo ahora en el catálogo."}
                   </p>
                   <div className="mt-8 flex flex-wrap gap-3">
                     <ActionButton action={{ label: "Ver cómo funciona", href: "/servicios/chatbots-ia-whatsapp#caso" }} tone="dark" />
-                    <ActionButton action={{ label: "Probarlo en el catálogo", href: "/catalogo" }} tone="dark" variant="secondary" />
+                    {CHAT_ENABLED && <ActionButton action={{ label: "Probarlo en el catálogo", href: "/catalogo" }} tone="dark" variant="secondary" />}
                   </div>
                 </div>
               </div>
