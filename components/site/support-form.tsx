@@ -57,7 +57,7 @@ export function SupportForm() {
           <p className="text-[15px] text-pewter max-w-md mx-auto">
             {result.saved
               ? `Tu número de referencia es ${result.ticketRef}. Para una respuesta más rápida, envíanos también los detalles por WhatsApp.`
-              : "Envíanos los detalles por WhatsApp y te respondemos en menos de 2 horas."}
+              : "Envíanos los detalles por WhatsApp y te respondemos al momento, 24/7."}
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             <Button size="lg" className="rounded-full px-6 text-[14px] font-normal" asChild>
@@ -89,7 +89,7 @@ export function SupportForm() {
           <Wrench className="h-5 w-5 text-sapphire dark:text-sky-signal" aria-hidden />
           Solicitar soporte técnico
         </CardTitle>
-        <p className="text-[13px] text-pewter">Completa el formulario y recibirás respuesta por WhatsApp en menos de 2 horas.</p>
+        <p className="text-[13px] text-pewter">Completa el formulario y te respondemos por WhatsApp al momento, 24/7.</p>
       </CardHeader>
       <CardContent>
         <form onSubmit={submit} className="space-y-4" noValidate={false}>

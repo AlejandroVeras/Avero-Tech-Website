@@ -1,38 +1,5 @@
 import type { FaqEntry } from "@/components/site/faq"
 
-export const SYSTEM_FAQ: FaqEntry[] = [
-  {
-    question: "¿Cómo funciona Avero Inventario?",
-    answer:
-      "Es una aplicación web: entras desde el navegador y tienes inventario, ventas a crédito, clientes, facturas y cotizaciones con ITBIS, gastos y reportes. Pagas una suscripción mensual o anual.",
-  },
-  {
-    question: "¿Necesito instalar algo?",
-    answer:
-      "No. Funciona desde el navegador de cualquier celular, tablet o computadora con internet.",
-  },
-  {
-    question: "¿Hay prueba gratis?",
-    answer:
-      "Sí, 30 días con todas las funciones. Al crear tu cuenta autorizas el pago con PayPal, pero no se cobra nada durante la prueba; si cancelas antes de que termine, no pagas nada.",
-  },
-  {
-    question: "¿Cómo pago la suscripción?",
-    answer:
-      "Con PayPal, de forma automática cada mes o cada año según tu plan. Si no tienes cuenta de PayPal, la creas en el mismo paso con tu tarjeta de crédito o débito.",
-  },
-  {
-    question: "¿Puedo cancelar cuando quiera?",
-    answer:
-      "Sí, desde \"Mi suscripción\" dentro del sistema, sin contratos ni penalizaciones. Mantienes el acceso hasta el final del período que ya pagaste.",
-  },
-  {
-    question: "¿Qué pasa con mis datos si dejo de pagar?",
-    answer:
-      "Tu cuenta pasa a modo solo lectura: sigues viendo todo, pero no puedes crear ni editar. No se borra nada, y al renovar todo sigue exactamente como lo dejaste.",
-  },
-]
-
 export const STORE_FAQ: FaqEntry[] = [
   {
     question: "¿Los equipos tienen garantía?",
@@ -49,20 +16,11 @@ export const STORE_FAQ: FaqEntry[] = [
     answer: "Para equipos puedes pagar con transferencia o en efectivo.",
   },
   {
-    question: "¿Hacen envíos a todo el país?",
-    answer:
-      "Operamos en Santo Domingo y alrededores. Para otras provincias, escríbenos por WhatsApp y coordinamos el envío.",
-  },
-]
-
-export const SUPPORT_FAQ: FaqEntry[] = [
-  {
-    question: "¿Ofrecen soporte técnico remoto?",
-    answer:
-      "Sí. Muchos problemas los diagnosticamos y resolvemos de forma remota. Si hace falta intervención física, coordinamos una visita.",
+    question: "¿Hacen envíos?",
+    answer: "Sí, a todo Santo Domingo. Coordinamos la entrega al confirmar el pedido.",
   },
   {
-    question: "¿Cuánto tardan en responder?",
-    answer: "Respondemos por WhatsApp en menos de 2 horas.",
+    question: "¿A qué hora puedo preguntar?",
+    answer: "A cualquier hora. Respondemos por WhatsApp las 24 horas, y el asistente del sitio contesta al momento con el catálogo real.",
   },
 ]

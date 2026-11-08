@@ -42,7 +42,7 @@ export default async function ProductPage({ params }: Params) {
       storeName="Avero Technology"
       whatsapp={WHATSAPP_NUMBER}
       showCart
-      deliveryNote="Entrega en Santo Domingo; otras provincias, coordinamos el envío"
+      deliveryNote="Entrega en todo Santo Domingo"
     />
   )
 }
