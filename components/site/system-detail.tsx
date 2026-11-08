@@ -211,7 +211,7 @@ export async function SystemDetail({ copy }: { copy: SystemCopy }) {
               ))}
             </div>
             <p className="mt-8 text-center text-[13px] text-white/60">
-              Precios en dólares, cobrados con PayPal. <Link href="/precios" className="text-sky-signal hover:underline underline-offset-4">Ver todos los precios</Link>
+              Precios en dólares, cobrados con PayPal. <Link href="/precios" className="text-sky-signal underline decoration-sky-signal/40 underline-offset-4">Ver todos los precios</Link>
             </p>
           </div>
         </section>

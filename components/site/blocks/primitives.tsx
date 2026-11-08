@@ -75,7 +75,7 @@ export function Byline({ path, inverted = false, className }: { path: string; in
   return (
     <p className={cn("text-[13px]", inverted ? "text-white/60" : "text-pewter", className)}>
       Por{" "}
-      <Link href="/nosotros" className={cn("underline-offset-4 hover:underline", inverted ? "text-white/85" : "text-obsidian/85 dark:text-foreground/85")}>
+      <Link href="/nosotros" className={cn("underline underline-offset-4", inverted ? "text-white/85 decoration-white/30" : "text-obsidian/85 dark:text-foreground/85 decoration-pewter/40")}>
         {FOUNDER}
       </Link>
       , fundador de Avero Technology · Actualizado el <time dateTime={contentDate(path)}>{contentDateLabel(path)}</time>
@@ -103,7 +103,7 @@ export function Lead({ children, inverted = false, className }: { children: Reac
 
 export function Prose({ children, inverted = false, className }: { children: React.ReactNode; inverted?: boolean; className?: string }) {
   return (
-    <div className={cn("space-y-4 text-body", inverted ? "text-white/75" : "text-pewter", "[&_a]:text-sapphire dark:[&_a]:text-sky-signal [&_a]:underline-offset-4 hover:[&_a]:underline [&_strong]:font-semibold [&_strong]:text-obsidian dark:[&_strong]:text-foreground", className)}>
+    <div className={cn("space-y-4 text-body", inverted ? "text-white/75" : "text-pewter", "[&_a]:text-sapphire dark:[&_a]:text-sky-signal [&_a]:underline [&_a]:decoration-sapphire/30 [&_a]:underline-offset-4 hover:[&_a]:decoration-current [&_strong]:font-semibold [&_strong]:text-obsidian dark:[&_strong]:text-foreground", className)}>
       {children}
     </div>
   )

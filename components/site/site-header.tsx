@@ -68,7 +68,7 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
           <Logo className="h-8" />
         </Link>
 
-        <nav aria-label="Principal" className="hidden md:flex items-center gap-1">
+        <nav aria-label="Principal" className="hidden lg:flex items-center gap-1">
           {NAV_LINKS.map((link) => {
             const active = isActive(pathname, link.href)
             const cls = cn(
@@ -89,7 +89,7 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
                     aria-expanded={megaOpen}
                     aria-controls={panelId}
                     onClick={() => (megaOpen ? setMegaOn(null) : openMega())}
-                    className="py-2 pr-2 text-obsidian/60 dark:text-foreground/60 hover:text-obsidian dark:hover:text-foreground"
+                    className="flex h-8 w-7 items-center justify-center rounded-full text-obsidian/60 dark:text-foreground/60 hover:text-obsidian dark:hover:text-foreground"
                   >
                     <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", megaOpen && "rotate-180")} aria-hidden />
                   </button>
@@ -118,7 +118,7 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden rounded-full"
+            className="lg:hidden rounded-full"
             aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
@@ -130,7 +130,7 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
       </div>
 
       {megaOpen && (
-        <div className="hidden md:block" onMouseEnter={openMega} onMouseLeave={closeMegaSoon}>
+        <div className="hidden lg:block" onMouseEnter={openMega} onMouseLeave={closeMegaSoon}>
           <MegaMenuPanel id={panelId} onNavigate={() => setMegaOn(null)} />
         </div>
       )}
@@ -143,7 +143,7 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="md:hidden overflow-hidden bg-background/95 backdrop-blur-xl max-h-[calc(100dvh-3.5rem)] overflow-y-auto"
+            className="lg:hidden overflow-hidden bg-background/95 backdrop-blur-xl max-h-[calc(100dvh-3.5rem)] overflow-y-auto"
           >
             <div className="p-4 space-y-1">
               {NAV_LINKS.map((link) => {

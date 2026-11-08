@@ -121,7 +121,7 @@ export function CompareTable({ headers, rows, highlight, caption, className }: {
                       isLabel || (!hasRowLabel && i === 0) ? "font-semibold text-obsidian dark:text-foreground max-md:text-[16px]" : "text-obsidian/80 dark:text-foreground/80",
                       headers[i] && !(isLabel || (!hasRowLabel && i === 0)) && "max-md:before:content-[attr(data-label)] max-md:before:block max-md:before:text-caption max-md:before:uppercase max-md:before:tracking-[0.12em] max-md:before:text-pewter max-md:before:mb-0.5",
                       i === highlight && "md:bg-ice-wash/20 dark:md:bg-sky-signal/[0.07] max-md:-mx-2 max-md:mt-1 max-md:rounded-2xl max-md:bg-ice-wash/20 max-md:px-2 dark:max-md:bg-sky-signal/10",
-                      "[&_a]:text-sapphire dark:[&_a]:text-sky-signal hover:[&_a]:underline [&_a]:underline-offset-4",
+                      "[&_a]:text-sapphire dark:[&_a]:text-sky-signal [&_a]:underline [&_a]:decoration-sapphire/30 [&_a]:underline-offset-4",
                     )}
                   >
                     {cell}
@@ -211,7 +211,7 @@ export function CaseBlock({ id = "caso", eyebrow = "Caso real", title, children,
               <div>
                 <p className="text-caption uppercase tracking-[0.16em] text-sapphire dark:text-sky-signal">{eyebrow}</p>
                 <h2 className="mt-3 text-3xl md:text-heading-lg font-semibold tracking-[-0.02em] text-obsidian dark:text-foreground text-balance">{title}</h2>
-                <div className="mt-5 space-y-4 text-body text-pewter [&_strong]:text-obsidian dark:[&_strong]:text-foreground [&_a]:text-sapphire dark:[&_a]:text-sky-signal hover:[&_a]:underline">{children}</div>
+                <div className="mt-5 space-y-4 text-body text-pewter [&_strong]:text-obsidian dark:[&_strong]:text-foreground [&_a]:text-sapphire dark:[&_a]:text-sky-signal [&_a]:underline [&_a]:decoration-sapphire/30 [&_a]:underline-offset-4">{children}</div>
                 {metrics && (
                   <dl className="mt-8 grid grid-cols-2 gap-4">
                     {metrics.map((m) => (

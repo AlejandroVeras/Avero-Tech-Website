@@ -179,7 +179,7 @@ export function PortalMockup() {
                   <span className="text-obsidian dark:text-foreground">{r.doc}<span className="ml-2 text-pewter">{r.date}</span></span>
                   <span className="flex items-center gap-2">
                     <span className="text-obsidian dark:text-foreground">{r.amount}</span>
-                    <span className={cn("rounded-full px-2 py-0.5", r.state === "Pendiente" ? "bg-[#fff4e5] text-[#b35c00] dark:bg-[#b35c00]/20 dark:text-[#ffb766]" : "bg-[#e8f7ee] text-[#1a7f45] dark:bg-[#1a7f45]/20 dark:text-[#6fd39b]")}>{r.state}</span>
+                    <span className={cn("rounded-full px-2 py-0.5", r.state === "Pendiente" ? "bg-[#fff4e5] text-[#8a4600] dark:bg-[#b35c00]/20 dark:text-[#ffb766]" : "bg-[#e8f7ee] text-[#14653a] dark:bg-[#1a7f45]/20 dark:text-[#6fd39b]")}>{r.state}</span>
                   </span>
                 </div>
               ))}

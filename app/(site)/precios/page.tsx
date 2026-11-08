@@ -110,12 +110,10 @@ function ServicePrices() {
                   <dl className="mt-5 divide-y divide-pale-mist/70">
                     {t.rows.map((r) => (
                       <div key={r.name} className="flex items-start justify-between gap-4 py-3">
-                        <div>
-                          <dt className="text-[15px] font-medium text-obsidian dark:text-foreground">
-                            {r.name}
-                            <span className="block text-[13px] font-normal text-pewter">{r.includes}</span>
-                          </dt>
-                        </div>
+                        <dt className="text-[15px] font-medium text-obsidian dark:text-foreground">
+                          {r.name}
+                          <span className="block text-[13px] font-normal text-pewter">{r.includes}</span>
+                        </dt>
                         <dd className="shrink-0 text-right text-[14px] font-semibold text-sapphire dark:text-sky-signal">{r.price}</dd>
                       </div>
                     ))}
@@ -267,7 +265,7 @@ function ExternalPlans({ system, trialDays }: { system: SaasSystem; trialDays: n
           ? `${trialDays} días gratis y después un solo pago al año.`
           : `${trialDays} días gratis. Si pagas el año completo, te regalamos 2 meses.`}{" "}
         {system.externalUrl && (
-          <a href={system.externalUrl} className="text-sapphire dark:text-sky-signal hover:underline underline-offset-4">
+          <a href={system.externalUrl} className="text-sapphire dark:text-sky-signal underline decoration-sapphire/30 underline-offset-4">
             Conocer {system.name} &gt;
           </a>
         )}

@@ -26,7 +26,7 @@ function FaqItem({ question, answer, link }: FaqEntry) {
         {link && (
           <>
             {" "}
-            <Link href={link.href} className="text-sapphire dark:text-sky-signal hover:underline underline-offset-4">{link.label}</Link>
+            <Link href={link.href} className="text-sapphire dark:text-sky-signal underline decoration-sapphire/30 underline-offset-4">{link.label}</Link>
           </>
         )}
       </p>
