@@ -58,3 +58,9 @@ export function priceLabel(key: PriceKey, suffix = "") {
 export function hasPrice(key: PriceKey) {
   return SERVICE_PRICES[key] !== null
 }
+
+/** Inline form for running text: "desde RD$ 25,000". Only call it after hasPrice(key). */
+export function priceInline(key: PriceKey, suffix = "") {
+  const p = SERVICE_PRICES[key]
+  return p ? `desde RD$ ${dop.format(p.from)}${suffix}` : ""
+}

@@ -258,16 +258,19 @@ export function CtaBand({ title, text, primary, secondary, micro }: { title: str
 
 /* ───────────────────────── Related services ───────────────────────── */
 
-export function RelatedServices({ items, title = "Servicios relacionados" }: { items: { key: ServiceKey; why: string }[]; title?: string }) {
+export type RelatedItem = { key: ServiceKey; why: string } | { name: string; href: string; icon: string; why: string; cta?: string }
+
+export function RelatedServices({ items, title = "Servicios relacionados" }: { items: RelatedItem[]; title?: string }) {
   return (
     <section className="pt-4 pb-20 md:pb-24 bg-background">
       <div className="container mx-auto max-w-6xl px-4">
         <h2 className="text-heading-sm font-semibold text-obsidian dark:text-foreground">{title}</h2>
         <ul className="mt-6 grid gap-5 md:grid-cols-3">
-          {items.map(({ key, why }) => {
-            const s = SERVICES.find((x) => x.key === key)!
+          {items.map((item) => {
+            const s = "key" in item ? { ...SERVICES.find((x) => x.key === item.key)!, cta: "Ver servicio" } : { ...item, cta: item.cta ?? "Ver más" }
+            const why = item.why
             return (
-              <li key={key}>
+              <li key={s.href}>
                 <Link href={s.href} className="group flex h-full flex-col rounded-[28px] border border-pale-mist/70 bg-card p-7 transition-colors hover:border-sapphire/40">
                   <span className="flex h-11 w-11 items-center justify-center rounded-full bg-fog-white dark:bg-white/5 text-sapphire dark:text-sky-signal">
                     <ServiceIcon name={s.icon} className="h-5 w-5" />
@@ -275,7 +278,7 @@ export function RelatedServices({ items, title = "Servicios relacionados" }: { i
                   <h3 className="mt-5 text-lg font-semibold text-obsidian dark:text-foreground">{s.name}</h3>
                   <p className="mt-1.5 text-[15px] text-pewter">{why}</p>
                   <span className="mt-auto pt-6 inline-flex items-center gap-1 text-[14px] text-sapphire dark:text-sky-signal">
-                    Ver servicio <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
+                    {s.cta} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
                   </span>
                 </Link>
               </li>
