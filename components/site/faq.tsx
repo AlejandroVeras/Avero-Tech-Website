@@ -1,12 +1,15 @@
+import Link from "next/link"
 import { ChevronDown } from "lucide-react"
 
 export interface FaqEntry {
   question: string
   answer: string
+  /** Optional link to the page that develops the answer. */
+  link?: { href: string; label: string }
 }
 
 // Native <details>: the answer is always in the HTML, so Google and AI crawlers can read it even while closed.
-function FaqItem({ question, answer }: FaqEntry) {
+function FaqItem({ question, answer, link }: FaqEntry) {
   return (
     <details className="group border-b border-border last:border-0">
       <summary className="flex w-full cursor-pointer list-none items-center justify-between py-5 text-left [&::-webkit-details-marker]:hidden">
@@ -18,7 +21,15 @@ function FaqItem({ question, answer }: FaqEntry) {
           className="h-5 w-5 shrink-0 text-pewter transition-transform group-open:rotate-180 group-open:text-sapphire dark:group-open:text-sky-signal"
         />
       </summary>
-      <p className="pb-5 text-pewter text-[15px] leading-relaxed">{answer}</p>
+      <p className="pb-5 text-pewter text-[15px] leading-relaxed">
+        {answer}
+        {link && (
+          <>
+            {" "}
+            <Link href={link.href} className="text-sapphire dark:text-sky-signal hover:underline underline-offset-4">{link.label}</Link>
+          </>
+        )}
+      </p>
     </details>
   )
 }

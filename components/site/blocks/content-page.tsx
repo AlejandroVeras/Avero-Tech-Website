@@ -16,7 +16,7 @@ export function rich(text: string): React.ReactNode {
     const link = p.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
     if (link) {
       const [, label, href] = link
-      return href.startsWith("http") ? (
+      return href.startsWith("http") || href.startsWith("mailto:") ? (
         <a key={i} href={href} target="_blank" rel="noopener noreferrer">{label}</a>
       ) : (
         <Link key={i} href={href}>{label}</Link>
