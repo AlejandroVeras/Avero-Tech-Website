@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useId, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
@@ -27,7 +27,7 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
   const [servicesOpenMobile, setServicesOpenMobile] = useState(false)
   const menuOpen = openOn === pathname
   const megaOpen = megaOn === pathname
-  const panelId = useId()
+  const panelId = "mega-menu-servicios"
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
 

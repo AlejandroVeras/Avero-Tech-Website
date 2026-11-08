@@ -64,7 +64,7 @@ const TONES = {
 
 export function Section({ tone = "default", id, className, children, narrow = false }: { tone?: keyof typeof TONES; id?: string; className?: string; children: React.ReactNode; narrow?: boolean }) {
   return (
-    <section id={id} className={cn("py-20 md:py-28 scroll-mt-20", TONES[tone], className)}>
+    <section id={id} className={cn("py-16 md:py-24 scroll-mt-20", TONES[tone], className)}>
       <div className={cn("container mx-auto px-4", narrow ? "max-w-3xl" : "max-w-6xl")}>{children}</div>
     </section>
   )
