@@ -6,7 +6,7 @@ import { AnswerBlock, CardGrid, CaseBlock, CompareTable, CtaBand, PricingTiers, 
 import { Reveal } from "@/components/site/blocks/reveal"
 import { WebsiteMockup } from "@/components/site/illustrations"
 import { LaptopMock } from "@/components/site/home/device-mockups"
-import { PENDING, hasPrice, priceLabel } from "@/lib/business"
+import { PENDING, hasPrice, priceInline, priceLabel } from "@/lib/business"
 import { pageGraph, serviceNode } from "@/lib/schema"
 import { SERVICE_PRICES } from "@/lib/business"
 import { whatsappUrl } from "@/lib/site"
@@ -32,14 +32,14 @@ const CRUMBS = [
 
 const priced = hasPrice("webPresentacion") && hasPrice("webCatalogo")
 const priceSentence = priced
-  ? `En Avero, una página de presentación cuesta ${priceLabel("webPresentacion").toLowerCase()} y una página con catálogo, ${priceLabel("webCatalogo").toLowerCase()}.`
+  ? `En Avero, una página de presentación cuesta ${priceInline("webPresentacion")} y una página con catálogo, ${priceInline("webCatalogo")}.`
   : "Te damos el precio por escrito en 24 a 48 horas, sin costo."
 
 const FAQ = [
   {
     question: "¿Cuánto cuesta una página web en República Dominicana?",
     answer: priced
-      ? `En Avero, una página de presentación cuesta ${priceLabel("webPresentacion").toLowerCase()} y una con catálogo, ${priceLabel("webCatalogo").toLowerCase()}. El precio depende de las secciones y funciones, y es cerrado: lo sabes antes de empezar. Aparte se paga el dominio y el alojamiento.`
+      ? `En Avero, una página de presentación cuesta ${priceInline("webPresentacion")} y una con catálogo, ${priceInline("webCatalogo")}. El precio depende de las secciones y funciones, y es cerrado: lo sabes antes de empezar. Aparte se paga el dominio y el alojamiento.`
       : "Depende de las secciones y funciones. En Avero el precio es cerrado: lo recibes por escrito en 24 a 48 horas, sin costo, y no cambia si el alcance no cambia. Aparte se paga cada año el dominio y el alojamiento.",
   },
   { question: "¿Cuánto tarda en estar lista?", answer: "De 2 a 3 semanas una página de presentación y de 3 a 5 semanas una con catálogo, contando desde que tenemos tus fotos y datos." },
