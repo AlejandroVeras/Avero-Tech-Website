@@ -62,7 +62,7 @@ export function SiteHeader({ isLoggedIn }: { isLoggedIn: boolean }) {
   return (
     <header ref={wrapRef} className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-xl backdrop-saturate-150">
       {/* Three equal side columns keep the menu centered on the page, whatever the width of the logo or the actions. */}
-      <div className="container mx-auto px-4 h-14 flex items-center justify-between gap-4 lg:grid lg:grid-cols-[1fr_auto_1fr]">
+      <div className="container mx-auto max-w-6xl px-4 h-14 flex items-center justify-between gap-4 lg:grid lg:grid-cols-[1fr_auto_1fr]">
         <Link href="/" aria-label="Avero Technology, inicio" className="shrink-0 lg:justify-self-start" onClick={closeAll}>
           <Logo className="h-8" />
         </Link>

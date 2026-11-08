@@ -49,8 +49,8 @@ export default async function SistemasPage() {
         })}
       />
       <section className="pt-10 md:pt-14 pb-24 md:pb-32 bg-obsidian text-white">
-        <div className="container mx-auto px-4">
-          <Breadcrumbs crumbs={CRUMBS} inverted className="max-w-6xl mx-auto mb-10" />
+        <div className="container mx-auto max-w-6xl px-4">
+          <Breadcrumbs crumbs={CRUMBS} inverted className="mb-10" />
           <SectionHeading
             as="h1"
             inverted

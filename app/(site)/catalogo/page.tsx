@@ -47,8 +47,8 @@ export default async function CatalogoPage() {
         })}
       />
       <section className="pt-10 md:pt-14 pb-20 md:pb-28 bg-gradient-to-b from-ice-wash/25 via-ice-wash/10 to-background dark:from-sky-signal/[0.07] dark:via-transparent">
-        <div className="container mx-auto px-4">
-          <Breadcrumbs crumbs={CRUMBS} className="max-w-6xl mx-auto mb-10" />
+        <div className="container mx-auto max-w-6xl px-4">
+          <Breadcrumbs crumbs={CRUMBS} className="mb-10" />
           <SectionHeading
             as="h1"
             title="Catálogo de laptops y equipos en Santo Domingo"

@@ -46,7 +46,7 @@ function Column({ title, links }: { title: string; links: readonly { label: stri
 export function SiteFooter({ isLoggedIn }: { isLoggedIn: boolean }) {
   return (
     <footer className="bg-fog-white dark:bg-white/[0.03] py-12">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto max-w-6xl px-4">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1.3fr] gap-8">
           <div className="col-span-2 md:col-span-3 lg:col-span-1 space-y-3">
             <Logo className="h-8" />

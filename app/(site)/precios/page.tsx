@@ -200,7 +200,7 @@ export default async function PreciosPage() {
           id={ANCHORS[s.slug] ?? s.slug}
           className={`scroll-mt-20 py-16 md:py-20 ${i % 2 ? "bg-gradient-to-b from-fog-white to-background dark:from-white/[0.03]" : "bg-background"}`}
         >
-          <div className="container mx-auto px-4">
+          <div className="container mx-auto max-w-6xl px-4">
             <SectionHeading title={s.name} description={s.tagline} className="mb-10" />
             {s.slug === "gestion" ? <GestionPlans system={s} trialDays={trialDays} /> : <ExternalPlans system={s} trialDays={s.trialDays ?? trialDays} />}
           </div>
@@ -208,7 +208,7 @@ export default async function PreciosPage() {
       ))}
 
       <section className="py-20 md:py-28 bg-gradient-to-b from-fog-white to-background dark:from-white/[0.03]">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto max-w-6xl px-4">
           <SectionHeading title="Preguntas frecuentes sobre precios" className="mb-12" />
           <Faq entries={FAQ} />
         </div>

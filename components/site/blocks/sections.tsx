@@ -237,8 +237,8 @@ export function CaseBlock({ id = "caso", eyebrow = "Caso real", title, children,
 export function CtaBand({ title, text, primary, secondary, micro }: { title: string; text: string; primary: Action; secondary?: Action; micro?: string }) {
   return (
     <section className="pb-24 md:pb-32 pt-4 bg-background">
-      <div className="container mx-auto px-4">
-        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[36px] bg-gradient-to-br from-[#0058b3] via-[#0071e3] to-[#2997ff] px-6 py-16 text-center text-white md:px-16 md:py-24">
+      <div className="container mx-auto max-w-6xl px-4">
+        <div className="relative overflow-hidden rounded-[36px] bg-gradient-to-br from-[#0058b3] via-[#0071e3] to-[#2997ff] px-6 py-16 text-center text-white md:px-16 md:py-24">
           <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-white/10 blur-2xl" />
           <div aria-hidden className="pointer-events-none absolute -bottom-32 -left-16 h-96 w-96 rounded-full bg-[#aad0f6]/20 blur-3xl" />
           <div className="relative">
