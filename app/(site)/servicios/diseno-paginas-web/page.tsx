@@ -4,8 +4,7 @@ import { JsonLd } from "@/components/site/blocks/structure"
 import { ArrowLink, CheckList, H2, Prose, Section } from "@/components/site/blocks/primitives"
 import { AnswerBlock, CardGrid, CaseBlock, CompareTable, CtaBand, PricingTiers, ProcessSteps, RelatedServices, ServiceHero } from "@/components/site/blocks/sections"
 import { Reveal } from "@/components/site/blocks/reveal"
-import { WebsiteMockup } from "@/components/site/illustrations"
-import { LaptopMock } from "@/components/site/home/device-mockups"
+import { ScreenshotFrame, WebsiteMockup } from "@/components/site/illustrations"
 import { PENDING, hasPrice, priceInline, priceLabel } from "@/lib/business"
 import { pageGraph, serviceNode } from "@/lib/schema"
 import { SERVICE_PRICES } from "@/lib/business"
@@ -235,7 +234,7 @@ export default function WebDesignPage() {
           { value: "100", label: "SEO, accesibilidad y buenas prácticas (Lighthouse móvil)" },
           { value: "250", label: "combinaciones probadas, con 0 enlaces rotos y 0 errores" },
         ]}
-        visual={<LaptopMock />}
+        visual={<ScreenshotFrame src="/images/servicios/averotechnology-inicio.jpg" alt="Portada de averotechnology.com, el sitio que Avero Technology diseñó y programó para sí misma" url="averotechnology.com" width={1200} height={750} />}
       >
         <p>
           El sitio que estás leyendo lo diseñamos y programamos nosotros, con catálogo de productos, carrito que envía el pedido por WhatsApp y un asistente de ventas con IA. Antes de cada cambio grande lo probamos en 250 combinaciones de página, ancho de pantalla y tema claro u oscuro.

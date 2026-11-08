@@ -262,3 +262,13 @@ export function SupportMockup() {
     </div>
   )
 }
+
+/** A real screenshot inside a browser frame (used for Avero's own work). */
+export function ScreenshotFrame({ src, alt, url, width, height }: { src: string; alt: string; url: string; width: number; height: number }) {
+  return (
+    <Window url={url}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" className="block h-auto w-full" />
+    </Window>
+  )
+}
