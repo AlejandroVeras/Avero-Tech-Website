@@ -38,8 +38,11 @@ export function isAnnualOnly(plan: Pick<SystemPlan, "monthly_usd" | "annual_usd"
   return !plan.monthly_usd && !!plan.annual_usd
 }
 
+// Each system has its own page on the main domain (the apps keep living on their subdomains).
+const SYSTEM_PAGES: Record<string, string> = { gestion: "/sistemas/inventario", citas: "/sistemas/citas", condominios: "/sistemas/condominios" }
+
 export function systemHref(system: Pick<SaasSystem, "slug" | "externalUrl">) {
-  return system.externalUrl ?? `/sistemas/${system.slug}`
+  return SYSTEM_PAGES[system.slug] ?? system.externalUrl ?? `/sistemas/${system.slug}`
 }
 
 export const DEFAULT_TRIAL_DAYS = 30

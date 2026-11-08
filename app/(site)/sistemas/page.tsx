@@ -1,35 +1,65 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { SectionHeading } from "@/components/site/section-heading"
 import { SystemIcon } from "@/components/site/system-icon"
 import { getPublishedSystems, getTrialDays } from "@/lib/data/systems"
 import { isAnnualOnly, systemHref } from "@/lib/systems"
-import { formatUSD, whatsappUrl } from "@/lib/site"
+import { SITE_URL, formatUSD, whatsappUrl } from "@/lib/site"
+import { Faq } from "@/components/site/faq"
+import { Breadcrumbs, JsonLd } from "@/components/site/blocks/structure"
+import { Byline, CheckList, H2, Section } from "@/components/site/blocks/primitives"
+import { AnswerBlock, CompareTable, CtaBand } from "@/components/site/blocks/sections"
+import { Reveal } from "@/components/site/blocks/reveal"
+import { contentMetadata } from "@/components/site/blocks/content-page"
+import { pageGraph } from "@/lib/schema"
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/sistemas" },
-  title: "Sistemas",
-  description:
-    "Software para administrar tu negocio: inventario, ventas a crédito, facturas con ITBIS y catálogo en línea. Hecho en República Dominicana.",
-}
+const PATH = "/sistemas"
+const TITLE = "Sistemas para negocios hechos en RD"
+const DESCRIPTION = "Avero Inventario, Avero Citas y Avero Condominios: software web en español para administrar tu negocio desde el celular. Prueba gratis antes de pagar."
+const CRUMBS = [
+  { name: "Inicio", href: "/" },
+  { name: "Sistemas", href: PATH },
+]
+
+export const metadata: Metadata = contentMetadata({ path: PATH, title: TITLE, description: DESCRIPTION })
+
+const FAQ = [
+  { question: "¿Los sistemas de Avero funcionan en el celular?", answer: "Sí. Los tres funcionan en el navegador del celular, la tablet o la computadora, sin instalar nada." },
+  { question: "¿Puedo probarlos gratis?", answer: "Sí. Avero Inventario y Avero Citas tienen 30 días de prueba y Avero Condominios, 60." },
+  { question: "¿Cómo se pagan?", answer: "Con PayPal, de forma automática según el plan. Si no tienes cuenta de PayPal, se crea en el mismo paso con tu tarjeta." },
+  { question: "¿Mis datos están seguros?", answer: "Cada negocio ve solo su información gracias a reglas de acceso dentro de la base de datos, y las conexiones van cifradas con HTTPS." },
+  { question: "¿Pueden adaptar un sistema a mi negocio?", answer: "Los sistemas son iguales para todos los clientes. Si necesitas algo distinto, lo desarrollamos a medida." },
+]
 
 export default async function SistemasPage() {
   const [systems, trialDays] = await Promise.all([getPublishedSystems(), getTrialDays()])
 
   return (
     <>
-      <section className="py-24 md:py-32 bg-obsidian text-white">
+      <JsonLd
+        data={pageGraph({
+          path: PATH,
+          title: `${TITLE} | Avero Technology`,
+          description: DESCRIPTION,
+          type: "CollectionPage",
+          crumbs: CRUMBS,
+          faq: FAQ,
+          nodes: [{ "@type": "ItemList", "@id": `${SITE_URL}${PATH}#sistemas`, itemListElement: systems.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: s.name, url: `${SITE_URL}${systemHref(s)}` })) }],
+        })}
+      />
+      <section className="pt-10 md:pt-14 pb-24 md:pb-32 bg-obsidian text-white">
         <div className="container mx-auto px-4">
+          <Breadcrumbs crumbs={CRUMBS} inverted className="max-w-6xl mx-auto mb-10" />
           <SectionHeading
             as="h1"
             inverted
             eyebrow="Software para tu negocio"
-            title="Sistemas que trabajan por ti"
-            description="Herramientas web, simples y en español, para que administres tu negocio desde el celular o la computadora. Sin instalar nada."
-            className="mb-14"
+            title="Sistemas para administrar tu negocio, hechos en República Dominicana"
+            description="Tres sistemas web, en español, que funcionan desde el celular o la computadora sin instalar nada. Los diseñó y los opera Avero Technology en Santo Domingo, y los pruebas gratis antes de pagar."
+            className="mb-6"
           />
+          <Byline path={PATH} inverted className="mb-14 text-center" />
 
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
             {systems.map((s) => {
@@ -92,24 +122,53 @@ export default async function SistemasPage() {
         </div>
       </section>
 
-      <section className="py-20 md:py-28 bg-background">
-        <div className="container mx-auto px-4 text-center">
-          <SectionHeading
-            title="¿Necesitas algo a la medida?"
-            description="Si tu negocio necesita un sistema que todavía no está aquí, cuéntanos qué quieres resolver."
-            className="mb-8"
+      <Section>
+        <AnswerBlock
+          question="¿Qué sistema necesito?"
+          answer="Si vendes productos, Avero Inventario. Si trabajas con citas, Avero Citas. Si administras un edificio, Avero Condominios. Los tres comparten el mismo principio: cada negocio ve solo su información, el pago es automático y puedes cancelar cuando quieras."
+        >
+          <CompareTable
+            caption="Qué sistema elegir"
+            headers={["", "Para quién", "Qué resuelve", "Desde", "Prueba"]}
+            rows={[
+              [<Link key="i" href="/sistemas/inventario">Avero Inventario</Link>, "Colmados, tiendas, ferreterías, talleres", "Inventario, ventas a crédito, facturas con ITBIS, gastos y catálogo en línea", "US$12/mes", "30 días"],
+              [<Link key="c" href="/sistemas/citas">Avero Citas</Link>, "Barberías, salones, spas y consultorios", "Reservas en línea, recordatorios, agenda del equipo y comisiones", "US$9/mes", "30 días"],
+              [<Link key="d" href="/sistemas/condominios">Avero Condominios</Link>, "Administradores de condominios", "Cuotas, gas, comprobantes, recibos y estado de cuenta por apartamento", "US$320/año", "60 días"],
+            ]}
           />
-          <Button size="lg" className="rounded-full px-6 text-[14px] font-normal" asChild>
-            <a
-              href={whatsappUrl("Hola, me interesa un sistema a la medida para mi negocio.")}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Hablar por WhatsApp
-            </a>
-          </Button>
-        </div>
-      </section>
+        </AnswerBlock>
+      </Section>
+
+      <Section tone="fog">
+        <Reveal>
+          <H2>¿Qué tienen en común los sistemas de Avero?</H2>
+          <CheckList
+            className="mt-8 max-w-3xl"
+            items={[
+              "Funcionan en el navegador: no hay que descargar nada ni actualizar.",
+              "Cada negocio ve solo su información, con reglas de acceso dentro de la base de datos.",
+              "Si dejas de pagar, no se borra nada: la cuenta queda en modo solo lectura hasta que renuevas.",
+              "Soporte por WhatsApp de la misma empresa que los programa.",
+            ]}
+          />
+        </Reveal>
+      </Section>
+
+      <Section narrow>
+        <Reveal>
+          <H2 className="text-center">Preguntas frecuentes</H2>
+          <div className="mt-10">
+            <Faq entries={FAQ} />
+          </div>
+        </Reveal>
+      </Section>
+
+      <CtaBand
+        title="¿Necesitas algo a la medida?"
+        text="Si tu negocio necesita un sistema que todavía no está aquí, lo construimos con el mismo método. Mira el servicio de portales y plataformas a medida o cuéntanos qué quieres resolver."
+        primary={{ label: "Hablar de un sistema a la medida", href: whatsappUrl("Hola, me interesa un sistema a la medida") }}
+        secondary={{ label: "Ver portales a medida", href: "/servicios/desarrollo-portales-web" }}
+      />
     </>
   )
 }
