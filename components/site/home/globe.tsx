@@ -42,26 +42,35 @@ export function Globe({ className }: { className?: string }) {
     let drag: { x: number; phi: number } | null = null
     let velocity = 0
 
-    const start = async () => {
+    const isDark = () => document.documentElement.classList.contains("dark")
+    // Light theme: white land dots on a pale sphere; dark theme: blue on navy.
+    const palette = (dark: boolean) =>
+      dark
+        ? { dark: 1, diffuse: 1.4, mapBrightness: 5, mapBaseBrightness: 0.02, baseColor: [0.12, 0.16, 0.24] as [number, number, number], glowColor: [0.18, 0.36, 0.7] as [number, number, number], homeColor: [0.66, 0.84, 1] as [number, number, number] }
+        : { dark: 0, diffuse: 1.2, mapBrightness: 7, mapBaseBrightness: 0, baseColor: [0.92, 0.95, 1] as [number, number, number], glowColor: [0.78, 0.86, 1] as [number, number, number], homeColor: [0, 0.44, 0.89] as [number, number, number] }
+
+    const create = async () => {
       const { default: createGlobe } = await import("cobe")
       if (cancelled || !canvas) return
+      globe?.destroy()
       const size = canvas.offsetWidth
       const small = size < 420
+      const c = palette(isDark())
       globe = createGlobe(canvas, {
         devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
         width: size * 2,
         height: size * 2,
         phi,
         theta: theta - 0.12,
-        dark: 1,
-        diffuse: 1.4,
+        dark: c.dark,
+        diffuse: c.diffuse,
         mapSamples: small ? 9000 : 16000,
-        mapBrightness: 5,
-        mapBaseBrightness: 0.02,
-        baseColor: [0.12, 0.16, 0.24],
+        mapBrightness: c.mapBrightness,
+        mapBaseBrightness: c.mapBaseBrightness,
+        baseColor: c.baseColor,
         markerColor: BLUE,
-        glowColor: [0.18, 0.36, 0.7],
-        markers: [{ location: HOME, size: 0.09, color: [0.66, 0.84, 1] }, ...PLACES.map((p) => ({ location: p.location, size: 0.035 }))],
+        glowColor: c.glowColor,
+        markers: [{ location: HOME, size: 0.09, color: c.homeColor }, ...PLACES.map((p) => ({ location: p.location, size: 0.035 }))],
         arcs: PLACES.map((p) => ({ from: HOME, to: p.location })),
         arcColor: BLUE,
         arcWidth: 0.6,
@@ -70,6 +79,10 @@ export function Globe({ className }: { className?: string }) {
         opacity: 0.95,
       })
       setReady(true)
+    }
+
+    const start = async () => {
+      await create()
       const tick = () => {
         if (!drag) {
           velocity *= 0.95
@@ -80,6 +93,17 @@ export function Globe({ className }: { className?: string }) {
       }
       frame = requestAnimationFrame(tick)
     }
+
+    // Rebuild the globe with the other palette when the visitor switches theme.
+    let wasDark = isDark()
+    const themeObserver = new MutationObserver(() => {
+      const now = isDark()
+      if (now !== wasDark && globe) {
+        wasDark = now
+        void create()
+      }
+    })
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] })
 
     // Wait until the browser is idle so the globe never competes with the first paint.
     const idle = (cb: () => void) => (typeof window.requestIdleCallback === "function" ? window.requestIdleCallback(cb, { timeout: 1500 }) : setTimeout(cb, 600))
@@ -110,6 +134,7 @@ export function Globe({ className }: { className?: string }) {
 
     return () => {
       cancelled = true
+      themeObserver.disconnect()
       cancelAnimationFrame(frame)
       io.disconnect()
       canvas.removeEventListener("pointerdown", onDown)
