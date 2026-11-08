@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
-import Link from "next/link"
-import { ArrowRight, BadgeCheck, FileSignature, KeyRound, MessageCircle } from "lucide-react"
+import { ArrowRight, BadgeCheck, Banknote, FileSignature, KeyRound, MessageCircle, ShieldCheck, Truck } from "lucide-react"
 import { ProductCard } from "@/components/site/product-card"
 import { SystemsShowcase } from "@/components/site/systems-showcase"
 import { Faq } from "@/components/site/faq"
@@ -9,13 +8,15 @@ import { ActionButton, ArrowLink, H2, Lead, Section } from "@/components/site/bl
 import { CtaBand } from "@/components/site/blocks/sections"
 import { Reveal } from "@/components/site/blocks/reveal"
 import { ServiceIcon } from "@/components/site/blocks/service-icon"
-import { ChatBubbles, WebsiteMockup } from "@/components/site/illustrations"
+import { ChatBubbles } from "@/components/site/illustrations"
+import { HomeHero } from "@/components/site/home/hero"
+import { TiltCard } from "@/components/site/home/tilt-card"
 import { getStoreProducts } from "@/lib/data/public-catalog"
 import { getPublishedSystems, getTrialDays } from "@/lib/data/systems"
 import { PENDING, hasPrice, priceInline } from "@/lib/business"
 import { CHAT_ENABLED } from "@/lib/features"
 import { pageGraph } from "@/lib/schema"
-import { ENTITY_DEFINITION, FOUNDER, SERVICES, whatsappUrl } from "@/lib/site"
+import { ENTITY_DEFINITION, FOUNDER, SERVICES, formatDOP, whatsappUrl } from "@/lib/site"
 
 const TITLE = "Avero Technology: webs, SEO e IA en Santo Domingo"
 const DESCRIPTION = "Diseñamos páginas y portales web, hacemos SEO y creamos chatbots con IA para negocios en RD. También vendemos equipos y damos soporte técnico."
@@ -28,11 +29,12 @@ export const metadata: Metadata = {
   openGraph: { title: TITLE, description: DESCRIPTION, url: "/" },
 }
 
-const PROOF = [
-  { value: "3", label: "sistemas propios en producción" },
-  { value: "24/7", label: "respuesta por WhatsApp" },
-  { value: "100", label: "en SEO y accesibilidad (Lighthouse móvil)" },
-  { value: "2024", label: "año en que empezamos, en Santo Domingo" },
+const TECH = ["Next.js", "Supabase", "PostgreSQL", "OpenAI", "WhatsApp Cloud API", "Vercel", "Google Search Console", "Google Analytics 4", "PayPal", "schema.org"]
+
+const STORE_PERKS = [
+  { icon: ShieldCheck, text: "Con garantía" },
+  { icon: Truck, text: "Entrega en todo Santo Domingo" },
+  { icon: Banknote, text: "Transferencia o efectivo" },
 ]
 
 const WHY = [
@@ -64,48 +66,29 @@ const FAQ = [
 
 export default async function HomePage() {
   const [products, trialDays, systems] = await Promise.all([getStoreProducts(), getTrialDays(), getPublishedSystems()])
-  const featured = products.filter((p) => p.inStock).slice(0, 4)
+  const available = products.filter((p) => p.inStock)
+  const featured = available.slice(0, 4)
+  const pick = available.find((p) => p.coverUrl) ?? available[0]
+  const spotlight = pick ? { name: pick.name, price: formatDOP(pick.price), href: `/catalogo/${pick.slug}`, image: pick.coverUrl } : undefined
 
   return (
     <>
       <JsonLd data={pageGraph({ path: "/", title: TITLE, description: DESCRIPTION, faq: FAQ, author: false })} />
 
-      {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-background pt-14 md:pt-20 pb-16 md:pb-20">
-        <div aria-hidden className="pointer-events-none absolute inset-0">
-          <div className="absolute left-1/2 top-[-12%] h-[620px] w-[1100px] max-w-[160vw] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(41,151,255,0.18),transparent)] dark:bg-[radial-gradient(closest-side,rgba(41,151,255,0.22),transparent)]" />
-          <div className="absolute right-[-10%] top-[38%] h-[520px] w-[620px] max-w-[110vw] rounded-full bg-[radial-gradient(closest-side,rgba(170,208,246,0.45),transparent)] dark:bg-[radial-gradient(closest-side,rgba(80,155,231,0.14),transparent)]" />
-        </div>
-        <div className="relative container mx-auto max-w-6xl px-4 grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
-          <div>
-            <h1 className="text-[2.5rem] leading-[1.05] sm:text-5xl md:text-[3.75rem] font-semibold tracking-[-0.035em] text-obsidian dark:text-foreground text-balance">
-              Páginas web, SEO e{" "}
-              <span className="bg-gradient-to-r from-[#0071e3] via-[#2997ff] to-[#509be7] bg-clip-text text-transparent">inteligencia artificial</span>{" "}
-              para negocios en República Dominicana
-            </h1>
-            <Lead className="mt-6 max-w-xl">
-              Hacemos que tu negocio aparezca en Google, atienda por WhatsApp a cualquier hora y deje de perder tiempo en tareas repetitivas. Somos Avero Technology, desde Santo Domingo para todo el país y el mundo.
-            </Lead>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ActionButton action={{ label: "Cotizar por WhatsApp", href: QUOTE }} />
-              <ActionButton action={{ label: "Ver servicios", href: "/servicios" }} variant="secondary" />
-            </div>
-            <p className="mt-4 text-[13px] text-pewter">Respondemos al momento, 24/7. Cotización sin costo.</p>
-          </div>
-          <WebsiteMockup />
-        </div>
+      <HomeHero quoteUrl={QUOTE} spotlight={spotlight} />
 
-        {/* Proof strip */}
-        <div className="relative container mx-auto max-w-6xl px-4 mt-16">
-          <dl className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {PROOF.map((p) => (
-              <div key={p.label} className="flex flex-col-reverse rounded-[24px] border border-pale-mist/70 bg-card/80 backdrop-blur p-5">
-                <dt className="mt-1 text-[13px] text-pewter">{p.label}</dt>
-                <dd className="text-3xl md:text-4xl font-semibold tracking-tight text-obsidian dark:text-foreground">{p.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
+      {/* ── What we build with: moving strip ── */}
+      <section aria-label="Tecnologías que usamos" className="marquee relative overflow-hidden border-y border-pale-mist/60 bg-background py-5">
+        <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-background to-transparent" />
+        <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-background to-transparent" />
+        <ul className="marquee-track flex w-max items-center gap-10 whitespace-nowrap text-[15px] font-medium text-pewter">
+          {[...TECH, ...TECH].map((t, i) => (
+            <li key={i} aria-hidden={i >= TECH.length} className="flex items-center gap-10">
+              {t}
+              <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-sky-signal/60" />
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* ── Entity definition ── */}
@@ -128,7 +111,7 @@ export default async function HomePage() {
           <ul className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {SERVICES.map((s) => (
               <li key={s.key}>
-                <Link href={s.href} className="group flex h-full flex-col rounded-[28px] border border-pale-mist/70 bg-card p-7 transition-colors hover:border-sapphire/40">
+                <TiltCard href={s.href} className="flex h-full flex-col rounded-[28px] border border-pale-mist/70 bg-card p-7 hover:border-sapphire/40">
                   <span className="flex h-11 w-11 items-center justify-center rounded-full bg-fog-white dark:bg-white/5 text-sapphire dark:text-sky-signal">
                     <ServiceIcon name={s.icon} className="h-5 w-5" />
                   </span>
@@ -137,7 +120,7 @@ export default async function HomePage() {
                   <span className="mt-auto pt-6 inline-flex items-center gap-1 text-[14px] text-sapphire dark:text-sky-signal">
                     Ver servicio <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
                   </span>
-                </Link>
+                </TiltCard>
               </li>
             ))}
           </ul>
@@ -147,8 +130,48 @@ export default async function HomePage() {
         </Reveal>
       </Section>
 
+      {/* ── Products: we also sell equipment ── */}
+      {featured.length > 0 && (
+        <Section>
+          <Reveal>
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <div className="max-w-2xl">
+                <p className="text-caption uppercase tracking-[0.16em] text-sapphire dark:text-sky-signal">Tienda de equipos</p>
+                <H2 className="mt-3">Equipos disponibles en Santo Domingo</H2>
+                <Lead className="mt-4">Laptops, celulares y accesorios con precio en pesos, garantía y entrega en todo Santo Domingo. ¿Buscas otro modelo? Te lo conseguimos.</Lead>
+              </div>
+              <ul className="flex flex-wrap gap-2">
+                {STORE_PERKS.map((p) => (
+                  <li key={p.text} className="inline-flex items-center gap-1.5 rounded-full border border-pale-mist/80 bg-card px-3 py-1.5 text-[13px] text-obsidian/80 dark:text-foreground/80">
+                    <p.icon className="h-3.5 w-3.5 text-sapphire dark:text-sky-signal" aria-hidden /> {p.text}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <ul className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {featured.map((p) => (
+                <li key={p.id}>
+                  <ProductCard product={p} />
+                </li>
+              ))}
+            </ul>
+            <p className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <ActionButton action={{ label: "Ver todo el catálogo", href: "/catalogo" }} />
+              <a
+                href={whatsappUrl("Hola, busco un equipo que no veo en el catálogo")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[15px] text-sapphire dark:text-sky-signal underline decoration-sapphire/30 underline-offset-4"
+              >
+                <MessageCircle className="h-4 w-4" aria-hidden /> Pedir otro modelo por WhatsApp
+              </a>
+            </p>
+          </Reveal>
+        </Section>
+      )}
+
       {/* ── Assistant ── */}
-      <section className="py-20 md:py-28 bg-background">
+      <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto max-w-6xl px-4">
           <Reveal>
             <div className="relative overflow-hidden rounded-[36px] bg-obsidian text-white">
@@ -187,36 +210,6 @@ export default async function HomePage() {
           </p>
         </Reveal>
       </Section>
-
-      {/* ── Products ── */}
-      {featured.length > 0 && (
-        <Section>
-          <Reveal>
-            <div className="max-w-3xl">
-              <H2>Equipos disponibles en Santo Domingo</H2>
-              <Lead className="mt-4">Laptops, celulares y accesorios con precio en pesos, garantía y entrega en todo Santo Domingo. ¿Buscas otro modelo? Te lo conseguimos.</Lead>
-            </div>
-            <ul className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {featured.map((p) => (
-                <li key={p.id}>
-                  <ProductCard product={p} />
-                </li>
-              ))}
-            </ul>
-            <p className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <ArrowLink href="/catalogo">Ver catálogo</ArrowLink>
-              <a
-                href={whatsappUrl("Hola, busco un equipo que no veo en el catálogo")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-[15px] text-sapphire dark:text-sky-signal hover:underline underline-offset-4"
-              >
-                <MessageCircle className="h-4 w-4" aria-hidden /> Pedir otro modelo por WhatsApp
-              </a>
-            </p>
-          </Reveal>
-        </Section>
-      )}
 
       {/* ── Why ── */}
       <Section tone="ice">
