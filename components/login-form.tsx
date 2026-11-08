@@ -1,76 +1,69 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { Loader2 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card"
-import Link from "next/link"
+import { PasswordInput } from "@/components/ui/password-input"
+
+function loginError(error: { message: string; status?: number }) {
+  if (error.status === 429) return "Demasiados intentos. Espera unos minutos e intenta de nuevo."
+  if (error.message.includes("Email not confirmed")) return "Confirma tu correo primero: te enviamos un enlace al registrarte."
+  return "Correo o contraseña incorrectos."
+}
 
 export function LoginForm({ next = "/dashboard" }: { next?: string }) {
   const router = useRouter()
-  const [error, setError] = useState<string>("")
+  const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
     setError("")
-
     const formData = new FormData(e.currentTarget)
-    const email = formData.get("email") as string
-    const password = formData.get("password") as string
-
-    const supabase = createClient()
-
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    const { error: signInError } = await createClient().auth.signInWithPassword({
+      email: String(formData.get("email") ?? "").trim(),
+      password: String(formData.get("password") ?? ""),
     })
-
     if (signInError) {
-      setError(signInError.message)
+      setError(loginError(signInError))
       setLoading(false)
-    } else {
-      router.push(next)
-      router.refresh()
+      return
     }
+    router.push(next)
+    router.refresh()
   }
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader className="space-y-1">
-        <h1 className="text-2xl font-bold leading-none">Iniciar sesión</h1>
-        <CardDescription>Ingresa a tu cuenta de Avero Technology</CardDescription>
-      </CardHeader>
-      <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
-          {error && <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200">{error}</div>}
-          <div className="space-y-2">
-            <Label htmlFor="email">Correo Electrónico</Label>
-            <Input id="email" name="email" type="email" placeholder="tu@email.com" required disabled={loading} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Contraseña</Label>
-            <Input id="password" name="password" type="password" required disabled={loading} />
-          </div>
-        </CardContent>
-        <CardFooter className="flex flex-col space-y-4">
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Iniciando..." : "Iniciar Sesión"}
-          </Button>
-          <p className="text-sm text-center text-muted-foreground">
-            ¿No tienes cuenta?{" "}
-            <Link href="/signup" className="text-primary dark:text-sky-signal underline underline-offset-4">
-              Regístrate
-            </Link>
-          </p>
-        </CardFooter>
-      </form>
-    </Card>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <p role="alert" className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          {error}
+        </p>
+      )}
+      <div className="space-y-2">
+        <Label htmlFor="email">Correo electrónico</Label>
+        <Input id="email" name="email" type="email" autoComplete="email" placeholder="tu@correo.com" required disabled={loading} className="h-12 text-base" />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="password">Contraseña</Label>
+        <PasswordInput id="password" name="password" autoComplete="current-password" required disabled={loading} className="h-12 text-base" />
+      </div>
+      <Button type="submit" size="lg" className="h-12 w-full rounded-full text-base" disabled={loading}>
+        {loading && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />} {loading ? "Entrando…" : "Entrar"}
+      </Button>
+      <p className="pt-2 text-center text-sm text-muted-foreground">
+        ¿No tienes cuenta?{" "}
+        <Link href="/signup" className="text-primary underline underline-offset-4 dark:text-sky-signal">
+          Crea una gratis
+        </Link>
+      </p>
+    </form>
   )
 }
