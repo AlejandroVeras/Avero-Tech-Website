@@ -25,7 +25,7 @@ Dejar averotechnology.com listo para producción en cuatro frentes:
 - **Datos pendientes:** `lib/business.ts` guarda precios y datos sin confirmar como `null`; la web muestra «Cotiza sin costo» y oculta lo que depende de ellos. Ese mecanismo se mantiene.
 - **Formularios públicos:** solo existe `components/site/support-form.tsx` (en `/servicios/soporte-tecnico`), que guarda en Supabase con `lib/data/support.ts` y tiene un campo trampa contra spam. `/contacto` no tiene formulario: solo WhatsApp y correo.
 - **Idioma:** todo está en español, con `lang="es"` fijo y los textos escritos dentro de cada página. No hay ninguna librería de traducción.
-- **Bot de WhatsApp:** desde el 11 de noviembre de 2026 el bot corre en Kapso, fuera de este repo, con un modelo de Claude. El código de `app/api/webhooks/whatsapp`, `lib/ai/` y la burbuja de chat (`CHAT_ENABLED`) sigue en el repo, pero no está en uso. **Ojo:** varias páginas describen el asistente con datos de la simulación anterior (modelos de OpenAI, US$0.0046 por 10 conversaciones, 3.8 s). Ver la Fase 0.
+- **Bot de WhatsApp:** el bot de ventas ya no corre desde este repo. El código de `app/api/webhooks/whatsapp`, `lib/ai/` y la burbuja de chat (`CHAT_ENABLED`) sigue aquí, pero no está en uso. **Regla del dueño: el sitio no dice con qué está hecho el bot de Avero.** Ninguna página pública nombra la plataforma, el proveedor ni el modelo de IA del asistente propio. Ver la Fase 0.
 - **Otros repos:** Citas y Condominios son apps aparte (`avero-citas`, `avero-condominios`). No se tocan en este encargo.
 - **Documentos de referencia:** `docs/contenido/00-estrategia-seo-llmo.docx` (arquitectura y voz), `99-implementacion-tecnica.docx` (SEO técnico) y `docs/QA-UIUX-2026-10.md`. En macOS se leen con `textutil -convert txt -stdout <archivo>`.
 
@@ -34,7 +34,12 @@ Dejar averotechnology.com listo para producción en cuatro frentes:
 Recorre el sitio completo en local (`npm run dev`) y en producción, en 390, 768, 1024 y 1440 px, en tema claro y oscuro. Entrégame un informe corto en `docs/AUDITORIA-PULIDO-2026-11.md` con:
 
 1. **Hallazgos visuales** por página, con captura, ordenados por impacto: jerarquía, espaciado, alineación, consistencia entre páginas, estados vacíos, hover y foco, tablas en celular, modo oscuro.
-2. **Hallazgos de contenido:** textos desactualizados o que se contradicen. Revisa en especial lo que se dice del asistente de WhatsApp frente a cómo funciona hoy en Kapso. No lo corrijas por tu cuenta: lista cada frase y pregúntame qué es cierto ahora.
+2. **Hallazgos de contenido:** textos desactualizados o que se contradicen. Revisa en especial todo lo que se dice del asistente de ventas propio:
+   - lista cada frase que nombre la plataforma, el proveedor o el modelo de IA del bot de Avero (por ejemplo los nombres de modelos en el caso real de `/servicios/chatbots-ia-whatsapp`) y propón una versión genérica («un modelo de IA», «la conexión oficial de WhatsApp»);
+   - lista las cifras de la simulación anterior (costo por conversación, tiempos de respuesta) y pregúntame cuáles siguen siendo ciertas antes de tocarlas;
+   - revisa también `llms.txt`, `llms-full.txt`, el JSON-LD y las preguntas frecuentes.
+
+   Esta regla aplica al bot de Avero. Si una página explica qué tecnologías usamos en proyectos de clientes, pregúntame si esas menciones se quedan.
 3. **Hallazgos técnicos:** código sin uso (por ejemplo el webhook de WhatsApp y los archivos `placeholder*` de `public/`), dependencias sin usar, avisos de lint, variables de entorno que sobran o faltan en `.env.example`.
 4. **Propuesta de mejoras** priorizada (alta, media, baja), con el esfuerzo de cada una.
 
@@ -92,6 +97,7 @@ El público principal es dominicano, así que el español sigue siendo el idioma
 - **Rendimiento:** Lighthouse móvil en la portada, `/servicios`, una página de servicio y `/en`. Metas: rendimiento de 90 o más, accesibilidad y SEO en 100, LCP de 2.5 s o menos y CLS de 0.1 o menos. La portada mide hoy 97, con LCP de 2.5 s; no puede empeorar.
 - **Analítica:** el sitio solo tiene Vercel Analytics. Deja preparado GA4 y el evento `whatsapp_click`, detrás del consentimiento de cookies, y actívalo solo si te doy el ID.
 - **QA completo:** `npm run lint`, `npm test` y `npm run build` sin errores. Corre `node scripts/qa/run.mjs` con las páginas en inglés añadidas: 0 enlaces rotos, 0 desbordes y 0 errores de la página. Después prueba a mano en Chrome el selector de idioma, los dos formularios, el mega menú, el menú «Entrar» y el carrito.
+- **Bot sin tecnología a la vista:** ninguna página pública, metadato, JSON-LD ni archivo `llms` nombra la plataforma, el proveedor o el modelo del asistente de Avero.
 - **Sin marcadores:** `rg "\[(DATO REAL|PRECIO|CASO REAL|X)\b"` no debe encontrar nada en `app/`, `components/`, `lib/`, `content/` ni `public/`.
 - **Documentación:** actualiza `.env.example` y el README con las variables nuevas y cómo añadir o corregir una traducción.
 
