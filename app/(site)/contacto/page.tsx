@@ -1,5 +1,7 @@
 import { Mail, MapPin, MessageCircle, Truck } from "lucide-react"
 import { ContentPage, contentMetadata, type PageSpec } from "@/components/site/blocks/content-page"
+import { H2 } from "@/components/site/blocks/primitives"
+import { ContactForm } from "@/components/site/contact-form"
 import { PENDING } from "@/lib/business"
 import { CONTACT_EMAIL, WHATSAPP_DISPLAY, whatsappUrl } from "@/lib/site"
 
@@ -51,10 +53,24 @@ const spec: PageSpec = {
     h1: "Contacto",
     intro: "La forma más rápida de hablar con nosotros es WhatsApp. Respondemos al momento, las 24 horas, todos los días.",
     primary: { label: "Escribir por WhatsApp", href: HELLO },
-    secondary: { label: "Enviar un correo", href: `mailto:${CONTACT_EMAIL}` },
+    secondary: { label: "Llenar el formulario", href: "#formulario" },
     visual: <ContactCards />,
   },
   blocks: [
+    {
+      k: "node",
+      node: (
+        <section id="formulario" className="scroll-mt-20 py-20 md:py-28 bg-background">
+          <div className="container mx-auto max-w-2xl px-4">
+            <H2 className="text-center">¿Prefieres escribirnos aquí?</H2>
+            <p className="mt-4 text-center text-body text-pewter">Déjanos tus datos y lo que necesitas. Te respondemos por WhatsApp o por correo.</p>
+            <div className="mt-10">
+              <ContactForm />
+            </div>
+          </div>
+        </section>
+      ),
+    },
     {
       k: "section",
       tone: "fog",

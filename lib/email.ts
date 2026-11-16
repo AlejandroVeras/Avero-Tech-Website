@@ -41,3 +41,28 @@ export function trialEndingEmail(input: { businessName: string; chargeDate: stri
   </div></body></html>`
   return { subject, html, text }
 }
+
+export function newLeadEmail(lead: { name?: string; email?: string; phone?: string; company?: string; service: string; message?: string; pageUri?: string; utm?: Record<string, string> }) {
+  const rows: [string, string][] = [
+    ["Nombre", lead.name],
+    ["Correo", lead.email],
+    ["Teléfono / WhatsApp", lead.phone],
+    ["Empresa", lead.company || "—"],
+    ["Servicio", lead.service],
+    ["Página", lead.pageUri || "—"],
+  ]
+  const utm = Object.entries(lead.utm ?? {})
+  if (utm.length) rows.push(["Campaña", utm.map(([k, v]) => `${k}=${v}`).join(", ")])
+  const subject = `Nuevo contacto web: ${lead.name} (${lead.service})`
+  const text = rows.map(([k, v]) => `${k}: ${v}`).join("\n") + `\n\nMensaje:\n${lead.message}`
+  const html = `<!doctype html><html lang="es"><body style="margin:0;background:#f5f5f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1d1d1f">
+  <div style="max-width:560px;margin:0 auto;padding:32px 20px"><div style="background:#ffffff;border-radius:20px;padding:28px">
+    <h1 style="margin:0 0 16px;font-size:20px">Nuevo contacto desde el sitio web</h1>
+    <table style="width:100%;border-collapse:collapse;font-size:14px">${rows
+      .map(([k, v]) => `<tr><td style="padding:6px 12px 6px 0;color:#636366;white-space:nowrap;vertical-align:top">${escapeHtml(k)}</td><td style="padding:6px 0">${escapeHtml(v)}</td></tr>`)
+      .join("")}</table>
+    <p style="margin:20px 0 6px;font-size:13px;color:#636366">Mensaje</p>
+    <p style="margin:0;font-size:15px;line-height:1.5;white-space:pre-wrap">${escapeHtml(lead.message)}</p>
+  </div></div></body></html>`
+  return { subject, html, text }
+}
