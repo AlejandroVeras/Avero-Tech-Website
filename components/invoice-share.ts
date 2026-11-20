@@ -1,6 +1,6 @@
 "use client"
 
-import { invoiceDocumentHtml, invoiceFileName, type InvoiceDocument } from "@/lib/invoice-document"
+import { escapeHtml, invoiceDocumentHtml, invoiceFileName, type InvoiceDocument } from "@/lib/invoice-document"
 
 /** The logo as a data: URL, so the PDF renderer never reads a cross-origin image. */
 async function inlineImage(url?: string) {
@@ -110,4 +110,23 @@ export async function sharePdfToWhatsApp(file: File, text: string): Promise<"sha
   downloadFile(file)
   window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer")
   return "downloaded"
+}
+
+/** Opens the same document in a new window and prints it (or "Guardar como PDF" from the dialog). */
+export function printDocument(doc: InvoiceDocument) {
+  const w = window.open("", "_blank")
+  if (!w) return false
+  const title = `${doc.kind === "quote" ? "Cotización" : "Factura"} ${doc.invoiceNumber}`
+  w.document.write(
+    `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title>` +
+      `<style>@page{size:letter;margin:10mm}body{margin:0;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.av-inv{margin:0 auto}</style>` +
+      `</head><body>${invoiceDocumentHtml(doc)}</body></html>`,
+  )
+  w.document.close()
+  const imgs = Array.from(w.document.images)
+  Promise.all(imgs.map((i) => (i.complete ? null : new Promise((r) => ((i.onload = r), (i.onerror = r)))))).then(() => {
+    w.focus()
+    w.print()
+  })
+  return true
 }

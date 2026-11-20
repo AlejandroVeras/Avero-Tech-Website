@@ -16,7 +16,6 @@ import { ArrowLeft, Edit, CreditCard, History, Receipt } from "lucide-react"
 import Link from "next/link"
 import { parseDay } from "@/lib/dates"
 import { paymentMethodLabel } from "@/lib/pos"
-import { getBranding } from "@/lib/data/branding"
 import { getInvoiceDocument } from "@/lib/data/invoice-document-actions"
 import { InvoiceShareButtons } from "@/components/invoice-share-buttons"
 
@@ -30,7 +29,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
   }
 
   const { id } = await params
-  const [invoice, profile, branding, document] = await Promise.all([getInvoice(id), getProfile(), getBranding(), getInvoiceDocument(id)])
+  const [invoice, profile, document] = await Promise.all([getInvoice(id), getProfile(), getInvoiceDocument(id)])
 
   if (!invoice || !profile) {
     notFound()
@@ -195,7 +194,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                 <div className="pt-6 border-t flex justify-center">
                    <div className="flex flex-col items-center gap-3">
                      {document && <InvoiceShareButtons document={document} className="flex flex-col items-center" />}
-                     <InvoicePDF invoice={invoice} profile={profile} brandColor={branding.brandColor} />
+                     <InvoicePDF document={document ?? undefined} invoice={invoice} profile={profile} />
                    </div>
                 </div>
               </CardContent>

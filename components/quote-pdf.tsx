@@ -1,17 +1,21 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Mail } from "lucide-react"
+import { Mail, Printer } from "lucide-react"
+import type { InvoiceDocument } from "@/lib/invoice-document"
+import { printDocument } from "@/components/invoice-share"
 import type { Quote } from "@/lib/data/quotes"
 
 import type { Profile } from "@/lib/data/profile"
 
 interface QuotePDFProps {
+  /** The branded quote document that "Imprimir" prints. */
+  document: InvoiceDocument
   quote: Quote
   profile: Profile
 }
 
-export function QuotePDF({ quote, profile }: QuotePDFProps) {
+export function QuotePDF({ document, quote, profile }: QuotePDFProps) {
   function formatCurrency(amount: number) {
     return new Intl.NumberFormat("es-DO", {
       style: "currency",
@@ -42,9 +46,13 @@ export function QuotePDF({ quote, profile }: QuotePDFProps) {
   }
 
   return (
-    <div className="flex">
-      <Button onClick={sendEmail} variant="outline" className="border-primary/20 hover:bg-primary/5">
-        <Mail className="h-4 w-4 mr-2 text-primary" />
+    <div className="flex flex-wrap gap-2">
+      <Button onClick={() => printDocument(document)} variant="outline">
+        <Printer className="h-4 w-4" aria-hidden />
+        Imprimir
+      </Button>
+      <Button onClick={sendEmail} variant="outline">
+        <Mail className="h-4 w-4" aria-hidden />
         Enviar por Email
       </Button>
     </div>

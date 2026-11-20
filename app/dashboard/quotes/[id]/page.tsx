@@ -67,7 +67,7 @@ export default async function EditQuotePage({ params }: { params: Promise<{ id: 
         </div>
         <div className="flex flex-wrap items-start gap-2">
           <InvoiceShareButtons document={document} />
-          <QuotePDF quote={quote} profile={profile} />
+          <QuotePDF document={document} quote={quote} profile={profile} />
         </div>
       </div>
 
