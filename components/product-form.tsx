@@ -21,13 +21,21 @@ import {
 import { CONDITIONS, CONDITION_LABELS, slugify, type Spec } from "@/lib/catalog"
 import { ImagesField } from "@/components/product-form/images-field"
 import { SpecsField } from "@/components/product-form/specs-field"
+import type { ProductFormConfig } from "@/lib/business-setup"
 
 interface ProductFormProps {
   product?: Product
   userId: string
+  /** Fields and examples for this kind of business (productFormFor). */
+  config: ProductFormConfig
+  /** Public address prefix of this business's catalog, e.g. "/t/boutique-marina/". */
+  catalogPrefix: string
 }
 
-export function ProductForm({ product, userId }: ProductFormProps) {
+export function ProductForm({ product, userId, config, catalogPrefix }: ProductFormProps) {
+  // A field hidden for this business still shows if the product already has a value, so it can be changed or cleared.
+  const showCondition = config.showCondition || !!product?.condition
+  const showWarranty = config.showWarranty || product?.warrantyMonths != null
   const router = useRouter()
   const [error, setError] = useState<string>("")
   const [loading, setLoading] = useState(false)
@@ -104,7 +112,7 @@ export function ProductForm({ product, userId }: ProductFormProps) {
                 id="name"
                 name="name"
                 type="text"
-                placeholder="Nombre del producto o servicio"
+                placeholder={config.namePlaceholder}
                 required
                 maxLength={200}
                 disabled={loading}
@@ -136,7 +144,7 @@ export function ProductForm({ product, userId }: ProductFormProps) {
                 id="category"
                 name="category"
                 type="text"
-                placeholder="Ej: Laptops, Monitores, Servicios"
+                placeholder={config.categoryPlaceholder}
                 disabled={loading}
                 defaultValue={product?.category}
               />
@@ -222,7 +230,7 @@ export function ProductForm({ product, userId }: ProductFormProps) {
                   defaultValue={product?.stockQuantity || 0}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Esta cantidad se reducirá automáticamente cuando hagas una venta. Con 0 el equipo aparece como
+                  Esta cantidad se reducirá automáticamente cuando hagas una venta. Con 0 el producto aparece como
                   agotado en la tienda.
                 </p>
               </div>
@@ -247,11 +255,12 @@ export function ProductForm({ product, userId }: ProductFormProps) {
             disabled={loading}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className={`grid grid-cols-1 gap-4 ${showCondition && showWarranty ? "md:grid-cols-3" : showCondition || showWarranty ? "md:grid-cols-2" : ""}`}>
             <div className="space-y-2">
               <Label htmlFor="brand">Marca</Label>
-              <Input id="brand" name="brand" placeholder="Ej: Dell" maxLength={80} disabled={loading} defaultValue={product?.brand} />
+              <Input id="brand" name="brand" placeholder={config.brandPlaceholder} maxLength={80} disabled={loading} defaultValue={product?.brand} />
             </div>
+            {showCondition && (
             <div className="space-y-2">
               <Label htmlFor="condition">Condición</Label>
               <Select name="condition" defaultValue={product?.condition ?? "none"} disabled={loading}>
@@ -268,6 +277,8 @@ export function ProductForm({ product, userId }: ProductFormProps) {
                 </SelectContent>
               </Select>
             </div>
+            )}
+            {showWarranty && (
             <div className="space-y-2">
               <Label htmlFor="warrantyMonths">Garantía (meses)</Label>
               <Input
@@ -282,15 +293,16 @@ export function ProductForm({ product, userId }: ProductFormProps) {
                 defaultValue={product?.warrantyMonths}
               />
             </div>
+            )}
           </div>
 
-          <SpecsField specs={specs} onChange={setSpecs} disabled={loading} />
+          <SpecsField specs={specs} onChange={setSpecs} disabled={loading} template={config.specsTemplate} example={config.specsExample} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="slug">Dirección web</Label>
               <div className="flex items-center rounded-md border bg-muted/40 pl-3 focus-within:ring-[3px] focus-within:ring-ring/50">
-                <span className="text-xs text-muted-foreground whitespace-nowrap">/catalogo/</span>
+                <span className="text-xs text-muted-foreground whitespace-nowrap">{catalogPrefix}</span>
                 <Input
                   id="slug"
                   name="slug"

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { RecordPaymentForm, StatusButtons } from "@/components/admin/subscription-actions"
+import { SetAccessForm } from "@/components/admin/access-form"
 import { listAccounts, listPayments } from "@/lib/data/admin-queries"
 import { getPublishedSystem } from "@/lib/data/systems"
 import { accountState, daysUntil, PLAN_LABELS, STATE_LABELS } from "@/lib/admin"
@@ -110,6 +111,16 @@ export default async function NegocioPage({ params }: { params: Promise<{ id: st
         </div>
 
         <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Acceso</CardTitle>
+              <CardDescription>Marca si pagó, si es cortesía o prueba, y hasta qué fecha.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <SetAccessForm account={account.userId} />
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle>Registrar pago</CardTitle>

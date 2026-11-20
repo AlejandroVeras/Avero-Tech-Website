@@ -12,9 +12,15 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Edit, CreditCard, History } from "lucide-react"
+import { ArrowLeft, Edit, CreditCard, History, Receipt } from "lucide-react"
 import Link from "next/link"
 import { parseDay } from "@/lib/dates"
+import { paymentMethodLabel } from "@/lib/pos"
+import { getBranding } from "@/lib/data/branding"
+import { getInvoiceDocument } from "@/lib/data/invoice-document-actions"
+import { InvoiceShareButtons } from "@/components/invoice-share-buttons"
+
+export const metadata = { title: "Factura" }
 
 export default async function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getUser()
@@ -24,7 +30,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
   }
 
   const { id } = await params
-  const [invoice, profile] = await Promise.all([getInvoice(id), getProfile()])
+  const [invoice, profile, branding, document] = await Promise.all([getInvoice(id), getProfile(), getBranding(), getInvoiceDocument(id)])
 
   if (!invoice || !profile) {
     notFound()
@@ -97,16 +103,28 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                   {isFullyPaid ? "Pagada" : `Pendiente: ${formatCurrency(balanceDue)}`}
                 </Badge>
                 <span className="text-muted-foreground text-sm">• {invoice.customerName}</span>
+                {paymentMethodLabel(invoice.paymentMethod) && (
+                  <span className="text-muted-foreground text-sm">• {paymentMethodLabel(invoice.paymentMethod)}</span>
+                )}
               </div>
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" asChild>
-              <Link href={`/dashboard/invoices/${invoice.id}`}>
-                <Edit className="h-4 w-4 mr-2" />
-                Editar Factura
-              </Link>
-            </Button>
+            {invoice.source === "pos" ? (
+              <Button variant="outline" asChild>
+                <Link href={`/dashboard/vender/recibo/${invoice.id}`}>
+                  <Receipt className="h-4 w-4 mr-2" />
+                  Ver ticket
+                </Link>
+              </Button>
+            ) : (
+              <Button variant="outline" asChild>
+                <Link href={`/dashboard/invoices/${invoice.id}`}>
+                  <Edit className="h-4 w-4 mr-2" />
+                  Editar Factura
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
 
@@ -164,7 +182,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                       </div>
                     )}
                     <div className="flex justify-between text-sm text-muted-foreground">
-                      <span>ITBIS (18%)</span>
+                      <span>{invoice.itbisIncluded ? "ITBIS incluido (18%)" : "ITBIS (18%)"}</span>
                       <span>{formatCurrency(invoice.itbis)}</span>
                     </div>
                     <div className="flex justify-between text-lg font-bold border-t pt-2 text-foreground">
@@ -175,7 +193,10 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                 </div>
                 
                 <div className="pt-6 border-t flex justify-center">
-                   <InvoicePDF invoice={invoice} profile={profile} />
+                   <div className="flex flex-col items-center gap-3">
+                     {document && <InvoiceShareButtons document={document} className="flex flex-col items-center" />}
+                     <InvoicePDF invoice={invoice} profile={profile} brandColor={branding.brandColor} />
+                   </div>
                 </div>
               </CardContent>
             </Card>

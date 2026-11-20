@@ -8,6 +8,8 @@ import { FinancingPaymentForm } from "@/components/financing-payment-form"
 import { FinancingPaymentList } from "@/components/financing-payment-list"
 import { CustomerFinancing } from "@/components/customer-financing"
 
+export const metadata = { title: "Cliente" }
+
 export default async function EditCustomerPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getUser()
 

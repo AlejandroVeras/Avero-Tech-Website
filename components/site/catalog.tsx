@@ -30,14 +30,17 @@ export function Catalog({
   basePath = "/catalogo",
   showCart = true,
   emptyMessage = "Pronto publicaremos nuestro inventario",
+  initialCategory,
 }: {
   products: PublicProduct[]
   basePath?: string
   showCart?: boolean
   emptyMessage?: string
+  /** Pre-selected category (featured category buttons on a store page). */
+  initialCategory?: string
 }) {
   const [query, setQuery] = useState("")
-  const [category, setCategory] = useState(ALL)
+  const [category, setCategory] = useState(initialCategory || ALL)
   const [brand, setBrand] = useState(ALL)
   const [condition, setCondition] = useState(ALL)
   const [minPrice, setMinPrice] = useState("")

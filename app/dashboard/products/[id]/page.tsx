@@ -3,6 +3,9 @@ import { getUser } from "@/lib/auth"
 import { getProduct } from "@/lib/data/products"
 
 import { ProductForm } from "@/components/product-form"
+import { getProductFormSettings } from "@/lib/data/business-setup"
+
+export const metadata = { title: "Editar producto" }
 
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getUser()
@@ -10,6 +13,8 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
   if (!user) {
     redirect("/login")
   }
+
+  const formSettings = await getProductFormSettings()
 
   const { id } = await params
   const product = await getProduct(id)
@@ -26,7 +31,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
           <p className="text-muted-foreground mt-1">Actualiza la información del producto</p>
         </div>
 
-        <ProductForm product={product} userId={user.id} />
+        <ProductForm product={product} userId={user.id} {...formSettings} />
       </div>
     </div>
   )

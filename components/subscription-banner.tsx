@@ -25,7 +25,7 @@ function Bar({
     danger: "bg-red-50 text-red-950 dark:bg-red-950/40 dark:text-red-100",
   }
   return (
-    <div role={role} className={`border-b ${tones[tone]}`}>
+    <div role={role} className={`border-b print:hidden ${tones[tone]}`}>
       <div className="flex flex-col gap-2 px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <p className="flex items-start gap-2 text-sm">
           <Icon className="h-4 w-4 shrink-0 mt-0.5" aria-hidden />

@@ -3,6 +3,8 @@ import { getUser } from "@/lib/auth"
 import { getTicket } from "@/lib/data/tickets"
 import { TicketForm } from "@/components/ticket-form"
 
+export const metadata = { title: "Editar ticket" }
+
 export const dynamic = "force-dynamic"
 
 export default async function EditTicketPage({ params }: { params: Promise<{ id: string }> }) {

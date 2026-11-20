@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Download, Mail } from "lucide-react"
+import { Mail, Printer } from "lucide-react"
 import type { Invoice } from "@/lib/data/invoices"
 
 import type { Profile } from "@/lib/data/profile"
@@ -10,9 +10,17 @@ import { parseDay } from "@/lib/dates"
 interface InvoicePDFProps {
   invoice: Invoice
   profile: Profile
+  /** The business's brand color (Configuración); the Avero green otherwise. */
+  brandColor?: string | null
 }
 
-export function InvoicePDF({ invoice, profile }: InvoicePDFProps) {
+const escapeAttr = (v: string) => v.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;")
+
+export function InvoicePDF({ invoice, profile, brandColor }: InvoicePDFProps) {
+  const accent = brandColor || "#10b981"
+  const accentSoft = `${accent}14` // same color at ~8% opacity
+  const logo = profile.logoUrl ? `<img src="${escapeAttr(profile.logoUrl)}" alt="" style="height:64px;width:auto;max-width:180px;object-fit:contain;margin-bottom:12px;display:block" />` : ""
+
   function formatCurrency(amount: number) {
     return new Intl.NumberFormat("es-DO", {
       style: "currency",
@@ -49,7 +57,7 @@ export function InvoicePDF({ invoice, profile }: InvoicePDFProps) {
             .company-info p { color: #64748b; font-size: 14px; margin: 4px 0; }
             
             .invoice-info { text-align: right; }
-            .invoice-info h2 { color: #10b981; font-size: 36px; font-weight: 900; letter-spacing: 2px; margin-bottom: 12px; }
+            .invoice-info h2 { color: ${accent}; font-size: 36px; font-weight: 900; letter-spacing: 2px; margin-bottom: 12px; }
             .invoice-info p { margin: 4px 0; color: #475569; font-size: 14px;}
             .invoice-info strong { color: #0f172a; }
             
@@ -84,11 +92,11 @@ export function InvoicePDF({ invoice, profile }: InvoicePDFProps) {
             .totals-row.subtotal { color: #64748b; font-size: 14px; }
             .totals-row.discount { color: #ef4444; font-size: 14px; }
             .totals-row.tax { color: #64748b; font-size: 14px; }
-            .totals-row.total { border-top: 2px dashed #cbd5e1; margin-top: 10px; padding-top: 15px; font-size: 20px; font-weight: 800; color: #10b981; }
+            .totals-row.total { border-top: 2px dashed #cbd5e1; margin-top: 10px; padding-top: 15px; font-size: 20px; font-weight: 800; color: ${accent}; }
             
             /* Notes Section */
-            .notes { margin-top: 40px; padding: 25px; border-left: 4px solid #10b981; background: #ecfdf5; border-radius: 0 12px 12px 0; }
-            .notes h3 { color: #047857; margin-bottom: 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+            .notes { margin-top: 40px; padding: 25px; border-left: 4px solid ${accent}; background: ${accentSoft}; border-radius: 0 12px 12px 0; }
+            .notes h3 { color: ${accent}; margin-bottom: 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
             .notes p { color: #064e3b; line-height: 1.6; font-size: 14px; }
             
             /* Footer */
@@ -105,6 +113,7 @@ export function InvoicePDF({ invoice, profile }: InvoicePDFProps) {
           <div class="invoice-container">
             <div class="header">
               <div class="company-info">
+                ${logo}
                 <h1>${profile.businessName}</h1>
                 ${profile.taxId ? `<p><strong>RNC:</strong> ${profile.taxId}</p>` : ''}
                 ${profile.phone ? `<p><strong>Teléfono:</strong> ${profile.phone}</p>` : ''}
@@ -171,7 +180,7 @@ export function InvoicePDF({ invoice, profile }: InvoicePDFProps) {
                 </div>` : ''}
 
                 <div class="totals-row tax">
-                  <span>ITBIS (18%):</span>
+                  <span>${invoice.itbisIncluded ? "ITBIS incluido (18%):" : "ITBIS (18%):"}</span>
                   <span>${formatCurrency(invoice.itbis)}</span>
                 </div>
                 <div class="totals-row total">
@@ -223,8 +232,8 @@ export function InvoicePDF({ invoice, profile }: InvoicePDFProps) {
   return (
     <div className="flex gap-2">
       <Button onClick={generatePDF} variant="outline">
-        <Download className="h-4 w-4 mr-2" />
-        Descargar PDF
+        <Printer className="h-4 w-4 mr-2" />
+        Imprimir
       </Button>
       <Button onClick={sendEmail} variant="outline">
         <Mail className="h-4 w-4 mr-2" />

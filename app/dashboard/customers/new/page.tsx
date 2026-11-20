@@ -3,6 +3,8 @@ import { getUser } from "@/lib/auth"
 
 import { CustomerForm } from "@/components/customer-form"
 
+export const metadata = { title: "Nuevo cliente" }
+
 export default async function NewCustomerPage() {
   const user = await getUser()
 

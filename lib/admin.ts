@@ -99,3 +99,37 @@ export function saasMetrics(accounts: AdminAccount[], system: SaasSystem | null,
     },
   }
 }
+
+// ─── Acceso que el administrador le da a un negocio ──────────────────
+// No imports beyond types: tests/admin-access.test.ts runs this file directly.
+
+export type AccessKind = "paid" | "courtesy" | "trial"
+export type PaidPlan = "monthly" | "annual"
+
+export const ACCESS_KINDS: { id: AccessKind; label: string; hint: string }[] = [
+  { id: "paid", label: "Pagó", hint: "Plan mensual o anual, con acceso hasta la fecha que pongas." },
+  { id: "courtesy", label: "Cortesía", hint: "Gratis. Sin fecha, o hasta la fecha que pongas." },
+  { id: "trial", label: "Prueba", hint: "Prueba gratis hasta la fecha que pongas." },
+]
+
+/** "2026-12-31" → the last second of that day in Santo Domingo (UTC−4, no daylight saving). */
+export function endOfDaySantoDomingo(date: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null
+  const d = new Date(`${date}T23:59:59-04:00`)
+  return Number.isNaN(d.getTime()) ? null : d.toISOString()
+}
+
+/** Arguments for public.admin_set_subscription (DATABASE_ADMIN_UPDATE.sql). */
+export function accessToSubscription(
+  account: string,
+  input: { kind?: AccessKind; plan?: PaidPlan; until?: string | null },
+): { args: { account: string; new_status: string; new_plan: string; new_end: string | null; keep_end: boolean } } | { error: string } {
+  if (!input.kind) return { error: "Elige el tipo de acceso" }
+  const end = input.until ? endOfDaySantoDomingo(input.until) : null
+  if (input.until && !end) return { error: "Fecha inválida" }
+  if (input.kind !== "courtesy" && !end) return { error: "Pon hasta qué fecha tiene acceso" }
+
+  const new_plan = input.kind === "paid" ? (input.plan ?? "monthly") : input.kind === "trial" ? "trial" : "courtesy"
+  const new_status = input.kind === "trial" ? "trialing" : "active"
+  return { args: { account, new_status, new_plan, new_end: end, keep_end: false } }
+}

@@ -140,14 +140,17 @@ export function InvoicesList({ invoices }: InvoicesListProps) {
                     >
                       <Eye className="h-4 w-4 text-blue-500" />
                     </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      title="Editar"
-                      onClick={() => router.push(`/dashboard/invoices/${invoice.id}`)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                    {/* Sales from Vender are not edited with the invoice form (it would recompute the ITBIS). */}
+                    {invoice.source !== "pos" && (
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        title="Editar"
+                        onClick={() => router.push(`/dashboard/invoices/${invoice.id}`)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    )}
                     <Button aria-label="Eliminar" size="icon" variant="ghost" onClick={() => setDeleteId(invoice.id)}>
                       <Trash2 className="h-4 w-4 text-red-500" />
                     </Button>

@@ -1,5 +1,7 @@
 "use server"
 
+import { MERCHANDISE_CATEGORY } from "@/lib/profit"
+
 import { friendlyError } from "@/lib/data/errors"
 
 import { createClient } from "@/lib/supabase/server"
@@ -21,6 +23,7 @@ export interface Expense {
 
 export async function getExpenseCategories() {
   return [
+    MERCHANDISE_CATEGORY,
     "Servicios",
     "Suministros de Oficina",
     "Tecnología",

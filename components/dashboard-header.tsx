@@ -18,27 +18,16 @@ import Link from "next/link"
 import { Logo } from "@/components/site/logo"
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "./theme-toggle"
-import {
-  BarChart3,
-  CreditCard,
-  FileText,
-  LayoutDashboard,
-  Package,
-  Receipt,
-  Settings,
-  Users,
-  Ticket,
-  Store,
-  ShieldCheck,
-  Wallet,
-} from "lucide-react"
+import { dashboardNavigation, ALL_FEATURES } from "@/components/dashboard-nav"
+import type { Features } from "@/lib/business-setup"
 
 interface DashboardHeaderProps {
   user: User
   isAdmin?: boolean
+  features?: Features
 }
 
-export function DashboardHeader({ user, isAdmin = false }: DashboardHeaderProps) {
+export function DashboardHeader({ user, isAdmin = false, features = ALL_FEATURES }: DashboardHeaderProps) {
   const router = useRouter()
   const pathname = usePathname()
 
@@ -47,23 +36,10 @@ export function DashboardHeader({ user, isAdmin = false }: DashboardHeaderProps)
     router.push("/login")
   }
 
-  const navigation = [
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Clientes", href: "/dashboard/customers", icon: Users },
-    { name: "Productos", href: "/dashboard/products", icon: Package },
-    { name: "Mi tienda", href: "/dashboard/tienda", icon: Store },
-    { name: "Cotizaciones", href: "/dashboard/quotes", icon: FileText },
-    { name: "Facturas", href: "/dashboard/invoices", icon: Receipt },
-    { name: "Gastos", href: "/dashboard/expenses", icon: CreditCard },
-    { name: "Tickets", href: "/dashboard/tickets", icon: Ticket },
-    { name: "Reportes", href: "/dashboard/reports", icon: BarChart3 },
-    { name: "Configuración", href: "/dashboard/settings", icon: Settings },
-    { name: "Mi suscripción", href: "/dashboard/suscripcion", icon: Wallet },
-    ...(isAdmin ? [{ name: "Administración", href: "/admin", icon: ShieldCheck }] : []),
-  ]
+  const navigation = dashboardNavigation(features, isAdmin)
 
   return (
-    <header className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b sticky top-0 z-40 w-full">
+    <header className="print:hidden bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b sticky top-0 z-40 w-full">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-4 md:hidden">
           <Sheet>

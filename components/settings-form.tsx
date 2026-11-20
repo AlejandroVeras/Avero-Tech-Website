@@ -129,20 +129,6 @@ export function SettingsForm({ profile }: SettingsFormProps) {
           </Button>
         </CardFooter>
       </Card>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Personalización de Marca (Próximamente)</CardTitle>
-          <CardDescription>Opciones avanzadas para personalizar tu identidad y correos automáticos.</CardDescription>
-        </CardHeader>
-        <CardContent>
-           <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>• Ajustar Logo PDF personalizado</li>
-              <li>• Editar formato de color de facturas</li>
-              <li>• Configurar recordatorios automáticos por correo</li>
-            </ul>
-        </CardContent>
-      </Card>
     </form>
   )
 }

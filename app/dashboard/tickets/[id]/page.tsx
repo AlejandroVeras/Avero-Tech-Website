@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, User, Mail, Phone, Monitor, Hash, Clock, Calendar } from "lucide-react"
 import Link from "next/link"
 
+export const metadata = { title: "Ticket de soporte" }
+
 export const dynamic = "force-dynamic"
 
 const statusLabels: Record<string, string> = {

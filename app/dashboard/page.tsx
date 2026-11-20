@@ -1,5 +1,13 @@
 import { redirect } from "next/navigation"
+import Link from "next/link"
+import { ShoppingCart } from "lucide-react"
 import { getUser } from "@/lib/auth"
+import { getBusinessSetup } from "@/lib/data/business-setup"
+import { featuresFor } from "@/lib/business-setup"
+import { Button } from "@/components/ui/button"
+import { getBranding } from "@/lib/data/branding"
+import { LowStock, TodaySales } from "@/components/dashboard-widgets"
+import type { WidgetId } from "@/lib/brand"
 
 import { DashboardStats } from "@/components/dashboard-stats"
 import { RecentActivity } from "@/components/recent-activity"
@@ -9,6 +17,8 @@ import { Card, CardContent } from "@/components/ui/card"
 
 // Forzamos a que esta página sea dinámica y no se guarde en caché estático
 export const dynamic = "force-dynamic"
+// Same folder as the dashboard layout, so its title template does not apply here.
+export const metadata = { title: { absolute: "Inicio | Avero Inventario" } }
 
 function StatsLoading() {
   return (
@@ -48,12 +58,45 @@ function ActivityLoading() {
   )
 }
 
+// Each business picks which cards it sees and in what order (Configuración → Inicio del dashboard).
+function widgetsFor(counter: boolean): Record<WidgetId, React.ReactNode> {
+  return {
+    "quick-actions": <QuickActions />,
+    "today-sales": (
+      <Suspense fallback={<ActivityLoading />}>
+        <TodaySales />
+      </Suspense>
+    ),
+    stats: (
+      <Suspense fallback={<StatsLoading />}>
+        <DashboardStats counter={counter} />
+      </Suspense>
+    ),
+    "low-stock": (
+      <Suspense fallback={<ActivityLoading />}>
+        <LowStock />
+      </Suspense>
+    ),
+    "recent-activity": (
+      <Suspense fallback={<ActivityLoading />}>
+        <RecentActivity />
+      </Suspense>
+    ),
+  }
+}
+
 export default async function DashboardPage() {
   const user = await getUser()
 
   if (!user) {
     redirect("/login")
   }
+
+  const [setup, branding] = await Promise.all([getBusinessSetup(), getBranding()])
+  // New accounts answer what kind of business they are before anything else (or skip it).
+  if (!setup.completed) redirect("/dashboard/bienvenida")
+  const { quickSale, quotes } = featuresFor(setup)
+  const WIDGETS = widgetsFor(!quotes)
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,15 +107,17 @@ export default async function DashboardPage() {
           <p className="text-muted-foreground mt-1">Bienvenido de vuelta, {user.businessName}</p>
         </div>
 
-        <QuickActions />
-        
-        <Suspense fallback={<StatsLoading />}>
-          <DashboardStats />
-        </Suspense>
-        
-        <Suspense fallback={<ActivityLoading />}>
-          <RecentActivity />
-        </Suspense>
+        {quickSale && (
+          <Button asChild size="lg" className="h-14 w-full rounded-2xl text-base sm:w-auto sm:px-10">
+            <Link href="/dashboard/vender">
+              <ShoppingCart className="h-5 w-5" aria-hidden /> Vender
+            </Link>
+          </Button>
+        )}
+
+        {branding.widgets.filter((w) => w.visible).map((w) => (
+          <div key={w.id}>{WIDGETS[w.id]}</div>
+        ))}
       </div>
     </div>
   )

@@ -5,6 +5,9 @@ import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
 import { isPlatformAdmin } from "@/lib/data/access"
 import { slugify } from "@/lib/catalog"
+import { createServiceClient } from "@/lib/supabase/admin"
+import { accessToSubscription } from "@/lib/admin"
+import { checkPassword, isStrongPassword, weakPasswordMessage } from "@/lib/password-policy"
 
 type Result = { error?: string; success?: boolean; id?: string }
 
@@ -188,4 +191,84 @@ export async function updateTrialDays(formData: FormData): Promise<Result> {
   revalidatePath("/precios")
   revalidatePath("/signup")
   return { success: true }
+}
+
+// ─── Acceso con fecha, y cuentas creadas por el administrador ─────────
+
+const accessSchema = z.object({
+  kind: z.enum(["paid", "courtesy", "trial"], { message: "Elige el tipo de acceso" }),
+  plan: z.enum(["monthly", "annual"]).optional(),
+  until: z.string().trim().optional(),
+})
+
+export async function setAccess(formData: FormData): Promise<Result> {
+  const parsed = accessSchema.extend({ account: uuid }).safeParse(formEntries(formData))
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" }
+  const mapped = accessToSubscription(parsed.data.account, parsed.data)
+  if ("error" in mapped) return { error: mapped.error }
+
+  const supabase = await adminClient()
+  const { error } = await supabase.rpc("admin_set_subscription", mapped.args)
+  if (error) return { error: error.message }
+  revalidatePath("/admin", "layout")
+  return { success: true }
+}
+
+const newAccountSchema = accessSchema.extend({
+  businessName: z.string().trim().min(2, "Escribe el nombre del negocio").max(120),
+  email: z.string().trim().toLowerCase().email("Correo inválido").max(200),
+  password: z.string().min(1, "Escribe una contraseña").max(200),
+})
+
+/**
+ * Creates the login for a business (already confirmed, it can enter right away) and gives it
+ * the access chosen here, so it skips the PayPal activation screen. The trigger that runs on
+ * every new user creates its profile; the first time it enters it sees the welcome questions.
+ */
+export async function createAccount(formData: FormData): Promise<Result & { warning?: string }> {
+  const parsed = newAccountSchema.safeParse(formEntries(formData))
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" }
+  const d = parsed.data
+
+  const checks = checkPassword(d.password, { email: d.email, name: d.businessName })
+  if (!isStrongPassword(checks)) return { error: weakPasswordMessage(checks) }
+
+  // Validate the access before creating anything.
+  const preview = accessToSubscription("00000000-0000-0000-0000-000000000000", d)
+  if ("error" in preview) return { error: preview.error }
+
+  const supabase = await adminClient() // throws unless the current user is a platform admin
+
+  let service
+  try {
+    service = createServiceClient()
+  } catch {
+    return { error: "Falta SUPABASE_SECRET_KEY en el servidor; sin ella no se pueden crear usuarios." }
+  }
+
+  const { data: created, error: createError } = await service.auth.admin.createUser({
+    email: d.email,
+    password: d.password,
+    email_confirm: true,
+    user_metadata: { business_name: d.businessName },
+  })
+  if (createError || !created.user) {
+    const msg = createError?.message ?? ""
+    if (/already|registered|exists/i.test(msg)) return { error: "Ya existe una cuenta con ese correo." }
+    return { error: msg || "No se pudo crear el usuario." }
+  }
+
+  const mapped = accessToSubscription(created.user.id, d)
+  if ("error" in mapped) return { error: mapped.error }
+  const { error } = await supabase.rpc("admin_set_subscription", mapped.args)
+
+  revalidatePath("/admin", "layout")
+  if (error) {
+    return {
+      success: true,
+      id: created.user.id,
+      warning: `El usuario se creó, pero no se pudo guardar el acceso (${error.message}). Ponlo desde su ficha.`,
+    }
+  }
+  return { success: true, id: created.user.id }
 }

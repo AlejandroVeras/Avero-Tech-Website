@@ -10,11 +10,15 @@ import {
   type PublicStore,
   type Spec,
 } from "@/lib/catalog"
+import { normalizeHex } from "@/lib/brand"
 
 // Views from DATABASE_TENANT_STORES.sql; anon has no direct access to products/profiles.
 const LIST_COLUMNS =
   "id, slug, name, description, price, category, brand, condition, featured, in_stock, cover_url, created_at"
 const STORE_COLUMNS = "id, slug, business_name, logo_url, store_description, whatsapp_phone, is_store_owner"
+// From DATABASE_BRANDING.sql; selectStore retries without them until it runs.
+const BRANDING_COLUMNS =
+  "brand_color, store_cover_url, store_hours, store_address, store_instagram, store_facebook, store_tiktok, store_featured_categories"
 
 type Row = {
   id: string
@@ -39,6 +43,14 @@ type StoreRow = {
   store_description?: string | null
   whatsapp_phone?: string | null
   is_store_owner: boolean | null
+  brand_color?: string | null
+  store_cover_url?: string | null
+  store_hours?: string | null
+  store_address?: string | null
+  store_instagram?: string | null
+  store_facebook?: string | null
+  store_tiktok?: string | null
+  store_featured_categories?: string[] | null
 }
 
 function toCondition(value: string | null): Condition | undefined {
@@ -71,6 +83,14 @@ function toStore(r: StoreRow): PublicStore {
     description: r.store_description ?? undefined,
     whatsapp: r.whatsapp_phone ?? undefined,
     isStoreOwner: !!r.is_store_owner,
+    brandColor: normalizeHex(r.brand_color) ?? undefined,
+    coverUrl: r.store_cover_url ?? undefined,
+    hours: r.store_hours ?? undefined,
+    address: r.store_address ?? undefined,
+    instagram: r.store_instagram ?? undefined,
+    facebook: r.store_facebook ?? undefined,
+    tiktok: r.store_tiktok ?? undefined,
+    featuredCategories: Array.isArray(r.store_featured_categories) ? r.store_featured_categories : undefined,
   }
 }
 
@@ -84,6 +104,13 @@ function toSpecs(value: unknown): Spec[] {
 // Before DATABASE_TENANT_STORES.sql the view lacks the store columns; fall back to id only.
 async function selectStore(filter: { column: "is_store_owner" | "slug"; value: string | boolean }) {
   const supabase = await createClient()
+  const branded = await supabase
+    .from("public_stores")
+    .select(`${STORE_COLUMNS}, ${BRANDING_COLUMNS}`)
+    .eq(filter.column, filter.value)
+    .limit(1)
+    .maybeSingle()
+  if (!branded.error) return branded.data ? toStore(branded.data as StoreRow) : null
   const full = await supabase.from("public_stores").select(STORE_COLUMNS).eq(filter.column, filter.value).limit(1).maybeSingle()
   if (!full.error) return full.data ? toStore(full.data as StoreRow) : null
   if (filter.column !== "is_store_owner") return null

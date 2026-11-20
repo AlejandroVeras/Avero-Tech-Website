@@ -1,28 +1,33 @@
 "use client"
 
-import { Plus, Trash2, Laptop } from "lucide-react"
+import { Plus, Trash2, ListPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { MAX_SPECS, type Spec } from "@/lib/catalog"
 
-const LAPTOP_TEMPLATE = ["Procesador", "Memoria RAM", "Almacenamiento", "Pantalla", "Gráficos", "Sistema operativo", "Batería"]
-
 export function SpecsField({
   specs,
   onChange,
   disabled,
+  template,
+  example = { label: "Ej: Característica", value: "Ej: Valor" },
 }: {
   specs: Spec[]
   onChange: (specs: Spec[]) => void
   disabled?: boolean
+  /** Shortcut that adds the usual rows for this kind of business (lib/business-setup.ts). */
+  template?: { label: string; fields: string[] } | null
+  /** Greyed-out example for empty rows, matching the kind of business. */
+  example?: { label: string; value: string }
 }) {
   const update = (i: number, patch: Partial<Spec>) =>
     onChange(specs.map((s, j) => (j === i ? { ...s, ...patch } : s)))
 
   const addTemplate = () => {
     const existing = new Set(specs.map((s) => s.label.trim().toLowerCase()))
-    const missing = LAPTOP_TEMPLATE.filter((l) => !existing.has(l.toLowerCase())).map((label) => ({ label, value: "" }))
+    if (!template) return
+    const missing = template.fields.filter((l) => !existing.has(l.toLowerCase())).map((label) => ({ label, value: "" }))
     onChange([...specs, ...missing].slice(0, MAX_SPECS))
   }
 
@@ -30,12 +35,14 @@ export function SpecsField({
     <div className="space-y-2">
       <div className="flex items-center justify-between gap-2">
         <Label>Especificaciones</Label>
-        <Button type="button" variant="ghost" size="sm" onClick={addTemplate} disabled={disabled}>
-          <Laptop className="h-4 w-4" /> Campos de laptop
-        </Button>
+        {template && (
+          <Button type="button" variant="ghost" size="sm" onClick={addTemplate} disabled={disabled}>
+            <ListPlus className="h-4 w-4" /> {template.label}
+          </Button>
+        )}
       </div>
       <p className="text-xs text-muted-foreground">
-        Se muestran en la página del equipo. Las filas vacías no se guardan.
+        Se muestran en la página del producto. Las filas vacías no se guardan.
       </p>
       {specs.length > 0 && (
         <ul className="space-y-2">
@@ -43,7 +50,7 @@ export function SpecsField({
             <li key={i} className="grid grid-cols-[1fr_1.5fr_auto] gap-2">
               <Input
                 aria-label={`Característica ${i + 1}`}
-                placeholder="Ej: Procesador"
+                placeholder={example.label}
                 value={s.label}
                 maxLength={60}
                 disabled={disabled}
@@ -51,7 +58,7 @@ export function SpecsField({
               />
               <Input
                 aria-label={`Valor de la característica ${i + 1}`}
-                placeholder="Ej: Intel Core i5-1135G7"
+                placeholder={example.value}
                 value={s.value}
                 maxLength={200}
                 disabled={disabled}

@@ -4,6 +4,8 @@ import { getExpense } from "@/lib/data/expenses"
 
 import { ExpenseForm } from "@/components/expense-form"
 
+export const metadata = { title: "Editar gasto" }
+
 export default async function EditExpensePage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getUser()
 

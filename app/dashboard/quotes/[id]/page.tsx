@@ -7,6 +7,8 @@ import { getProfile } from "@/lib/data/profile"
 import { QuoteForm } from "@/components/quote-form"
 import { QuotePDF } from "@/components/quote-pdf"
 
+export const metadata = { title: "Cotización" }
+
 export default async function EditQuotePage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getUser()
 

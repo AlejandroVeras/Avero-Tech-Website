@@ -3,10 +3,24 @@
 import { getUser } from "@/lib/auth"
 import { getInvoices } from "@/lib/data/invoices"
 import { getExpenses } from "@/lib/data/expenses"
+import { createClient } from "@/lib/supabase/server"
+import { computeProfit } from "@/lib/profit"
 
 export interface FinancialSummary {
+  /** Sales without ITBIS (what the business keeps before costs). */
   totalIncome: number
+  /** What customers paid, ITBIS included. */
+  grossSales: number
+  /** ITBIS collected (belongs to the DGII). */
+  itbis: number
+  /** Cost of the merchandise sold. */
+  cogs: number
+  /** Sold lines whose product has no cost on file. */
+  itemsWithoutCost: number
+  /** Operating expenses; merchandise purchases are not included (their cost is in cogs). */
   totalExpenses: number
+  merchandisePurchases: number
+  /** totalIncome − cogs − totalExpenses */
   netProfit: number
   pendingInvoices: number
   pendingAmount: number
@@ -27,36 +41,40 @@ export interface CategoryExpense {
   percentage: number
 }
 
+/** Cost on file per product, for sales saved before each line stored its own cost. */
+async function currentCosts() {
+  const supabase = await createClient()
+  const { data } = await supabase.from("products").select("id, cost")
+  return new Map((data ?? []).map((p) => [p.id as string, p.cost != null ? Number(p.cost) : null]))
+}
+
 export async function getFinancialSummary(startDate?: string, endDate?: string): Promise<FinancialSummary> {
   const user = await getUser()
   if (!user) throw new Error("Unauthorized")
 
-  const [invoices, expenses] = await Promise.all([getInvoices(), getExpenses()])
+  const [invoices, expenses, costs] = await Promise.all([getInvoices(), getExpenses(), currentCosts()])
 
-  // Filter by date range if provided
   const filteredInvoices =
     startDate && endDate ? invoices.filter((inv) => inv.issueDate >= startDate && inv.issueDate <= endDate) : invoices
-
   const filteredExpenses =
     startDate && endDate ? expenses.filter((exp) => exp.date >= startDate && exp.date <= endDate) : expenses
 
-  const paidInvoices = filteredInvoices.filter((inv) => inv.status === "paid")
+  const profit = computeProfit(filteredInvoices, filteredExpenses, costs)
   const pendingInvoices = filteredInvoices.filter((inv) => inv.status === "sent" || inv.status === "overdue")
 
-  const totalIncome = paidInvoices.reduce((sum, inv) => sum + inv.total, 0)
-  const totalExpenses = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0)
-  const netProfit = totalIncome - totalExpenses
-
-  const pendingAmount = pendingInvoices.reduce((sum, inv) => sum + inv.total, 0)
-
   return {
-    totalIncome,
-    totalExpenses,
-    netProfit,
+    totalIncome: profit.netSales,
+    grossSales: profit.grossSales,
+    itbis: profit.itbis,
+    cogs: profit.cogs,
+    itemsWithoutCost: profit.itemsWithoutCost,
+    totalExpenses: profit.expenses,
+    merchandisePurchases: profit.merchandisePurchases,
+    netProfit: profit.netProfit,
     pendingInvoices: pendingInvoices.length,
-    pendingAmount,
-    paidInvoices: paidInvoices.length,
-    paidAmount: totalIncome,
+    pendingAmount: pendingInvoices.reduce((sum, inv) => sum + inv.total, 0),
+    paidInvoices: profit.paidCount,
+    paidAmount: profit.grossSales,
   }
 }
 
@@ -64,51 +82,27 @@ export async function getMonthlyData(months = 6): Promise<MonthlyData[]> {
   const user = await getUser()
   if (!user) throw new Error("Unauthorized")
 
-  const [invoices, expenses] = await Promise.all([getInvoices(), getExpenses()])
+  const [invoices, expenses, costs] = await Promise.all([getInvoices(), getExpenses(), currentCosts()])
 
-  const monthlyMap = new Map<string, MonthlyData>()
-
-  // Initialize last N months
   const now = new Date()
+  const result: MonthlyData[] = []
   for (let i = months - 1; i >= 0; i--) {
     const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
-    const monthKey = date.toISOString().slice(0, 7) // YYYY-MM
-    const monthLabel = date.toLocaleDateString("es-DO", { year: "numeric", month: "short" })
-
-    monthlyMap.set(monthKey, {
-      month: monthLabel,
-      income: 0,
-      expenses: 0,
-      profit: 0,
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`
+    const p = computeProfit(
+      invoices.filter((inv) => inv.issueDate.startsWith(key)),
+      expenses.filter((exp) => exp.date.startsWith(key)),
+      costs,
+    )
+    result.push({
+      month: date.toLocaleDateString("es-DO", { year: "numeric", month: "short" }),
+      income: p.netSales,
+      // Bars show everything that came out of the sales: merchandise sold plus operating expenses.
+      expenses: Math.round((p.cogs + p.expenses) * 100) / 100,
+      profit: p.netProfit,
     })
   }
-
-  // Add invoice income
-  for (const invoice of invoices) {
-    if (invoice.status === "paid") {
-      const monthKey = invoice.issueDate.slice(0, 7)
-      const data = monthlyMap.get(monthKey)
-      if (data) {
-        data.income += invoice.total
-      }
-    }
-  }
-
-  // Add expenses
-  for (const expense of expenses) {
-    const monthKey = expense.date.slice(0, 7)
-    const data = monthlyMap.get(monthKey)
-    if (data) {
-      data.expenses += expense.amount
-    }
-  }
-
-  // Calculate profit
-  for (const data of monthlyMap.values()) {
-    data.profit = data.income - data.expenses
-  }
-
-  return Array.from(monthlyMap.values())
+  return result
 }
 
 export async function getExpensesByCategory(): Promise<CategoryExpense[]> {

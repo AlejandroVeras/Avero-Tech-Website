@@ -3,6 +3,8 @@ import { getUser } from "@/lib/auth"
 
 import { ExpenseForm } from "@/components/expense-form"
 
+export const metadata = { title: "Nuevo gasto" }
+
 export default async function NewExpensePage() {
   const user = await getUser()
 

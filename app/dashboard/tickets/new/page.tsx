@@ -2,6 +2,8 @@ import { redirect } from "next/navigation"
 import { getUser } from "@/lib/auth"
 import { TicketForm } from "@/components/ticket-form"
 
+export const metadata = { title: "Nuevo ticket" }
+
 export default async function NewTicketPage() {
   const user = await getUser()
   if (!user) redirect("/login")

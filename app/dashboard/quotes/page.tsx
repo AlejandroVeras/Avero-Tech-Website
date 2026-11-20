@@ -6,6 +6,8 @@ import { Plus } from "lucide-react"
 import Link from "next/link"
 import { QuotesList } from "@/components/quotes-list"
 
+export const metadata = { title: "Cotizaciones" }
+
 export default async function QuotesPage() {
   const user = await getUser()
 

@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
 
+export const metadata = { title: "Clientes" }
+
 export default async function CustomersPage() {
   const user = await getUser()
 

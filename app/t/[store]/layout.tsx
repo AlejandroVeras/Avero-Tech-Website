@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { getStoreBySlug } from "@/lib/data/public-catalog"
 import type { Metadata } from "next"
 import { APP_URL, whatsappUrl } from "@/lib/site"
+import { brandProps } from "@/lib/brand"
 
 // Stores are served from the app domain, so their canonical and share URLs resolve there.
 export const metadata: Metadata = { metadataBase: new URL(APP_URL) }
@@ -23,7 +24,7 @@ export default async function TenantStoreLayout({
   if (!store) notFound()
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
+    <div className="min-h-screen flex flex-col bg-background text-foreground" {...(brandProps(store.brandColor) as React.HTMLAttributes<HTMLDivElement>)}>
       <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-xl backdrop-saturate-150 border-b border-pale-mist/50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
           <Link href={`/t/${store.slug}`} className="flex items-center gap-3 min-w-0">

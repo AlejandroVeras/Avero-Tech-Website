@@ -2,6 +2,9 @@ import { redirect } from "next/navigation"
 import { getUser } from "@/lib/auth"
 
 import { ProductForm } from "@/components/product-form"
+import { getProductFormSettings } from "@/lib/data/business-setup"
+
+export const metadata = { title: "Nuevo producto" }
 
 export default async function NewProductPage() {
   const user = await getUser()
@@ -9,6 +12,8 @@ export default async function NewProductPage() {
   if (!user) {
     redirect("/login")
   }
+
+  const formSettings = await getProductFormSettings()
 
   return (
     <div className="min-h-screen bg-background">
@@ -19,7 +24,7 @@ export default async function NewProductPage() {
           <p className="text-muted-foreground mt-1">Agrega un nuevo producto o servicio a tu catálogo</p>
         </div>
 
-        <ProductForm userId={user.id} />
+        <ProductForm userId={user.id} {...formSettings} />
       </div>
     </div>
   )

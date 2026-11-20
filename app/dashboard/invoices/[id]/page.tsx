@@ -6,6 +6,8 @@ import { getProducts } from "@/lib/data/products"
 
 import { InvoiceForm } from "@/components/invoice-form"
 
+export const metadata = { title: "Editar factura" }
+
 export default async function EditInvoicePage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getUser()
 
@@ -18,6 +20,11 @@ export default async function EditInvoicePage({ params }: { params: Promise<{ id
 
   if (!invoice) {
     notFound()
+  }
+
+  // Sales from Vender may carry the ITBIS inside the price; the invoice form would add it again.
+  if (invoice.source === "pos") {
+    redirect(`/dashboard/invoices/${invoice.id}/detail`)
   }
 
   return (

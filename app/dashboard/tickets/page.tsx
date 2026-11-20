@@ -5,6 +5,8 @@ import { TicketsList } from "@/components/tickets-list"
 import { Suspense } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 
+export const metadata = { title: "Tickets" }
+
 export const dynamic = "force-dynamic"
 
 function TicketsLoading() {

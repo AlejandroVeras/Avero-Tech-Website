@@ -46,6 +46,15 @@ export interface PublicStore {
   description?: string
   whatsapp?: string
   isStoreOwner: boolean
+  /** From DATABASE_BRANDING.sql; empty until it runs. */
+  brandColor?: string
+  coverUrl?: string
+  hours?: string
+  address?: string
+  instagram?: string
+  facebook?: string
+  tiktok?: string
+  featuredCategories?: string[]
 }
 
 // "829-812-2103" -> "18298122103" (wa.me needs the country code, DR is +1).

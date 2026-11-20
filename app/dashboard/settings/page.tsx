@@ -1,9 +1,15 @@
 import { redirect } from "next/navigation"
 import { getProfile } from "@/lib/data/profile"
 import { SettingsForm } from "@/components/settings-form"
+import { BusinessSetupForm } from "@/components/business-setup-form"
+import { getBusinessSetup } from "@/lib/data/business-setup"
+import { getBranding } from "@/lib/data/branding"
+import { BrandColorForm, DashboardWidgetsForm } from "@/components/branding-settings"
+
+export const metadata = { title: "Configuración" }
 
 export default async function SettingsPage() {
-  const profile = await getProfile()
+  const [profile, setup, branding] = await Promise.all([getProfile(), getBusinessSetup(), getBranding()])
 
   if (!profile) {
     redirect("/login")
@@ -17,6 +23,12 @@ export default async function SettingsPage() {
       </div>
 
       <SettingsForm profile={profile} />
+
+      <BrandColorForm current={branding.brandColor} />
+
+      <DashboardWidgetsForm current={branding.widgets} />
+
+      <BusinessSetupForm setup={setup} mode="settings" />
     </div>
   )
 }

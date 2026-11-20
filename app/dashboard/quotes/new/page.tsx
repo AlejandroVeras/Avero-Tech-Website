@@ -4,6 +4,8 @@ import { getCustomers } from "@/lib/data/customers"
 import { getProducts } from "@/lib/data/products"
 import { QuoteForm } from "@/components/quote-form"
 
+export const metadata = { title: "Nueva cotización" }
+
 export default async function NewQuotePage() {
   const user = await getUser()
 

@@ -6,6 +6,10 @@ import { FinancialSummaryCards } from "@/components/financial-summary-cards"
 import { MonthlyChart } from "@/components/monthly-chart"
 import { ExpensesCategoryChart } from "@/components/expenses-category-chart"
 import { ExportReportsButton } from "@/components/export-reports-button"
+import { getBusinessSetup } from "@/lib/data/business-setup"
+import { featuresFor } from "@/lib/business-setup"
+
+export const metadata = { title: "Reportes" }
 
 export default async function ReportsPage() {
   const user = await getUser()
@@ -15,11 +19,13 @@ export default async function ReportsPage() {
   }
 
   // Obtenemos todos los datos en paralelo
-  const [summary, monthlyData, categoryExpenses] = await Promise.all([
+  const [summary, monthlyData, categoryExpenses, setup] = await Promise.all([
     getFinancialSummary(),
     getMonthlyData(6),
     getExpensesByCategory(),
+    getBusinessSetup(),
   ])
+  const { quotes } = featuresFor(setup)
 
   return (
     <div className="min-h-screen bg-background">
@@ -37,7 +43,7 @@ export default async function ReportsPage() {
           />
         </div>
 
-        <FinancialSummaryCards summary={summary} />
+        <FinancialSummaryCards summary={summary} showPending={quotes} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <MonthlyChart data={monthlyData} />

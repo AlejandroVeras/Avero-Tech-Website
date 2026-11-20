@@ -5,6 +5,8 @@ import { getProducts } from "@/lib/data/products"
 
 import { InvoiceForm } from "@/components/invoice-form"
 
+export const metadata = { title: "Nueva factura" }
+
 export default async function NewInvoicePage() {
   const user = await getUser()
 

@@ -274,3 +274,23 @@
 @media (prefers-reduced-motion: reduce) {
   .auth-grid, .auth-rise { animation: none; }
 }
+
+/* A business's own color (lib/brand.ts brandProps): replaces the Avero blue inside its dashboard,
+   catalog and previews. Each mode gets a shade that stays visible on that mode's background. */
+[data-brand] {
+  --primary: var(--brand-light);
+  --primary-foreground: var(--brand-light-fg);
+  --ring: var(--brand-light);
+  --sidebar-primary: var(--brand-light);
+  --sidebar-primary-foreground: var(--brand-light-fg);
+  --sidebar-ring: var(--brand-light);
+}
+.dark [data-brand],
+.dark[data-brand] {
+  --primary: var(--brand-dark);
+  --primary-foreground: var(--brand-dark-fg);
+  --ring: var(--brand-dark);
+  --sidebar-primary: var(--brand-dark);
+  --sidebar-primary-foreground: var(--brand-dark-fg);
+  --sidebar-ring: var(--brand-dark);
+}

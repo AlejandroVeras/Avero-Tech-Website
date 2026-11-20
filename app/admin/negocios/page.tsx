@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { appUrl } from "@/lib/site"
-import { Search } from "lucide-react"
+import { Plus, Search } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -49,9 +49,16 @@ export default async function NegociosPage({ searchParams }: { searchParams: Pro
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Negocios</h1>
-        <p className="text-muted-foreground">Cuentas registradas en el sistema de gestión.</p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold">Negocios</h1>
+          <p className="text-muted-foreground">Cuentas registradas en el sistema de gestión.</p>
+        </div>
+        <Button asChild>
+          <Link href="/admin/negocios/nuevo">
+            <Plus className="h-4 w-4" /> Crear usuario
+          </Link>
+        </Button>
       </div>
 
       {error && (
