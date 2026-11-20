@@ -6,6 +6,8 @@ import { DEFAULT_WIDGETS, normalizeHex, parseWidgets, type WidgetSetting } from 
 
 export interface Branding {
   brandColor: string | null
+  /** Color chosen for invoices, receipts and quotes; null = use the brand color. */
+  documentColor: string | null
   widgets: WidgetSetting[]
 }
 
@@ -27,15 +29,19 @@ export const getBranding = cache(async (): Promise<Branding> => {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) return { brandColor: null, widgets: DEFAULT_WIDGETS }
+  if (!user) return { brandColor: null, documentColor: null, widgets: DEFAULT_WIDGETS }
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("brand_color, dashboard_widgets")
+    .select("brand_color, document_color, dashboard_widgets")
     .eq("id", user.id)
     .maybeSingle()
-  if (error || !data) return { brandColor: null, widgets: DEFAULT_WIDGETS }
-  return { brandColor: normalizeHex(data.brand_color), widgets: parseWidgets(data.dashboard_widgets) }
+  if (error || !data) return { brandColor: null, documentColor: null, widgets: DEFAULT_WIDGETS }
+  return {
+    brandColor: normalizeHex(data.brand_color),
+    documentColor: normalizeHex(data.document_color),
+    widgets: parseWidgets(data.dashboard_widgets),
+  }
 })
 
 /** null until DATABASE_BRANDING.sql runs (the form explains it instead of failing on save). */
@@ -69,4 +75,9 @@ export async function getStoreAppearance(): Promise<StoreAppearance | null> {
     featuredCategories: Array.isArray(data.store_featured_categories) ? data.store_featured_categories : [],
     categories,
   }
+}
+
+/** The color invoices, receipts and quotes are drawn with. */
+export function documentAccent(b: Branding) {
+  return b.documentColor ?? b.brandColor
 }

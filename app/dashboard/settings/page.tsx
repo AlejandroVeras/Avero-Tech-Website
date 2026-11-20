@@ -3,6 +3,7 @@ import { getProfile } from "@/lib/data/profile"
 import { SettingsForm } from "@/components/settings-form"
 import { BusinessSetupForm } from "@/components/business-setup-form"
 import { ToolsForm } from "@/components/tools-form"
+import { DocumentColorForm } from "@/components/document-color-form"
 import { featuresFor } from "@/lib/business-setup"
 import { getBusinessSetup } from "@/lib/data/business-setup"
 import { getBranding } from "@/lib/data/branding"
@@ -27,6 +28,8 @@ export default async function SettingsPage() {
       <SettingsForm profile={profile} />
 
       <BrandColorForm current={branding.brandColor} />
+
+      <DocumentColorForm current={branding.documentColor} brandColor={branding.brandColor} businessName={profile.businessName} />
 
       <DashboardWidgetsForm current={branding.widgets} />
 

@@ -42,6 +42,19 @@ export async function saveBrandColor(color: string | null) {
   return { success: true }
 }
 
+/** Configuración → Color de facturas y recibos. null = same as the brand color. */
+export async function saveDocumentColor(color: string | null) {
+  const { supabase, user } = await requireUser()
+  const hex = color === null ? null : normalizeHex(color)
+  if (color !== null && !hex) return { error: "Color inválido" }
+
+  const { error } = await supabase.from("profiles").update({ document_color: hex, updated_at: new Date().toISOString() }).eq("id", user.id)
+  if (error) return { error: saveError(error) }
+
+  revalidatePath("/dashboard", "layout")
+  return { success: true }
+}
+
 const widgetIds = DASHBOARD_WIDGETS.map((w) => w.id) as [string, ...string[]]
 const widgetsSchema = z.array(z.object({ id: z.enum(widgetIds), visible: z.boolean() })).max(DASHBOARD_WIDGETS.length)
 

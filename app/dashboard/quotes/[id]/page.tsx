@@ -7,7 +7,7 @@ import { getProfile } from "@/lib/data/profile"
 import { QuoteForm } from "@/components/quote-form"
 import { QuotePDF } from "@/components/quote-pdf"
 import { InvoiceShareButtons } from "@/components/invoice-share-buttons"
-import { getBranding } from "@/lib/data/branding"
+import { documentAccent, getBranding } from "@/lib/data/branding"
 import type { InvoiceDocument } from "@/lib/invoice-document"
 
 export const metadata = { title: "Cotización" }
@@ -55,7 +55,7 @@ export default async function EditQuotePage({ params }: { params: Promise<{ id: 
       email: profile.email,
       logoUrl: profile.logoUrl,
     },
-    accent: branding.brandColor,
+    accent: documentAccent(branding),
   }
 
   return (

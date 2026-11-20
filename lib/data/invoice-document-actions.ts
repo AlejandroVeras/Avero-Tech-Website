@@ -2,7 +2,7 @@
 
 import { getInvoice } from "@/lib/data/invoices"
 import { getProfile } from "@/lib/data/profile"
-import { getBranding } from "@/lib/data/branding"
+import { documentAccent, getBranding } from "@/lib/data/branding"
 import type { InvoiceDocument } from "@/lib/invoice-document"
 
 /** Everything the invoice PDF needs, for the signed-in business's own invoice. */
@@ -33,6 +33,6 @@ export async function getInvoiceDocument(id: string): Promise<InvoiceDocument | 
       email: profile.email,
       logoUrl: profile.logoUrl,
     },
-    accent: branding.brandColor,
+    accent: documentAccent(branding),
   }
 }
