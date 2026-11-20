@@ -21,7 +21,7 @@ export function MonthlyChart({ data }: MonthlyChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Ventas, costos y ganancia (últimos 6 meses)</CardTitle>
+        <CardTitle>Ventas, costos y ganancia por mes</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>

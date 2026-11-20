@@ -31,7 +31,7 @@ export function ExpensesCategoryChart({ data }: ExpensesCategoryChartProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Gastos por Categoría</CardTitle>
+          <CardTitle>Gastos por categoría en el período</CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-[300px]">
           <p className="text-muted-foreground">No hay gastos registrados</p>
@@ -43,7 +43,7 @@ export function ExpensesCategoryChart({ data }: ExpensesCategoryChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Gastos por Categoría (Top 5)</CardTitle>
+        <CardTitle>Gastos por categoría en el período</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>

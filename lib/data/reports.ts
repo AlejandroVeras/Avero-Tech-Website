@@ -5,6 +5,7 @@ import { getInvoices } from "@/lib/data/invoices"
 import { getExpenses } from "@/lib/data/expenses"
 import { createClient } from "@/lib/supabase/server"
 import { computeProfit } from "@/lib/profit"
+import { inPeriod } from "@/lib/report-period"
 
 export interface FinancialSummary {
   /** Sales without ITBIS (what the business keeps before costs). */
@@ -48,16 +49,15 @@ async function currentCosts() {
   return new Map((data ?? []).map((p) => [p.id as string, p.cost != null ? Number(p.cost) : null]))
 }
 
-export async function getFinancialSummary(startDate?: string, endDate?: string): Promise<FinancialSummary> {
+export async function getFinancialSummary(startDate?: string | null, endDate?: string | null): Promise<FinancialSummary> {
   const user = await getUser()
   if (!user) throw new Error("Unauthorized")
 
   const [invoices, expenses, costs] = await Promise.all([getInvoices(), getExpenses(), currentCosts()])
 
-  const filteredInvoices =
-    startDate && endDate ? invoices.filter((inv) => inv.issueDate >= startDate && inv.issueDate <= endDate) : invoices
-  const filteredExpenses =
-    startDate && endDate ? expenses.filter((exp) => exp.date >= startDate && exp.date <= endDate) : expenses
+  const period = { start: startDate ?? null, end: endDate ?? null }
+  const filteredInvoices = invoices.filter((inv) => inPeriod(inv.issueDate, period))
+  const filteredExpenses = expenses.filter((exp) => inPeriod(exp.date, period))
 
   const profit = computeProfit(filteredInvoices, filteredExpenses, costs)
   const pendingInvoices = filteredInvoices.filter((inv) => inv.status === "sent" || inv.status === "overdue")
@@ -78,13 +78,14 @@ export async function getFinancialSummary(startDate?: string, endDate?: string):
   }
 }
 
-export async function getMonthlyData(months = 6): Promise<MonthlyData[]> {
+/** One bar per month, ending in the month of endDay (today when null). */
+export async function getMonthlyData(months = 6, endDay?: string | null): Promise<MonthlyData[]> {
   const user = await getUser()
   if (!user) throw new Error("Unauthorized")
 
   const [invoices, expenses, costs] = await Promise.all([getInvoices(), getExpenses(), currentCosts()])
 
-  const now = new Date()
+  const now = endDay ? new Date(`${endDay.slice(0, 7)}-15T12:00:00`) : new Date()
   const result: MonthlyData[] = []
   for (let i = months - 1; i >= 0; i--) {
     const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
@@ -105,11 +106,12 @@ export async function getMonthlyData(months = 6): Promise<MonthlyData[]> {
   return result
 }
 
-export async function getExpensesByCategory(): Promise<CategoryExpense[]> {
+export async function getExpensesByCategory(startDate?: string | null, endDate?: string | null): Promise<CategoryExpense[]> {
   const user = await getUser()
   if (!user) throw new Error("Unauthorized")
 
-  const expenses = await getExpenses()
+  const period = { start: startDate ?? null, end: endDate ?? null }
+  const expenses = (await getExpenses()).filter((e) => inPeriod(e.date, period))
 
   const categoryMap = new Map<string, number>()
   let total = 0

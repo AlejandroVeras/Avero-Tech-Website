@@ -8,21 +8,30 @@ import { ExpensesCategoryChart } from "@/components/expenses-category-chart"
 import { ExportReportsButton } from "@/components/export-reports-button"
 import { getBusinessSetup } from "@/lib/data/business-setup"
 import { featuresFor } from "@/lib/business-setup"
+import { resolvePeriod, todayInDR } from "@/lib/report-period"
+import { ReportPeriodFilter } from "@/components/report-period-filter"
 
-export const metadata = { title: "Reportes" }
+export const metadata = { title: "¿Cuánto gané?" }
 
-export default async function ReportsPage() {
+export default async function ReportsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ periodo?: string; desde?: string; hasta?: string }>
+}) {
   const user = await getUser()
 
   if (!user) {
     redirect("/login")
   }
 
-  // Obtenemos todos los datos en paralelo
+  const today = todayInDR()
+  const period = resolvePeriod(await searchParams, today)
+  // Long periods show one bar per month (up to 12); short ones, the 6 months up to the period's end.
+  const span = period.start ? monthsBetween(period.start, period.end ?? today) : 12
   const [summary, monthlyData, categoryExpenses, setup] = await Promise.all([
-    getFinancialSummary(),
-    getMonthlyData(6),
-    getExpensesByCategory(),
+    getFinancialSummary(period.start, period.end),
+    getMonthlyData(Math.min(12, Math.max(6, span)), period.end && period.end < today ? period.end : today),
+    getExpensesByCategory(period.start, period.end),
     getBusinessSetup(),
   ])
   const { quotes } = featuresFor(setup)
@@ -34,7 +43,9 @@ export default async function ReportsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-foreground">¿Cuánto gané?</h1>
-            <p className="text-muted-foreground mt-1">Lo que vendiste, lo que gastaste y lo que te quedó</p>
+            <p className="text-muted-foreground mt-1">
+              Lo que vendiste, lo que gastaste y lo que te quedó. <span className="font-medium text-foreground">{period.label}</span>
+            </p>
           </div>
           <ExportReportsButton 
             summary={summary} 
@@ -42,6 +53,8 @@ export default async function ReportsPage() {
             categoryExpenses={categoryExpenses} 
           />
         </div>
+
+        <ReportPeriodFilter period={period} today={today} />
 
         <FinancialSummaryCards summary={summary} showPending={quotes} />
 
@@ -54,3 +67,9 @@ export default async function ReportsPage() {
   )
 }
 
+
+function monthsBetween(start: string, end: string) {
+  const [sy, sm] = start.split("-").map(Number)
+  const [ey, em] = end.split("-").map(Number)
+  return (ey - sy) * 12 + (em - sm) + 1
+}
