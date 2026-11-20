@@ -3,10 +3,13 @@
 // placed inside the app without touching its styles. No imports: tests run this file directly.
 
 export interface InvoiceDocument {
+  /** "quote" turns the same layout into a cotización (title, labels, validity, acceptance). */
+  kind?: "invoice" | "quote"
   invoiceNumber: string
   status: string
   customerName: string
   issueDate: string
+  /** Invoice: due date. Quote: valid until. */
   dueDate?: string
   items: { description: string; quantity: number; unitPrice: number; total: number }[]
   subtotal: number
@@ -38,6 +41,13 @@ const STATUS: Record<string, string> = {
   cancelled: "CANCELADA",
 }
 
+const QUOTE_STATUS: Record<string, string> = {
+  draft: "BORRADOR",
+  sent: "ENVIADA",
+  approved: "APROBADA",
+  rejected: "RECHAZADA",
+}
+
 const PAYMENT: Record<string, string> = { cash: "Efectivo", card: "Tarjeta", transfer: "Transferencia" }
 
 export function escapeHtml(value: unknown) {
@@ -58,14 +68,14 @@ function longDate(day: string) {
 }
 
 /** File name for the PDF: "Factura-INV-0005-Boutique-Marina.pdf". */
-export function invoiceFileName(doc: Pick<InvoiceDocument, "invoiceNumber" | "business">) {
+export function invoiceFileName(doc: Pick<InvoiceDocument, "invoiceNumber" | "business" | "kind">) {
   const clean = (s: string) =>
     s
       .normalize("NFD")
       .replace(/[̀-ͯ]/g, "")
       .replace(/[^a-zA-Z0-9]+/g, "-")
       .replace(/^-|-$/g, "")
-  return `Factura-${clean(doc.invoiceNumber)}-${clean(doc.business.name).slice(0, 40)}.pdf`
+  return `${doc.kind === "quote" ? "Cotizacion" : "Factura"}-${clean(doc.invoiceNumber)}-${clean(doc.business.name).slice(0, 40)}.pdf`
 }
 
 export function invoiceDocumentHtml(doc: InvoiceDocument) {
@@ -74,6 +84,9 @@ export function invoiceDocumentHtml(doc: InvoiceDocument) {
   const b = doc.business
   const logoOk = b.logoUrl && /^(data:image\/|https:\/\/)/.test(b.logoUrl)
   const pay = doc.paymentMethod ? PAYMENT[doc.paymentMethod] : undefined
+  const quote = doc.kind === "quote"
+  const statusLabel = (quote ? QUOTE_STATUS : STATUS)[doc.status] ?? e(doc.status.toUpperCase())
+  const good = doc.status === (quote ? "approved" : "paid")
 
   return `<div class="av-inv">
 <style>
@@ -102,6 +115,10 @@ export function invoiceDocumentHtml(doc: InvoiceDocument) {
 .av-inv .row.big { border-top: 2px dashed #cbd5e1; margin-top: 8px; padding-top: 10px; line-height: 24px; font-size: 18px; font-weight: 800; color: ${accent}; }
 .av-inv .notes { margin-top: 24px; padding: 14px 18px; border-left: 4px solid ${accent}; background: #f8fafc; }
 .av-inv .notes h3 { font-size: 11px; color: ${accent}; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+.av-inv .valid { margin-top: 18px; padding: 12px 18px; border-radius: 10px; background: ${accent}12; color: #0f172a; display: flex; justify-content: space-between; gap: 16px; }
+.av-inv .valid strong { color: ${accent}; }
+.av-inv .sign { display: flex; gap: 48px; margin-top: 44px; }
+.av-inv .sign div { flex: 1; border-top: 1px solid #94a3b8; padding-top: 6px; text-align: center; color: #64748b; font-size: 12px; }
 .av-inv .ft { margin-top: 36px; padding-top: 16px; border-top: 1px solid #eef2f7; text-align: center; color: #94a3b8; font-size: 12px; }
 </style>
 <div class="hd">
@@ -115,17 +132,17 @@ export function invoiceDocumentHtml(doc: InvoiceDocument) {
     ${b.email ? `<p>${e(b.email)}</p>` : ""}
   </div>
   <div class="meta">
-    <h2>FACTURA</h2>
+    <h2>${quote ? "COTIZACIÓN" : "FACTURA"}</h2>
     <p class="num">${e(doc.invoiceNumber)}</p>
-    <span class="badge ${doc.status === "paid" ? "paid" : ""}">${STATUS[doc.status] ?? e(doc.status.toUpperCase())}</span>
+    <span class="badge ${good ? "paid" : ""}">${statusLabel}</span>
   </div>
 </div>
 <div class="box">
-  <div><h3>Cliente</h3><p><strong>${e(doc.customerName)}</strong></p></div>
+  <div><h3>${quote ? "Preparada para" : "Cliente"}</h3><p><strong>${e(doc.customerName)}</strong></p></div>
   <div class="r">
     <h3>Fecha</h3>
     <p>${e(longDate(doc.issueDate))}</p>
-    ${doc.dueDate ? `<p>Vence: ${e(longDate(doc.dueDate))}</p>` : ""}
+    ${doc.dueDate && !quote ? `<p>Vence: ${e(longDate(doc.dueDate))}</p>` : ""}
     ${pay ? `<p>Pago: ${pay}</p>` : ""}
   </div>
 </div>
@@ -144,9 +161,15 @@ export function invoiceDocumentHtml(doc: InvoiceDocument) {
   <div class="row"><span>Subtotal</span><span>${money.format(doc.subtotal)}</span></div>
   ${doc.discount > 0 ? `<div class="row disc"><span>Descuento</span><span>-${money.format(doc.discount)}</span></div>` : ""}
   ${doc.itbis > 0 ? `<div class="row"><span>${doc.itbisIncluded ? "ITBIS incluido (18%)" : "ITBIS (18%)"}</span><span>${money.format(doc.itbis)}</span></div>` : ""}
-  <div class="row big"><span>Total</span><span>${money.format(doc.total)}</span></div>
+  <div class="row big"><span>${quote ? "Total cotizado" : "Total"}</span><span>${money.format(doc.total)}</span></div>
 </div>
-${doc.notes ? `<div class="notes"><h3>Notas</h3><p>${e(doc.notes).replace(/\n/g, "<br/>")}</p></div>` : ""}
-<div class="ft">Gracias por su compra · ${e(b.name)}</div>
+${
+  quote && doc.dueDate
+    ? `<div class="valid"><span>Precios en pesos dominicanos (RD$).</span><span>Válida hasta el <strong>${e(longDate(doc.dueDate))}</strong></span></div>`
+    : ""
+}
+${doc.notes ? `<div class="notes"><h3>${quote ? "Condiciones y notas" : "Notas"}</h3><p>${e(doc.notes).replace(/\n/g, "<br/>")}</p></div>` : ""}
+${quote ? `<div class="sign"><div>Preparada por · ${e(b.name)}</div><div>Aceptada por el cliente (firma y fecha)</div></div>` : ""}
+<div class="ft">${quote ? `Gracias por considerarnos · ${e(b.name)}${b.phone ? ` · ${e(b.phone)}` : ""}` : `Gracias por su compra · ${e(b.name)}`}</div>
 </div>`
 }

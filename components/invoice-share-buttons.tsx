@@ -58,7 +58,10 @@ export function InvoiceShareButtons({
   async function sendWhatsApp() {
     if (!file || !doc) return
     setBusy(true)
-    const text = `Factura ${doc.invoiceNumber} de ${doc.business.name} por ${money.format(doc.total)}.`
+    const text =
+      doc.kind === "quote"
+        ? `Cotización ${doc.invoiceNumber} de ${doc.business.name} por ${money.format(doc.total)}.`
+        : `Factura ${doc.invoiceNumber} de ${doc.business.name} por ${money.format(doc.total)}.`
     const result = await sharePdfToWhatsApp(file, text)
     setBusy(false)
     if (result === "downloaded") {
@@ -71,12 +74,13 @@ export function InvoiceShareButtons({
   }
 
   const ready = !!file && !busy
+  const noun = (doc ?? initial)?.kind === "quote" ? "cotización" : "factura"
   return (
     <div className={cn("space-y-2", className)}>
       <div className={cn("gap-2", stacked ? "grid" : "flex flex-wrap")}>
         <Button type="button" onClick={sendWhatsApp} disabled={!ready} size={stacked ? "lg" : "default"}>
           {file ? <MessageCircle className="h-4 w-4" aria-hidden /> : <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
-          {file ? "Enviar factura por WhatsApp" : "Preparando PDF…"}
+          {file ? `Enviar ${noun} por WhatsApp` : "Preparando PDF…"}
         </Button>
         <Button
           type="button"

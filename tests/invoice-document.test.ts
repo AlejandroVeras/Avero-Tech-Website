@@ -43,3 +43,15 @@ test("a logo that is not https or data: is left out, and a bad color falls back"
 test("file name is safe for phones and WhatsApp", () => {
   assert.equal(invoiceFileName(doc), "Factura-INV-0005-Boutique-Marina-Co.pdf")
 })
+
+test("a quote uses its own title, labels, validity and acceptance lines", () => {
+  const html = invoiceDocumentHtml({ ...doc, kind: "quote", status: "approved", dueDate: "2026-12-20", paymentMethod: null })
+  assert.ok(html.includes("COTIZACIÓN"))
+  assert.ok(!html.includes(">FACTURA<"))
+  assert.ok(html.includes("APROBADA"))
+  assert.ok(html.includes("Preparada para"))
+  assert.ok(html.includes("Válida hasta"))
+  assert.ok(html.includes("Total cotizado"))
+  assert.ok(html.includes("Aceptada por el cliente"))
+  assert.equal(invoiceFileName({ ...doc, kind: "quote", invoiceNumber: "COT-0002" }), "Cotizacion-COT-0002-Boutique-Marina-Co.pdf")
+})
