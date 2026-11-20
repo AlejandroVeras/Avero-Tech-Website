@@ -80,7 +80,7 @@ export function InvoiceShareButtons({
       <div className={cn("gap-2", stacked ? "grid" : "flex flex-wrap")}>
         <Button type="button" onClick={sendWhatsApp} disabled={!ready} size={stacked ? "lg" : "default"}>
           {file ? <MessageCircle className="h-4 w-4" aria-hidden /> : <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
-          {file ? `Enviar ${noun} por WhatsApp` : "Preparando PDF…"}
+          {file ? (stacked ? `Enviar ${noun} por WhatsApp` : "Enviar por WhatsApp") : "Preparando PDF…"}
         </Button>
         <Button
           type="button"

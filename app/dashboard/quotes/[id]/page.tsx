@@ -60,14 +60,12 @@ export default async function EditQuotePage({ params }: { params: Promise<{ id: 
 
   return (
     <div className="container mx-auto p-4 md:p-6 lg:p-8 max-w-5xl space-y-6">
-      <div>
-        <p className="text-sm font-medium text-muted-foreground">Cotización {quote.quoteNumber}</p>
-        <h1 className="text-3xl font-bold tracking-tight">{quote.customerName}</h1>
-      </div>
-
-      <div className="flex flex-col gap-3 rounded-xl border bg-card p-3 shadow-xs sm:flex-row sm:items-center sm:justify-between">
-        <p className="px-1 text-sm text-muted-foreground">Envía o descarga la cotización con tu logo.</p>
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="space-y-4">
+        <div>
+          <p className="text-sm font-medium text-muted-foreground">Cotización {quote.quoteNumber}</p>
+          <h1 className="text-3xl font-bold tracking-tight">{quote.customerName}</h1>
+        </div>
+        <div className="flex flex-wrap items-start gap-2">
           <InvoiceShareButtons document={document} />
           <QuotePDF document={document} quote={quote} profile={profile} />
         </div>
