@@ -33,7 +33,7 @@ export interface InvoiceDocument {
   accent?: string | null
 }
 
-const STATUS: Record<string, string> = {
+export const STATUS: Record<string, string> = {
   paid: "PAGADA",
   sent: "ENVIADA",
   draft: "BORRADOR",
@@ -41,14 +41,14 @@ const STATUS: Record<string, string> = {
   cancelled: "CANCELADA",
 }
 
-const QUOTE_STATUS: Record<string, string> = {
+export const QUOTE_STATUS: Record<string, string> = {
   draft: "BORRADOR",
   sent: "ENVIADA",
   approved: "APROBADA",
   rejected: "RECHAZADA",
 }
 
-const PAYMENT: Record<string, string> = { cash: "Efectivo", card: "Tarjeta", transfer: "Transferencia" }
+export const PAYMENT: Record<string, string> = { cash: "Efectivo", card: "Tarjeta", transfer: "Transferencia" }
 
 export function escapeHtml(value: unknown) {
   return String(value ?? "")
@@ -59,9 +59,9 @@ export function escapeHtml(value: unknown) {
     .replace(/'/g, "&#39;")
 }
 
-const money = new Intl.NumberFormat("es-DO", { style: "currency", currency: "DOP" })
+export const money = new Intl.NumberFormat("es-DO", { style: "currency", currency: "DOP" })
 
-function longDate(day: string) {
+export function longDate(day: string) {
   // Date-only values parse as UTC midnight; read them at midday so the day never shifts.
   const d = new Date(/^\d{4}-\d{2}-\d{2}$/.test(day) ? `${day}T12:00:00` : day)
   return d.toLocaleDateString("es-DO", { year: "numeric", month: "long", day: "numeric" })

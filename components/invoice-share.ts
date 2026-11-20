@@ -1,79 +1,37 @@
 "use client"
 
 import { escapeHtml, invoiceDocumentHtml, invoiceFileName, type InvoiceDocument } from "@/lib/invoice-document"
+import { drawDocumentPdf, type PdfLogo } from "@/lib/document-pdf"
 
-/** The logo as a data: URL, so the PDF renderer never reads a cross-origin image. */
-async function inlineImage(url?: string) {
-  if (!url || url.startsWith("data:")) return url
+/** The logo as a PNG data: URL with its size, so jsPDF can embed it (it can't read WebP or cross-origin URLs). */
+async function loadLogo(url?: string): Promise<PdfLogo | null> {
+  if (!url) return null
   try {
-    const res = await fetch(url, { mode: "cors" })
-    if (!res.ok) return undefined
-    const blob = await res.blob()
-    // jsPDF can't embed WebP: redraw it as PNG.
+    const blob = url.startsWith("data:") ? await (await fetch(url)).blob() : await (await fetch(url, { mode: "cors" })).blob()
     const bitmap = await createImageBitmap(blob)
+    // Keep it sharp in print but light: at most 1200 px wide.
+    const scale = Math.min(1, 1200 / bitmap.width)
     const canvas = document.createElement("canvas")
-    canvas.width = bitmap.width
-    canvas.height = bitmap.height
-    canvas.getContext("2d")!.drawImage(bitmap, 0, 0)
-    return canvas.toDataURL("image/png")
+    canvas.width = Math.round(bitmap.width * scale)
+    canvas.height = Math.round(bitmap.height * scale)
+    const ctx = canvas.getContext("2d")!
+    ctx.imageSmoothingQuality = "high"
+    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
+    return { data: canvas.toDataURL("image/png"), width: canvas.width, height: canvas.height }
   } catch {
-    return undefined // no logo is better than no invoice
+    return null // no logo is better than no document
   }
 }
 
-/** Renders the invoice off-screen and returns it as a PDF file. */
+/** Builds the invoice or quote as a vector PDF (sharp, selectable text) and returns it as a file. */
 export async function renderInvoicePdf(doc: InvoiceDocument): Promise<File> {
-  const logoUrl = await inlineImage(doc.business.logoUrl)
-  const html = invoiceDocumentHtml({ ...doc, business: { ...doc.business, logoUrl } })
-
-  // An empty iframe: html2canvas can't parse the app's modern CSS colors (oklch/lab), so the
-  // invoice is laid out where none of the app's stylesheets exist.
-  const frame = document.createElement("iframe")
-  frame.setAttribute("aria-hidden", "true")
-  frame.tabIndex = -1
-  frame.style.cssText = "position:fixed;left:-10000px;top:0;width:800px;height:1200px;border:0;visibility:hidden"
-  document.body.appendChild(frame)
-  try {
-    const fdoc = frame.contentDocument!
-    fdoc.open()
-    fdoc.write(`<!doctype html><html><head><meta charset="utf-8"></head><body style="margin:0;background:#fff">${html}</body></html>`)
-    fdoc.close()
-    await Promise.all(
-      Array.from(fdoc.querySelectorAll("img")).map((img): Promise<unknown> | null =>
-        img.complete ? null : img.decode().catch((): null => null),
-      ),
-    )
-    // html2canvas reads only the iframe's document, so no app CSS reaches it.
-    const [{ default: html2canvas }, { jsPDF }] = await Promise.all([import("html2canvas"), import("jspdf")])
-    const canvas = await html2canvas(fdoc.body.firstElementChild as HTMLElement, {
-      scale: 2,
-      backgroundColor: "#ffffff",
-      useCORS: true,
-      logging: false,
-      windowWidth: 800,
-    })
-
-    // Letter page with an 8 mm margin; long invoices continue on the next pages.
-    const pdf = new jsPDF({ unit: "mm", format: "letter", orientation: "portrait" })
-    const margin = 8
-    const pageW = pdf.internal.pageSize.getWidth()
-    const pageH = pdf.internal.pageSize.getHeight()
-    const imgW = pageW - margin * 2
-    const imgH = (canvas.height * imgW) / canvas.width
-    const usable = pageH - margin * 2
-    const img = canvas.toDataURL("image/jpeg", 0.95)
-    let offset = 0
-    pdf.addImage(img, "JPEG", margin, margin, imgW, imgH)
-    while (imgH - offset > usable + 0.5) {
-      offset += usable
-      pdf.addPage()
-      pdf.addImage(img, "JPEG", margin, margin - offset, imgW, imgH)
-    }
-    const blob = pdf.output("blob")
-    return new File([blob], invoiceFileName(doc), { type: "application/pdf" })
-  } finally {
-    frame.remove()
-  }
+  const [logo, { jsPDF }] = await Promise.all([loadLogo(doc.business.logoUrl), import("jspdf")])
+  const pdf = new jsPDF({ unit: "mm", format: "letter", orientation: "portrait", compress: true })
+  const kind = doc.kind === "quote" ? "Cotización" : "Factura"
+  pdf.setProperties({ title: `${kind} ${doc.invoiceNumber}`, subject: `${kind} para ${doc.customerName}`, author: doc.business.name, creator: doc.business.name })
+  drawDocumentPdf(pdf, doc, logo)
+  const blob = pdf.output("blob")
+  return new File([blob], invoiceFileName(doc), { type: "application/pdf" })
 }
 
 export function downloadFile(file: File) {
