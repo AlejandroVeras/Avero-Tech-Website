@@ -62,11 +62,12 @@ export function SubscriptionBanner({ access, businessName }: { access: AccessSta
         icon={Clock}
         action={
           <Button size="sm" variant={urgent ? "default" : "outline"} asChild>
-            <Link href="/dashboard/suscripcion">Activar suscripción</Link>
+            <Link href="/dashboard/suscripcion">Cómo pagar</Link>
           </Button>
         }
       >
-        Estás en tu prueba gratis: {days} (hasta el {dateFormat.format(access.endsAt)}).
+        Estás en tu prueba gratis: {days} (hasta el {dateFormat.format(access.endsAt)}). Después, paga la mensualidad para
+        seguir usándolo.
       </Bar>
     )
   }

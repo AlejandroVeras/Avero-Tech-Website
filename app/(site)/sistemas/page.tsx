@@ -26,8 +26,8 @@ export const metadata: Metadata = contentMetadata({ path: PATH, title: TITLE, de
 
 const FAQ = [
   { question: "¿Los sistemas de Avero funcionan en el celular?", answer: "Sí. Los tres funcionan en el navegador del celular, la tablet o la computadora, sin instalar nada." },
-  { question: "¿Puedo probarlos gratis?", answer: "Sí. Avero Inventario y Avero Citas tienen 30 días de prueba y Avero Condominios, 60." },
-  { question: "¿Cómo se pagan?", answer: "Con PayPal, de forma automática según el plan. Si no tienes cuenta de PayPal, se crea en el mismo paso con tu tarjeta." },
+  { question: "¿Puedo probarlos gratis?", answer: "Sí. Avero Inventario tiene 14 días de prueba; Avero Citas, 30; y Avero Condominios, 60." },
+  { question: "¿Cómo se pagan?", answer: "Avero Inventario se paga directamente a Avero: te enviamos los datos de pago por WhatsApp. Avero Citas y Avero Condominios se pagan con PayPal, de forma automática según el plan." },
   { question: "¿Mis datos están seguros?", answer: "Cada negocio ve solo su información gracias a reglas de acceso dentro de la base de datos, y las conexiones van cifradas con HTTPS." },
   { question: "¿Pueden adaptar un sistema a mi negocio?", answer: "Los sistemas son iguales para todos los clientes. Si necesitas algo distinto, lo desarrollamos a medida." },
 ]
@@ -131,7 +131,7 @@ export default async function SistemasPage() {
             caption="Qué sistema elegir"
             headers={["", "Para quién", "Qué resuelve", "Desde", "Prueba"]}
             rows={[
-              [<Link key="i" href="/sistemas/inventario">Avero Inventario</Link>, "Colmados, tiendas, ferreterías, talleres", "Inventario, ventas a crédito, facturas con ITBIS, gastos y catálogo en línea", "US$12/mes", "30 días"],
+              [<Link key="i" href="/sistemas/inventario">Avero Inventario</Link>, "Colmados, tiendas, ferreterías, talleres", "Inventario, ventas a crédito, facturas con ITBIS, gastos y catálogo en línea", "US$12/mes", "14 días"],
               [<Link key="c" href="/sistemas/citas">Avero Citas</Link>, "Barberías, salones, spas y consultorios", "Reservas en línea, recordatorios, agenda del equipo y comisiones", "US$9/mes", "30 días"],
               [<Link key="d" href="/sistemas/condominios">Avero Condominios</Link>, "Administradores de condominios", "Cuotas, gas, comprobantes, recibos y estado de cuenta por apartamento", "US$320/año", "60 días"],
             ]}

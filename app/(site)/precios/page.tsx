@@ -189,7 +189,7 @@ export default async function PreciosPage() {
         <div className="container mx-auto max-w-6xl px-4">
           <SectionHeading
             title="Precios de los sistemas"
-            description="Prueba gratis, paga solo si te sirve. Sin contratos de permanencia: usas el sistema completo durante la prueba y el pago es automático con PayPal."
+            description="Prueba gratis, paga solo si te sirve. Sin contratos de permanencia: usas el sistema completo durante la prueba y pagas solo si te quedas."
           />
         </div>
       </section>
@@ -232,7 +232,7 @@ function GestionPlans({ system, trialDays }: { system: SaasSystem; trialDays: nu
                 <Button size="lg" className="w-full rounded-full text-[14px] font-normal" asChild>
                   <Link href={appUrl("/signup")}>Probar gratis {trialDays} días</Link>
                 </Button>
-                <p className="text-[12px] text-pewter">Al crear tu cuenta autorizas el pago con PayPal. No se cobra nada durante la prueba; después el cobro es automático cada mes o cada año.</p>
+                <p className="text-[12px] text-pewter">No necesitas tarjeta para la prueba. Al terminar, pagas la mensualidad directamente a Avero; te enviamos los datos por WhatsApp.</p>
               </div>
             }
           />

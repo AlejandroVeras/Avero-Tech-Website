@@ -61,7 +61,7 @@ const FAQ = [
   },
   { question: "¿A qué hora atienden?", answer: "Las 24 horas, todos los días, por WhatsApp al (829) 812-2103. Respondemos al momento." },
   { question: "¿Hacen envíos de equipos?", answer: "Sí, a todo Santo Domingo. Coordinamos la entrega al confirmar el pedido por WhatsApp." },
-  { question: "¿Puedo probar los sistemas antes de pagar?", answer: "Sí. Avero Inventario y Avero Citas tienen 30 días de prueba y Avero Condominios, 60." },
+  { question: "¿Puedo probar los sistemas antes de pagar?", answer: "Sí. Avero Inventario tiene 14 días de prueba; Avero Citas, 30; y Avero Condominios, 60." },
 ]
 
 export default async function HomePage() {

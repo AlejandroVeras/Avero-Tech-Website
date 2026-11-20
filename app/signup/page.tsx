@@ -19,7 +19,7 @@ export default async function SignupPage() {
       title="Crea tu cuenta"
       description={
         trialDays
-          ? `Prueba Avero Inventario gratis ${trialDays} días. Después autorizas el pago con PayPal; no se cobra nada hasta que termine la prueba.`
+          ? `Prueba Avero Inventario gratis ${trialDays} días. Sin tarjeta: al terminar, decides si te quedas y pagas la mensualidad.`
           : "Registra tu negocio en Avero Inventario."
       }
     >

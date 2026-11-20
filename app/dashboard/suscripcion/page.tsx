@@ -12,7 +12,8 @@ import { getPublishedSystem, getTrialDays } from "@/lib/data/systems"
 import { createClient } from "@/lib/supabase/server"
 import { emailConfigured } from "@/lib/email"
 import { FALLBACK_GESTION } from "@/lib/systems"
-import { formatDOP, formatUSD } from "@/lib/site"
+import { formatDOP, formatUSD, whatsappUrl } from "@/lib/site"
+import { PAYPAL_CHECKOUT_ENABLED } from "@/lib/features"
 
 export const metadata = { title: "Mi suscripción" }
 
@@ -75,6 +76,10 @@ export default async function SuscripcionPage() {
     (access.kind === "expired" || (!hasPayPal && (access.kind === "trialing" || access.kind === "active")))
   const canCancel = hasPayPal && (access.kind === "trialing" || (access.kind === "active" && !access.canceled))
   const accessUntil = access.kind === "trialing" || access.kind === "active" ? access.endsAt : null
+  // Manual billing: the owner collects by hand and records the payment in /admin/negocios.
+  const showManualPay = !PAYPAL_CHECKOUT_ENABLED && !hasPayPal && !!plan && billing?.planId !== "courtesy" && access.kind !== "unknown" && access.kind !== "incomplete"
+  const manualPayTitle =
+    access.kind === "expired" ? "Reactiva tu cuenta" : access.kind === "trialing" ? "Cuando termine la prueba" : "Renovar tu suscripción"
 
   return (
     <div className="min-h-screen bg-background">
@@ -110,7 +115,7 @@ export default async function SuscripcionPage() {
                 )}
                 <div className="flex justify-between py-2">
                   <dt className="text-muted-foreground">Forma de pago</dt>
-                  <dd>{hasPayPal ? "Cobro automático con PayPal" : billing.planId === "courtesy" ? "Cortesía" : "Manual (transferencia)"}</dd>
+                  <dd>{hasPayPal ? "Cobro automático con PayPal" : billing.planId === "courtesy" ? "Cortesía" : "Pago directo a Avero"}</dd>
                 </div>
               </dl>
             )}
@@ -139,6 +144,47 @@ export default async function SuscripcionPage() {
                 firstChargeAt={mode.firstChargeAt}
                 remindsByEmail={emailConfigured()}
               />
+            </CardContent>
+          </Card>
+        )}
+
+        {showManualPay && plan && (
+          <Card>
+            <CardHeader>
+              <CardTitle>{manualPayTitle}</CardTitle>
+              <CardDescription>
+                {access.kind === "trialing"
+                  ? "Para seguir usando el sistema después de la prueba, paga la mensualidad. Durante la prueba no se cobra nada."
+                  : access.kind === "expired"
+                    ? "Paga la mensualidad y tu cuenta vuelve a funcionar completa, con todos tus datos como los dejaste."
+                    : "Paga antes de la fecha de vencimiento para no pasar a solo lectura."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm">
+              <dl className="divide-y">
+                <div className="flex justify-between py-2">
+                  <dt className="text-muted-foreground">Mensual</dt>
+                  <dd className="font-semibold tabular-nums">{formatUSD(plan.monthly_usd)} al mes</dd>
+                </div>
+                {plan.annual_usd ? (
+                  <div className="flex justify-between py-2">
+                    <dt className="text-muted-foreground">Anual</dt>
+                    <dd className="font-semibold tabular-nums">{formatUSD(plan.annual_usd)} al año</dd>
+                  </div>
+                ) : null}
+              </dl>
+              <p className="text-muted-foreground">
+                Escríbenos por WhatsApp y te enviamos los datos para pagar. Cuando recibimos el pago, activamos tu período y
+                aparece abajo en «Pagos».
+              </p>
+              <a
+                href={whatsappUrl(`Hola, quiero pagar la mensualidad de Avero Inventario para mi negocio "${user.businessName}" (${user.email}).`)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-10 items-center rounded-full bg-primary px-5 text-primary-foreground"
+              >
+                Pagar por WhatsApp
+              </a>
             </CardContent>
           </Card>
         )}

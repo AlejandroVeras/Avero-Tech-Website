@@ -28,7 +28,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const [access, isAdmin, setup, branding] = await Promise.all([getAccess(), isPlatformAdmin(), getBusinessSetup(), getBranding()])
   const features = featuresFor(setup)
 
-  // New accounts authorize PayPal before using the system (DATABASE_TRIAL_WITH_PAYPAL.sql).
+  // Only when signup requires PayPal (DATABASE_TRIAL_WITH_PAYPAL.sql). With manual billing
+  // (DATABASE_TRIAL_MANUAL_14.sql) new accounts start trialing and never land here.
   if (access.kind === "incomplete" && !isAdmin) {
     return <ActivationScreen businessName={user.businessName} email={user.email} />
   }

@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/server"
 import { cancelSubscription, createSubscription, paypalConfig } from "@/lib/billing/paypal"
 import { refreshSubscription } from "@/lib/billing/sync"
 import { SITE_URL } from "@/lib/site"
+import { PAYPAL_CHECKOUT_ENABLED } from "@/lib/features"
 
 async function currentUser() {
   const supabase = await createClient()
@@ -54,6 +55,7 @@ function trialEnd(sub: Awaited<ReturnType<typeof mySubscription>>): Date | null 
 export async function getCheckoutMode(): Promise<{ ready: boolean; withTrial: boolean; firstChargeAt?: string }> {
   const config = paypalConfig()
   const { supabase, user } = await currentUser()
+  if (!PAYPAL_CHECKOUT_ENABLED) return { ready: false, withTrial: false }
   const sub = await mySubscription(supabase, user.id)
   const freeUntil = trialEnd(sub)
   if (freeUntil) return { ready: config.ready, withTrial: true, firstChargeAt: freeUntil.toISOString() }
@@ -66,7 +68,7 @@ export async function getCheckoutMode(): Promise<{ ready: boolean; withTrial: bo
 export async function startCheckout(formData: FormData): Promise<{ error?: string }> {
   const plan = formData.get("plan") === "annual" ? "annual" : "monthly"
   const config = paypalConfig()
-  if (!config.ready) {
+  if (!PAYPAL_CHECKOUT_ENABLED || !config.ready) {
     return { error: "Los pagos automáticos no están disponibles en este momento. Intenta de nuevo en unos minutos." }
   }
 

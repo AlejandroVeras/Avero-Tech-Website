@@ -60,7 +60,7 @@ const GROUPS: { title: string; entries: FaqEntry[] }[] = [
   {
     title: "Sistemas y equipos",
     entries: [
-      { question: "¿Puedo probar los sistemas gratis?", answer: "Sí. Avero Inventario y Avero Citas, 30 días; Avero Condominios, 60 días.", link: { href: "/sistemas", label: "Ver sistemas." } },
+      { question: "¿Puedo probar los sistemas gratis?", answer: "Sí. Avero Inventario, 14 días; Avero Citas, 30 días; Avero Condominios, 60 días.", link: { href: "/sistemas", label: "Ver sistemas." } },
       { question: "¿Puedo cancelar un sistema cuando quiera?", answer: "Sí, sin penalidad. Mantienes el acceso hasta el final del período pagado y, si no renuevas, la cuenta queda en solo lectura sin borrar nada." },
       { question: "¿Los equipos tienen garantía?", answer: "Sí. El período aparece en cada ficha y en tu factura.", link: { href: "/garantia", label: "Ver garantía y devoluciones." } },
       { question: "¿Cómo pago un equipo?", answer: "Por transferencia o en efectivo." },

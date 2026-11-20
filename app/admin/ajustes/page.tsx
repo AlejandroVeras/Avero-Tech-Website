@@ -17,8 +17,8 @@ export default async function AjustesPage() {
             Cada negocio nuevo empieza con esta cantidad de días con todas las funciones. Al terminar queda en solo lectura
             hasta que registres un pago. Las cuentas que ya están en prueba no cambian.
             <strong className="block mt-2 text-foreground">
-              Con cobro automático, la prueba real la define el plan de PayPal (scripts/paypal-setup.mjs): pon aquí el mismo
-              número de días para que la web muestre lo correcto.
+              Mientras el cobro es manual (PAYPAL_CHECKOUT_ENABLED = false en lib/features.ts), este número es la prueba real.
+              Si vuelves a activar PayPal, la prueba la define el plan de PayPal (scripts/paypal-setup.mjs): pon aquí el mismo número.
             </strong>
           </CardDescription>
         </CardHeader>

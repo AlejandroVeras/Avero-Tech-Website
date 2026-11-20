@@ -24,8 +24,9 @@ export async function ActivationScreen({ businessName, email }: { businessName: 
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">Activa tu prueba gratis, {businessName}</h1>
           <p className="text-muted-foreground">
-            Para empezar a usar el sistema, elige tu plan y autoriza el pago automático con PayPal. No se te cobra nada durante los{" "}
-            {trialDays} días de prueba.
+            {mode.ready
+              ? `Para empezar a usar el sistema, elige tu plan y autoriza el pago automático con PayPal. No se te cobra nada durante los ${trialDays} días de prueba.`
+              : `Tienes ${trialDays} días gratis con todas las funciones.`}
           </p>
         </div>
 
@@ -44,7 +45,7 @@ export async function ActivationScreen({ businessName, email }: { businessName: 
           ) : (
             <div className="space-y-4 text-sm">
               <p>
-                Los pagos automáticos se están configurando. Mientras tanto, escríbenos y activamos tu cuenta en el momento.
+                Escríbenos y activamos tu prueba gratis en el momento. No necesitas tarjeta.
               </p>
               <a
                 href={whatsappUrl(`Hola, acabo de crear mi cuenta (${email}) para "${businessName}" y quiero activarla.`)}
