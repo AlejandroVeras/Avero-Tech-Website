@@ -38,7 +38,7 @@ export function MonthlyChart({ data }: MonthlyChartProps) {
               }}
             />
             <Legend />
-            <Bar dataKey="income" fill="var(--chart-1)" name="Ventas sin ITBIS" radius={[8, 8, 0, 0]} />
+            <Bar dataKey="income" fill="var(--chart-1)" name="Vendiste (sin ITBIS)" radius={[8, 8, 0, 0]} />
             <Bar dataKey="expenses" fill="var(--chart-5)" name="Costo y gastos" radius={[8, 8, 0, 0]} />
             <Bar dataKey="profit" fill="var(--chart-3)" name="Ganancia" radius={[8, 8, 0, 0]} />
           </BarChart>

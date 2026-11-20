@@ -1,15 +1,30 @@
 import Link from "next/link"
-import { ArrowUpRight, FileText, Package, Receipt, Users } from "lucide-react"
+import { ArrowUpRight, FilePlus2, FileText, Package, Receipt, Store, Users } from "lucide-react"
+import type { Features } from "@/lib/business-setup"
 
-const actions = [
-  { icon: FileText, label: "Nueva factura", hint: "Cobra una venta", href: "/dashboard/invoices/new" },
-  { icon: Users, label: "Agregar cliente", hint: "Guarda sus datos", href: "/dashboard/customers/new" },
-  { icon: Package, label: "Nuevo producto", hint: "Precio y existencias", href: "/dashboard/products/new" },
-  { icon: Receipt, label: "Registrar gasto", hint: "Luz, compras, nómina", href: "/dashboard/expenses/new" },
-]
+type Action = { icon: typeof FileText; label: string; hint: string; href: string }
+
+const ACTIONS: Record<string, Action> = {
+  invoice: { icon: FileText, label: "Nueva factura", hint: "Cobra una venta", href: "/dashboard/invoices/new" },
+  quote: { icon: FilePlus2, label: "Nueva cotización", hint: "Envía un presupuesto", href: "/dashboard/quotes/new" },
+  customer: { icon: Users, label: "Agregar cliente", hint: "Guarda sus datos", href: "/dashboard/customers/new" },
+  product: { icon: Package, label: "Nuevo producto", hint: "Precio y existencias", href: "/dashboard/products/new" },
+  expense: { icon: Receipt, label: "Registrar gasto", hint: "Luz, compras, nómina", href: "/dashboard/expenses/new" },
+  store: { icon: Store, label: "Mi tienda en línea", hint: "Comparte tu catálogo", href: "/dashboard/tienda" },
+}
+
+/** The four shortcuts that matter for how this business sells. */
+function actionsFor(f?: Features): Action[] {
+  if (!f) return [ACTIONS.invoice, ACTIONS.customer, ACTIONS.product, ACTIONS.expense]
+  const ids = f.quickSale
+    ? ["product", "store", "expense", ...(f.customers ? ["customer"] : ["invoice"])]
+    : ["invoice", ...(f.quotes ? ["quote"] : []), ...(f.customers ? ["customer"] : []), "product", "expense"]
+  return ids.slice(0, 4).map((id) => ACTIONS[id])
+}
 
 /** One color for every shortcut (the business's brand color via --primary), as real links. */
-export function QuickActions() {
+export function QuickActions({ features }: { features?: Features }) {
+  const actions = actionsFor(features)
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
       {actions.map((action) => (

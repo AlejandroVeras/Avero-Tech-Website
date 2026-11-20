@@ -33,8 +33,8 @@ export default async function ReportsPage() {
       <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Reportes y Análisis</h1>
-            <p className="text-muted-foreground mt-1">Visualiza el desempeño financiero de tu negocio</p>
+            <h1 className="text-3xl font-bold text-foreground">¿Cuánto gané?</h1>
+            <p className="text-muted-foreground mt-1">Lo que vendiste, lo que gastaste y lo que te quedó</p>
           </div>
           <ExportReportsButton 
             summary={summary} 

@@ -30,7 +30,7 @@ export default async function CustomersPage() {
           <Button asChild>
             <Link href="/dashboard/customers/new">
               <Plus className="h-4 w-4 mr-2" />
-              Nuevo Cliente
+              Nuevo cliente
             </Link>
           </Button>
         </div>

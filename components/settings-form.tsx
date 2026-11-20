@@ -57,7 +57,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BuildingIcon className="h-5 w-5 text-primary dark:text-sky-signal" />
-            Perfil Fiscal del Negocio
+            Datos del negocio
           </CardTitle>
           <CardDescription>
             Información que aparecerá de forma oficial en tus cobros, facturas y cotizaciones.
@@ -139,7 +139,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
             {loading ? "Guardando..." : (
               <>
                 <Save className="h-4 w-4 mr-2" />
-                Guardar Cambios
+                Guardar cambios
               </>
             )}
           </Button>

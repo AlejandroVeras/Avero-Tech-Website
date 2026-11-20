@@ -110,7 +110,7 @@ export function FinancingPaymentList({ payments, customerName, customerEmail }: 
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Historial de Pagos</CardTitle>
+          <CardTitle>Pagos recibidos</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">

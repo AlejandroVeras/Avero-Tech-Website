@@ -43,7 +43,8 @@ export function CustomersList({ customers }: CustomersListProps) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <p className="text-muted-foreground">No hay clientes registrados aún</p>
+          <p className="text-lg font-semibold text-foreground">Guarda a tus clientes</p>
+          <p className="mt-1 max-w-sm mx-auto text-sm text-muted-foreground">Para facturarles con su nombre o RNC, enviarles cotizaciones y saber cuánto te deben.</p>
           <Button className="mt-4" onClick={() => router.push("/dashboard/customers/new")}>
             Agregar Primer Cliente
           </Button>

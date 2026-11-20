@@ -17,7 +17,7 @@ export default async function NewCustomerPage() {
 
       <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Nuevo Cliente</h1>
+          <h1 className="text-3xl font-bold text-foreground">Nuevo cliente</h1>
           <p className="text-muted-foreground mt-1">Agrega un nuevo cliente a tu base de datos</p>
         </div>
 

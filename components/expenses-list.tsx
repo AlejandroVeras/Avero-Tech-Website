@@ -105,7 +105,8 @@ export function ExpensesList({ expenses }: ExpensesListProps) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <p className="text-muted-foreground">No hay gastos registrados aún</p>
+          <p className="text-lg font-semibold text-foreground">Anota lo que gastas</p>
+          <p className="mt-1 max-w-sm mx-auto text-sm text-muted-foreground">Luz, alquiler, compras de mercancía, nómina. Así el sistema te dice cuánto ganaste de verdad.</p>
           <Button className="mt-4" onClick={() => router.push("/dashboard/expenses/new")}>
             Registrar Primer Gasto
           </Button>
@@ -119,7 +120,7 @@ export function ExpensesList({ expenses }: ExpensesListProps) {
       <div className="flex justify-end mb-4">
         <Button variant="outline" onClick={exportExpenses} className="flex items-center gap-2">
           <Download className="h-4 w-4" />
-          Exportar CSV
+          Descargar en Excel
         </Button>
       </div>
 

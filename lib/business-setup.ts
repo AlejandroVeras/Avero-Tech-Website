@@ -34,6 +34,8 @@ export interface BusinessSetup {
   itbisMode: ItbisMode
   /** False only for new accounts that have not answered or skipped the welcome questions. */
   completed: boolean
+  /** The Avero Technology account: its public products feed averotechnology.com/catalogo. */
+  isStoreOwner?: boolean
 }
 
 /** Accounts from before DATABASE_BUSINESS_SETUP.sql, or when the columns can't be read: nothing changes. */
@@ -84,6 +86,7 @@ export function parseSetupRow(row: {
   sells_on_credit?: unknown
   itbis_mode?: unknown
   setup_completed_at?: unknown
+  is_store_owner?: unknown
 }): BusinessSetup {
   return {
     businessType: oneOf(BUSINESS_TYPES, row.business_type),
@@ -91,6 +94,7 @@ export function parseSetupRow(row: {
     sellsOnCredit: typeof row.sells_on_credit === "boolean" ? row.sells_on_credit : null,
     itbisMode: oneOf(ITBIS_MODES, row.itbis_mode) ?? "added",
     completed: row.setup_completed_at != null,
+    isStoreOwner: row.is_store_owner === true,
   }
 }
 
@@ -99,13 +103,17 @@ export interface Features {
   quickSale: boolean
   quotes: boolean
   customers: boolean
+  /** Work orders for workshops and technicians (the Tickets screen, renamed for them). */
+  serviceOrders: boolean
 }
 
 export function featuresFor(setup: BusinessSetup): Features {
   const mode = setup.salesMode
   // No answer (old accounts, skipped questions): keep everything exactly as before.
-  if (!mode) return { quickSale: false, quotes: true, customers: true }
+  const serviceOrders = setup.businessType === "servicios"
+  if (!mode) return { quickSale: false, quotes: true, customers: true, serviceOrders }
   return {
+    serviceOrders,
     quickSale: mode === "counter" || mode === "both",
     quotes: mode !== "counter",
     // A counter-only shop still needs customers if it sells on credit.

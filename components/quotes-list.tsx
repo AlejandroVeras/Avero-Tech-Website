@@ -194,7 +194,7 @@ export function QuotesList({ quotes }: QuotesListProps) {
                       </div>
                     )}
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Items:</span>
+                      <span className="text-muted-foreground">Productos:</span>
                       <span className="font-medium">{quote.items.length}</span>
                     </div>
                   </div>

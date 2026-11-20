@@ -27,7 +27,7 @@ export default async function QuotesPage() {
         <Button asChild>
           <Link href="/dashboard/quotes/new">
             <Plus className="h-4 w-4 mr-2" />
-            Nueva Cotización
+            Nueva cotización
           </Link>
         </Button>
       </div>

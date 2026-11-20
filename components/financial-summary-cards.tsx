@@ -20,7 +20,7 @@ export function FinancialSummaryCards({ summary, showPending = true }: Financial
 
   const cards = [
     {
-      title: "Ventas sin ITBIS",
+      title: "Vendiste (sin ITBIS)",
       value: formatCurrency(summary.totalIncome),
       subtitle: `${summary.paidInvoices} ventas pagadas · ITBIS cobrado ${formatCurrency(summary.itbis)}`,
       icon: TrendingUp,

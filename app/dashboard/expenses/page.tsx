@@ -30,7 +30,7 @@ export default async function ExpensesPage() {
           <Button asChild>
             <Link href="/dashboard/expenses/new">
               <Plus className="h-4 w-4 mr-2" />
-              Nuevo Gasto
+              Nuevo gasto
             </Link>
           </Button>
         </div>

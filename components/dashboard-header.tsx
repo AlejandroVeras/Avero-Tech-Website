@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { UserIcon, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,37 +13,38 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import { signOut } from "@/lib/auth"
-import { useRouter, usePathname } from "next/navigation"
+import { useRouter } from "next/navigation"
 import type { User } from "@/lib/auth"
 import Link from "next/link"
 import { Logo } from "@/components/site/logo"
-import { cn } from "@/lib/utils"
 import { ThemeToggle } from "./theme-toggle"
 import { dashboardNavigation, ALL_FEATURES } from "@/components/dashboard-nav"
+import { DashboardNavList } from "@/components/dashboard-nav-list"
 import type { Features } from "@/lib/business-setup"
 
 interface DashboardHeaderProps {
   user: User
   isAdmin?: boolean
+  isStoreOwner?: boolean
   features?: Features
 }
 
-export function DashboardHeader({ user, isAdmin = false, features = ALL_FEATURES }: DashboardHeaderProps) {
+export function DashboardHeader({ user, isAdmin = false, isStoreOwner = false, features = ALL_FEATURES }: DashboardHeaderProps) {
+  const [menuOpen, setMenuOpen] = useState(false)
   const router = useRouter()
-  const pathname = usePathname()
 
   async function handleSignOut() {
     await signOut()
     router.push("/login")
   }
 
-  const navigation = dashboardNavigation(features, isAdmin)
+  const navigation = dashboardNavigation(features, { isAdmin, isStoreOwner })
 
   return (
     <header className="print:hidden bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b sticky top-0 z-40 w-full">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-4 md:hidden">
-          <Sheet>
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
                 <Menu className="h-5 w-5" />
@@ -56,24 +58,8 @@ export function DashboardHeader({ user, isAdmin = false, features = ALL_FEATURES
                   <Logo className="h-8" />
                 </Link>
               </div>
-              <div className="flex flex-col gap-2 p-4">
-                {navigation.map((item) => {
-                  const isActive =
-                    pathname === item.href ||
-                    (pathname.startsWith(`${item.href}/`) && item.href !== "/dashboard")
-
-                  return (
-                    <Link key={item.name} href={item.href}>
-                      <Button
-                        variant={isActive ? "default" : "ghost"}
-                        className={cn("w-full justify-start gap-3", !isActive && "text-muted-foreground")}
-                      >
-                        <item.icon className="h-4 w-4" />
-                        {item.name}
-                      </Button>
-                    </Link>
-                  )
-                })}
+              <div className="overflow-y-auto p-3" style={{ maxHeight: "calc(100vh - 4rem)" }}>
+                <DashboardNavList groups={navigation} onNavigate={() => setMenuOpen(false)} />
               </div>
             </SheetContent>
           </Sheet>

@@ -48,13 +48,13 @@ test("scanner match: exact SKU first, then a single name match", () => {
 })
 
 test("old accounts keep every section and no Vender screen", () => {
-  assert.deepEqual(featuresFor(LEGACY_SETUP), { quickSale: false, quotes: true, customers: true })
-  assert.deepEqual(featuresFor(parseSetupRow({ setup_completed_at: "2026-11-17" })), { quickSale: false, quotes: true, customers: true })
+  assert.deepEqual(featuresFor(LEGACY_SETUP), { quickSale: false, quotes: true, customers: true, serviceOrders: false })
+  assert.deepEqual(featuresFor(parseSetupRow({ setup_completed_at: "2026-11-17" })), { quickSale: false, quotes: true, customers: true, serviceOrders: false })
 })
 
 test("a clothing store gets Vender and hides quotes and customers", () => {
   const setup = { ...LEGACY_SETUP, businessType: "ropa" as const, ...presetFor("ropa") }
-  assert.deepEqual(featuresFor(setup), { quickSale: true, quotes: false, customers: false })
+  assert.deepEqual(featuresFor(setup), { quickSale: true, quotes: false, customers: false, serviceOrders: false })
   assert.equal(featuresFor({ ...setup, sellsOnCredit: true }).customers, true)
 })
 

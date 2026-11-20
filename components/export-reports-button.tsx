@@ -20,7 +20,7 @@ export function ExportReportsButton({ summary, monthlyData, categoryExpenses }: 
       ["Concepto", "Valor"],
       ["Ventas con ITBIS", summary.grossSales],
       ["ITBIS cobrado", summary.itbis],
-      ["Ventas sin ITBIS", summary.totalIncome],
+      ["Vendiste (sin ITBIS)", summary.totalIncome],
       ["Costo de lo vendido", summary.cogs],
       ["Gastos (sin compra de mercancía)", summary.totalExpenses],
       ["Compra de mercancía", summary.merchandisePurchases],
@@ -31,7 +31,7 @@ export function ExportReportsButton({ summary, monthlyData, categoryExpenses }: 
       ["Monto por Cobrar", summary.pendingAmount],
       [""],
       ["DESEMPEÑO MENSUAL (Últimos 6 meses)"],
-      ["Mes", "Ventas sin ITBIS", "Costo y gastos", "Ganancia"],
+      ["Mes", "Vendiste (sin ITBIS)", "Costo y gastos", "Ganancia"],
       ...monthlyData.map((m) => [m.month, m.income, m.expenses, m.profit]),
       [""],
       ["GASTOS POR CATEGORÍA"],
@@ -58,7 +58,7 @@ export function ExportReportsButton({ summary, monthlyData, categoryExpenses }: 
   return (
     <Button onClick={handleExport} variant="outline" className="w-full sm:w-auto">
       <Download className="h-4 w-4 mr-2" />
-      Exportar Reporte
+      Descargar reporte
     </Button>
   )
 }

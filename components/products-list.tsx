@@ -49,7 +49,8 @@ export function ProductsList({ products }: ProductsListProps) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <p className="text-muted-foreground">No hay productos registrados aún</p>
+          <p className="text-lg font-semibold text-foreground">Agrega lo que vendes</p>
+          <p className="mt-1 max-w-sm mx-auto text-sm text-muted-foreground">Con nombre, precio y cuántos tienes ya puedes vender. Las existencias bajan solas con cada venta.</p>
           <Button className="mt-4" onClick={() => router.push("/dashboard/products/new")}>
             Agregar Primer Producto
           </Button>

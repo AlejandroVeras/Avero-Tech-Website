@@ -93,7 +93,8 @@ export function InvoicesList({ invoices }: InvoicesListProps) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <p className="text-muted-foreground">No hay facturas registradas aún</p>
+          <p className="text-lg font-semibold text-foreground">Aquí verás tus ventas</p>
+          <p className="mt-1 max-w-sm mx-auto text-sm text-muted-foreground">Cada factura sale en PDF con tu logo y la puedes enviar por WhatsApp.</p>
           <Button className="mt-4" onClick={() => router.push("/dashboard/invoices/new")}>
             Crear Primera Factura
           </Button>

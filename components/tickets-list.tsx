@@ -117,7 +117,7 @@ export function TicketsList({ tickets }: TicketsListProps) {
           </SelectContent>
         </Select>
         <Button asChild>
-          <Link href="/dashboard/tickets/new"><Plus className="h-4 w-4 mr-2" /> Nuevo Ticket</Link>
+          <Link href="/dashboard/tickets/new"><Plus className="h-4 w-4 mr-2" /> Nueva orden</Link>
         </Button>
       </div>
 
@@ -128,13 +128,13 @@ export function TicketsList({ tickets }: TicketsListProps) {
             <div className="w-12 h-12 rounded-2xl bg-muted mx-auto mb-4 flex items-center justify-center">
               <Search className="h-6 w-6 text-muted-foreground" />
             </div>
-            <h3 className="font-medium text-lg">No hay tickets</h3>
+            <h3 className="font-medium text-lg">Todavía no hay nada aquí</h3>
             <p className="text-muted-foreground text-sm mt-1">
-              {search ? "Intenta con otra búsqueda" : "Crea tu primer ticket de soporte"}
+              {search ? "Intenta con otra búsqueda" : "Registra el primer trabajo: el cliente, el problema y la fecha de entrega."}
             </p>
             {!search && (
               <Button className="mt-4" asChild>
-                <Link href="/dashboard/tickets/new"><Plus className="h-4 w-4 mr-2" /> Crear Ticket</Link>
+                <Link href="/dashboard/tickets/new"><Plus className="h-4 w-4 mr-2" /> Crear la primera</Link>
               </Button>
             )}
           </CardContent>

@@ -3,7 +3,7 @@ import Link from "next/link"
 import { ShoppingCart } from "lucide-react"
 import { getUser } from "@/lib/auth"
 import { getBusinessSetup } from "@/lib/data/business-setup"
-import { featuresFor } from "@/lib/business-setup"
+import { featuresFor, type Features } from "@/lib/business-setup"
 import { Button } from "@/components/ui/button"
 import { getBranding } from "@/lib/data/branding"
 import { LowStock, TodaySales } from "@/components/dashboard-widgets"
@@ -12,6 +12,8 @@ import type { WidgetId } from "@/lib/brand"
 import { DashboardStats } from "@/components/dashboard-stats"
 import { RecentActivity } from "@/components/recent-activity"
 import { QuickActions } from "@/components/quick-actions"
+import { FirstSteps } from "@/components/onboarding/first-steps"
+import { getFirstSteps } from "@/lib/data/first-steps"
 import { Suspense } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 
@@ -59,9 +61,9 @@ function ActivityLoading() {
 }
 
 // Each business picks which cards it sees and in what order (Configuración → Inicio del dashboard).
-function widgetsFor(counter: boolean): Record<WidgetId, React.ReactNode> {
+function widgetsFor(counter: boolean, features: Features): Record<WidgetId, React.ReactNode> {
   return {
-    "quick-actions": <QuickActions />,
+    "quick-actions": <QuickActions features={features} />,
     "today-sales": (
       <Suspense fallback={<ActivityLoading />}>
         <TodaySales />
@@ -95,16 +97,18 @@ export default async function DashboardPage() {
   const [setup, branding] = await Promise.all([getBusinessSetup(), getBranding()])
   // New accounts answer what kind of business they are before anything else (or skip it).
   if (!setup.completed) redirect("/dashboard/bienvenida")
-  const { quickSale, quotes } = featuresFor(setup)
-  const WIDGETS = widgetsFor(!quotes)
+  const features = featuresFor(setup)
+  const { quickSale, quotes } = features
+  const WIDGETS = widgetsFor(!quotes, features)
+  const steps = await getFirstSteps(features)
 
   return (
     <div className="min-h-screen bg-background">
 
       <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Bienvenido de vuelta, {user.businessName}</p>
+          <h1 className="text-3xl font-bold text-foreground">Inicio</h1>
+          <p className="text-muted-foreground mt-1">Hola, {user.businessName}. Así va tu negocio.</p>
         </div>
 
         {quickSale && (
@@ -114,6 +118,8 @@ export default async function DashboardPage() {
             </Link>
           </Button>
         )}
+
+        <FirstSteps steps={steps} />
 
         {branding.widgets.filter((w) => w.visible).map((w) => (
           <div key={w.id}>{WIDGETS[w.id]}</div>

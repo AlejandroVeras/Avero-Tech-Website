@@ -3,8 +3,9 @@
 import type React from "react"
 import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft } from "lucide-react"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { ArrowLeft, ChevronDown } from "lucide-react"
+import { toast } from "sonner"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -85,77 +86,62 @@ export function ProductForm({ product, userId, config, catalogPrefix }: ProductF
         setLoading(false)
       } else {
         unsaved.current.clear()
-        router.refresh()
+        toast.success(product ? "Cambios guardados" : "Producto guardado")
+        // The action already revalidates the list. A refresh() fired together with push() could
+        // leave the navigation hanging and the button stuck on "Guardando…", so only navigate,
+        // and release the button if the page has not changed after a few seconds.
         router.push("/dashboard/products")
+        setTimeout(() => setLoading(false), 6000)
       }
     } catch (err) {
       console.error(err)
-      setError("Error al guardar el producto")
+      const stale = err instanceof Error && /server action|unexpected response/i.test(err.message)
+      setError(
+        stale
+          ? "Hay una versión nueva del sistema. Recarga la página (Cmd+R o deslizando hacia abajo) y vuelve a guardar."
+          : "No se pudo guardar el producto. Revisa tu conexión e intenta de nuevo.",
+      )
       setLoading(false)
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div role="alert" className="p-3 text-sm text-red-700 bg-red-50 rounded-lg border border-red-200 dark:bg-red-950/40 dark:text-red-200 dark:border-red-900">
+          {error}
+        </div>
+      )}
+
       <Card>
-        <CardContent className="pt-6 space-y-4">
-          {error && (
-            <div role="alert" className="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200">
-              {error}
-            </div>
-          )}
+        <CardHeader>
+          <CardTitle>Lo básico</CardTitle>
+          <CardDescription>Con esto ya puedes vender el producto. Lo marcado con * es obligatorio.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="space-y-2">
+            <Label htmlFor="name">Nombre *</Label>
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              placeholder={config.namePlaceholder}
+              required
+              maxLength={200}
+              disabled={loading}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="name">Nombre del Producto *</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                placeholder={config.namePlaceholder}
-                required
-                maxLength={200}
-                disabled={loading}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="description">Descripción</Label>
-              <Textarea
-                id="description"
-                name="description"
-                placeholder="Descripción del producto o servicio"
-                disabled={loading}
-                defaultValue={product?.description}
-                rows={3}
-              />
-            </div>
-
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="sku">SKU / Código</Label>
-              <Input id="sku" name="sku" type="text" placeholder="SKU-001" disabled={loading} defaultValue={product?.sku} />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="category">Categoría</Label>
-              <Input
-                id="category"
-                name="category"
-                type="text"
-                placeholder={config.categoryPlaceholder}
-                disabled={loading}
-                defaultValue={product?.category}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="price">Precio de Venta (RD$) *</Label>
+              <Label htmlFor="price">Precio de venta (RD$) *</Label>
               <Input
                 id="price"
                 name="price"
                 type="number"
+                inputMode="decimal"
                 step="0.01"
                 min="0"
                 placeholder="0.00"
@@ -164,89 +150,31 @@ export function ProductForm({ product, userId, config, catalogPrefix }: ProductF
                 defaultValue={product?.price}
               />
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="cost">Costo (RD$)</Label>
+              <Label htmlFor="stockQuantity">¿Cuántos tienes?</Label>
               <Input
-                id="cost"
-                name="cost"
+                id="stockQuantity"
+                name="stockQuantity"
                 type="number"
-                step="0.01"
+                inputMode="numeric"
                 min="0"
-                placeholder="0.00"
-                disabled={loading}
-                defaultValue={product?.cost}
+                step="1"
+                placeholder="0"
+                disabled={loading || !trackInventory}
+                defaultValue={product?.stockQuantity || 0}
               />
-              <p className="text-xs text-muted-foreground">Privado: nunca se muestra en la tienda.</p>
-            </div>
-
-            <div className="md:col-span-1 pt-2">
-              <div className="flex items-center space-x-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <label className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Checkbox
                   id="trackInventory"
                   checked={trackInventory}
                   onCheckedChange={(checked) => setTrackInventory(checked === true)}
                   disabled={loading}
                 />
-                <div className="flex-1">
-                  <Label htmlFor="trackInventory" className="cursor-pointer font-semibold">
-                    Controlar inventario
-                  </Label>
-                  <p className="text-xs text-muted-foreground mt-1">Reduce stock al vender</p>
-                </div>
-              </div>
+                Llevar la cuenta (baja sola con cada venta). Quítalo para servicios.
+              </label>
             </div>
-
-            <div className="md:col-span-1 pt-2">
-              <div className="flex items-center space-x-2 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg border border-indigo-200 dark:border-indigo-800">
-                <Checkbox
-                  id="isPublic"
-                  checked={isPublic}
-                  onCheckedChange={(checked) => setIsPublic(checked === true)}
-                  disabled={loading}
-                />
-                <div className="flex-1">
-                  <Label htmlFor="isPublic" className="cursor-pointer font-semibold">
-                    Visible en la tienda
-                  </Label>
-                  <p className="text-xs text-muted-foreground mt-1">Aparece en tu tienda en línea (actívala en Mi tienda)</p>
-                </div>
-              </div>
-            </div>
-
-            {trackInventory && (
-              <div className="space-y-2 md:col-span-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                <Label htmlFor="stockQuantity" className="font-semibold">
-                  Cantidad disponible en stock
-                </Label>
-                <Input
-                  id="stockQuantity"
-                  name="stockQuantity"
-                  type="number"
-                  min="0"
-                  step="1"
-                  placeholder="0"
-                  disabled={loading}
-                  defaultValue={product?.stockQuantity || 0}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Esta cantidad se reducirá automáticamente cuando hagas una venta. Con 0 el producto aparece como
-                  agotado en la tienda.
-                </p>
-              </div>
-            )}
           </div>
-        </CardContent>
-      </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Detalles para la tienda en línea</CardTitle>
-          <CardDescription>
-            Opcional. Se muestran en la página pública del producto cuando está visible en la tienda.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
           <ImagesField
             userId={userId}
             images={images}
@@ -255,52 +183,79 @@ export function ProductForm({ product, userId, config, catalogPrefix }: ProductF
             disabled={loading}
           />
 
-          <div className={`grid grid-cols-1 gap-4 ${showCondition && showWarranty ? "md:grid-cols-3" : showCondition || showWarranty ? "md:grid-cols-2" : ""}`}>
+          <label className="flex cursor-pointer items-start gap-3 rounded-lg border p-3">
+            <Checkbox id="isPublic" checked={isPublic} onCheckedChange={(checked) => setIsPublic(checked === true)} disabled={loading} className="mt-0.5" />
+            <span>
+              <span className="block text-sm font-medium">Mostrar en mi tienda en línea</span>
+              <span className="block text-xs text-muted-foreground">Tus clientes lo ven en el enlace de tu tienda. Con 0 en existencias sale como agotado.</span>
+            </span>
+          </label>
+        </CardContent>
+      </Card>
+
+      <details className="group rounded-xl border bg-card shadow-xs" open={!!product}>
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-5 [&::-webkit-details-marker]:hidden">
+          <span>
+            <span className="block font-semibold">Más detalles</span>
+            <span className="block text-sm text-muted-foreground">Opcional: costo, código, categoría, marca, descripción y más.</span>
+          </span>
+          <ChevronDown className="h-5 w-5 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" aria-hidden />
+        </summary>
+        <div className="space-y-5 border-t p-5">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="cost">Lo que te costó (RD$)</Label>
+              <Input id="cost" name="cost" type="number" inputMode="decimal" step="0.01" min="0" placeholder="0.00" disabled={loading} defaultValue={product?.cost} />
+              <p className="text-xs text-muted-foreground">Privado. Sirve para calcular cuánto ganas.</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="category">Categoría</Label>
+              <Input id="category" name="category" type="text" placeholder={config.categoryPlaceholder} disabled={loading} defaultValue={product?.category} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="sku">Código</Label>
+              <Input id="sku" name="sku" type="text" placeholder="Ej: BL-001 o el código de barras" disabled={loading} defaultValue={product?.sku} />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="brand">Marca</Label>
               <Input id="brand" name="brand" placeholder={config.brandPlaceholder} maxLength={80} disabled={loading} defaultValue={product?.brand} />
             </div>
             {showCondition && (
-            <div className="space-y-2">
-              <Label htmlFor="condition">Condición</Label>
-              <Select name="condition" defaultValue={product?.condition ?? "none"} disabled={loading}>
-                <SelectTrigger id="condition" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Sin especificar</SelectItem>
-                  {CONDITIONS.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {CONDITION_LABELS[c]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="condition">Condición</Label>
+                <Select name="condition" defaultValue={product?.condition ?? "none"} disabled={loading}>
+                  <SelectTrigger id="condition" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Sin especificar</SelectItem>
+                    {CONDITIONS.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {CONDITION_LABELS[c]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             )}
             {showWarranty && (
-            <div className="space-y-2">
-              <Label htmlFor="warrantyMonths">Garantía (meses)</Label>
-              <Input
-                id="warrantyMonths"
-                name="warrantyMonths"
-                type="number"
-                min="0"
-                max="120"
-                step="1"
-                placeholder="Ej: 3"
-                disabled={loading}
-                defaultValue={product?.warrantyMonths}
-              />
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="warrantyMonths">Garantía (meses)</Label>
+                <Input id="warrantyMonths" name="warrantyMonths" type="number" inputMode="numeric" min="0" max="120" step="1" placeholder="Ej: 3" disabled={loading} defaultValue={product?.warrantyMonths} />
+              </div>
             )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">Descripción</Label>
+            <Textarea id="description" name="description" placeholder="Lo que el cliente debe saber del producto" disabled={loading} defaultValue={product?.description} rows={3} />
           </div>
 
           <SpecsField specs={specs} onChange={setSpecs} disabled={loading} template={config.specsTemplate} example={config.specsExample} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="slug">Dirección web</Label>
+              <Label htmlFor="slug">Enlace del producto</Label>
               <div className="flex items-center rounded-md border bg-muted/40 pl-3 focus-within:ring-[3px] focus-within:ring-ring/50">
                 <span className="text-xs text-muted-foreground whitespace-nowrap">{catalogPrefix}</span>
                 <Input
@@ -313,34 +268,28 @@ export function ProductForm({ product, userId, config, catalogPrefix }: ProductF
                   className="border-0 shadow-none focus-visible:ring-0 pl-1"
                 />
               </div>
-              <p className="text-xs text-muted-foreground">Déjalo vacío para generarla del nombre.</p>
+              <p className="text-xs text-muted-foreground">Déjalo vacío y se crea solo con el nombre.</p>
             </div>
-            <div className="flex items-center space-x-2 p-3 rounded-lg border self-end">
-              <Checkbox
-                id="featured"
-                checked={featured}
-                onCheckedChange={(checked) => setFeatured(checked === true)}
-                disabled={loading}
-              />
-              <div className="flex-1">
-                <Label htmlFor="featured" className="cursor-pointer font-semibold">
-                  Destacado
-                </Label>
-                <p className="text-xs text-muted-foreground mt-1">Aparece primero en el catálogo y en el inicio</p>
-              </div>
-            </div>
+            <label className="flex cursor-pointer items-start gap-3 rounded-lg border p-3 self-end">
+              <Checkbox id="featured" checked={featured} onCheckedChange={(checked) => setFeatured(checked === true)} disabled={loading} className="mt-0.5" />
+              <span>
+                <span className="block text-sm font-medium">Destacado</span>
+                <span className="block text-xs text-muted-foreground">Sale primero en tu tienda.</span>
+              </span>
+            </label>
           </div>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button type="button" variant="outline" onClick={handleCancel} disabled={loading}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Cancelar
-          </Button>
-          <Button type="submit" disabled={loading}>
-            {loading ? "Guardando..." : product ? "Actualizar Producto" : "Crear Producto"}
-          </Button>
-        </CardFooter>
-      </Card>
+        </div>
+      </details>
+
+      <div className="sticky bottom-0 z-10 -mx-4 flex items-center justify-between gap-3 border-t bg-background/95 px-4 py-3 backdrop-blur md:static md:mx-0 md:border-0 md:bg-transparent md:p-0">
+        <Button type="button" variant="outline" onClick={handleCancel} disabled={loading}>
+          <ArrowLeft className="h-4 w-4" aria-hidden />
+          Cancelar
+        </Button>
+        <Button type="submit" disabled={loading} className="min-w-40">
+          {loading ? "Guardando…" : product ? "Guardar cambios" : "Guardar producto"}
+        </Button>
+      </div>
     </form>
   )
 }

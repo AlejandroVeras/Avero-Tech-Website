@@ -286,7 +286,7 @@ export function InvoiceForm({ invoice, customers, products }: InvoiceFormProps) 
             <CardTitle>Items</CardTitle>
             <Button type="button" size="sm" variant="outline" onClick={addItem} disabled={loading}>
               <Plus className="h-4 w-4 mr-2" />
-              Agregar Item
+              Agregar producto
             </Button>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -401,7 +401,7 @@ export function InvoiceForm({ invoice, customers, products }: InvoiceFormProps) 
               
               {/* CAMPO DE DESCUENTO */}
               <div className="flex justify-between text-sm items-center">
-                <Label htmlFor="discount" className="text-muted-foreground">Descuento (DOP):</Label>
+                <Label htmlFor="discount" className="text-muted-foreground">Descuento (RD$):</Label>
                 <div className="w-32">
                    <Input
                     id="discount"
@@ -418,7 +418,7 @@ export function InvoiceForm({ invoice, customers, products }: InvoiceFormProps) 
               </div>
 
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Importe Gravable:</span>
+                <span className="text-muted-foreground">Monto antes de ITBIS:</span>
                 <span className="font-medium">{formatCurrency(taxableAmount)}</span>
               </div>
 

@@ -36,9 +36,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="flex min-h-screen bg-muted/40 print:bg-white" {...(brandProps(branding.brandColor) as React.HTMLAttributes<HTMLDivElement>)}>
-      <DashboardSidebar isAdmin={isAdmin} features={features} />
+      <DashboardSidebar isAdmin={isAdmin} isStoreOwner={!!setup.isStoreOwner} features={features} />
       <div className="flex flex-col flex-1 min-w-0 w-full lg:w-[calc(100%-16rem)] border-l print:border-0">
-        <DashboardHeader user={user} isAdmin={isAdmin} features={features} />
+        <DashboardHeader user={user} isAdmin={isAdmin} isStoreOwner={!!setup.isStoreOwner} features={features} />
         <SubscriptionBanner access={access} businessName={user.businessName} />
         <main className="flex-1 w-full">
           {children}

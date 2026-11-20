@@ -30,7 +30,7 @@ export default async function InvoicesPage() {
           <Button asChild>
             <Link href="/dashboard/invoices/new">
               <Plus className="h-4 w-4 mr-2" />
-              Nueva Factura
+              Nueva factura
             </Link>
           </Button>
         </div>

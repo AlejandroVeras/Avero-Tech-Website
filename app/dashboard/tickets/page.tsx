@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 import { getUser } from "@/lib/auth"
 import { getTickets } from "@/lib/data/tickets"
+import { getBusinessSetup } from "@/lib/data/business-setup"
 import { TicketsList } from "@/components/tickets-list"
 import { Suspense } from "react"
 import { Card, CardContent } from "@/components/ui/card"
@@ -32,14 +33,18 @@ async function TicketsContent() {
 }
 
 export default async function TicketsPage() {
+  const setup = await getBusinessSetup()
+  const workshop = setup.businessType === "servicios" && !setup.isStoreOwner
   const user = await getUser()
   if (!user) redirect("/login")
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Tickets de Soporte</h1>
-        <p className="text-muted-foreground mt-1">Gestiona las solicitudes de soporte técnico</p>
+        <h1 className="text-3xl font-bold">{workshop ? "Órdenes de servicio" : "Soporte técnico"}</h1>
+        <p className="text-muted-foreground mt-1">
+          {workshop ? "Los equipos o trabajos que recibes, su estado y cuándo se entregan." : "Las solicitudes de soporte técnico de tus clientes."}
+        </p>
       </div>
       <Suspense fallback={<TicketsLoading />}>
         <TicketsContent />
