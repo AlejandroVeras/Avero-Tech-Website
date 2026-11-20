@@ -144,7 +144,7 @@ export function FinancingPaymentForm({ customer }: FinancingPaymentFormProps) {
                 <div className="space-y-2">
                   <Label htmlFor="paymentMethod">Método de Pago *</Label>
                   <Select value={paymentMethod} onValueChange={setPaymentMethod} disabled={loading}>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>

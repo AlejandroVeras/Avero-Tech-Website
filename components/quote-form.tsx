@@ -153,7 +153,7 @@ export function QuoteForm({ quote, customers, products }: QuoteFormProps) {
               <div className="space-y-2">
                 <Label htmlFor="customer">Cliente Registrado</Label>
                 <Select value={customerId} onValueChange={selectCustomer} disabled={loading}>
-                  <SelectTrigger className="mt-1">
+                  <SelectTrigger className="w-full mt-1">
                     <SelectValue placeholder="Seleccionar cliente (Opcional)" />
                   </SelectTrigger>
                   <SelectContent>
@@ -205,7 +205,7 @@ export function QuoteForm({ quote, customers, products }: QuoteFormProps) {
               <div className="space-y-2">
                 <Label htmlFor="status">Estado de Cotización</Label>
                 <Select value={status} onValueChange={(val) => setStatus(val as typeof status)} disabled={loading}>
-                  <SelectTrigger className="mt-1">
+                  <SelectTrigger className="w-full mt-1">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -231,14 +231,14 @@ export function QuoteForm({ quote, customers, products }: QuoteFormProps) {
           <CardContent className="space-y-4">
             {items.map((item, index) => (
               <div key={index} className="grid grid-cols-12 gap-3 items-start p-4 bg-muted/20 border rounded-lg">
-                <div className="col-span-12 md:col-span-4">
+                <div className="col-span-12 md:col-span-4 min-w-0">
                   <Label className="text-xs font-semibold">Catálogo</Label>
                   <Select
                     value={item.productId || ""}
                     onValueChange={(value) => selectProduct(index, value)}
                     disabled={loading}
                   >
-                    <SelectTrigger className="mt-1 border-2">
+                    <SelectTrigger className="w-full mt-1 border-2">
                       <SelectValue placeholder="Seleccionar producto..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -254,7 +254,7 @@ export function QuoteForm({ quote, customers, products }: QuoteFormProps) {
                   </Select>
                 </div>
 
-                <div className="col-span-12 md:col-span-4">
+                <div className="col-span-12 md:col-span-4 min-w-0">
                   <Label className="text-xs font-semibold">Descripción *</Label>
                   <Input
                     className="mt-1"

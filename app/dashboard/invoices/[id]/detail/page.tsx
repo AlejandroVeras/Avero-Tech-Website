@@ -191,11 +191,9 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                   </div>
                 </div>
                 
-                <div className="pt-6 border-t flex justify-center">
-                   <div className="flex flex-col items-center gap-3">
-                     {document && <InvoiceShareButtons document={document} className="flex flex-col items-center" />}
-                     <InvoicePDF document={document ?? undefined} invoice={invoice} profile={profile} />
-                   </div>
+                <div className="pt-6 border-t flex flex-wrap items-start justify-end gap-2">
+                  {document && <InvoiceShareButtons document={document} />}
+                  <InvoicePDF document={document ?? undefined} invoice={invoice} profile={profile} />
                 </div>
               </CardContent>
             </Card>
@@ -235,7 +233,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                     <div className="space-y-2">
                       <Label htmlFor="method">Método</Label>
                       <Select name="method" defaultValue="Efectivo">
-                        <SelectTrigger className="bg-card">
+                        <SelectTrigger className="w-full bg-card">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>

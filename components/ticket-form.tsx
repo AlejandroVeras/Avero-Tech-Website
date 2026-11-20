@@ -94,7 +94,7 @@ export function TicketForm({ ticket }: TicketFormProps) {
               <div className="space-y-2">
                 <Label htmlFor="problemType">Tipo de Problema</Label>
                 <Select name="problemType" defaultValue={ticket?.problemType || "hardware"} disabled={loading}>
-                  <SelectTrigger id="problemType"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="w-full" id="problemType"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="hardware">Hardware</SelectItem>
                     <SelectItem value="software">Software</SelectItem>
@@ -108,7 +108,7 @@ export function TicketForm({ ticket }: TicketFormProps) {
               <div className="space-y-2">
                 <Label htmlFor="priority">Prioridad</Label>
                 <Select name="priority" defaultValue={ticket?.priority || "medium"} disabled={loading}>
-                  <SelectTrigger id="priority"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="w-full" id="priority"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="low">🟢 Baja</SelectItem>
                     <SelectItem value="medium">🟡 Media</SelectItem>
@@ -121,7 +121,7 @@ export function TicketForm({ ticket }: TicketFormProps) {
                 <div className="space-y-2">
                   <Label htmlFor="status">Estado</Label>
                   <Select name="status" defaultValue={ticket.status} disabled={loading}>
-                    <SelectTrigger id="status"><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="w-full" id="status"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="open">Abierto</SelectItem>
                       <SelectItem value="in_progress">En Proceso</SelectItem>

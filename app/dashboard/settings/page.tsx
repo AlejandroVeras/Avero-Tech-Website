@@ -16,7 +16,7 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="flex-1 w-full space-y-6">
+    <div className="mx-auto w-full max-w-5xl space-y-6 p-4 md:p-6 lg:p-8">
       <div>
         <h1 className="text-3xl font-bold text-foreground">Configuración Comercial</h1>
         <p className="text-muted-foreground mt-1">Administra tu perfil, logo y detalles del negocio</p>

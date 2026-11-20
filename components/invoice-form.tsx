@@ -159,7 +159,7 @@ export function InvoiceForm({ invoice, customers, products }: InvoiceFormProps) 
               <div className="space-y-2">
                 <Label htmlFor="customer">Cliente</Label>
                 <Select value={customerId} onValueChange={selectCustomer} disabled={loading}>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Seleccionar cliente" />
                   </SelectTrigger>
                   <SelectContent>
@@ -210,7 +210,7 @@ export function InvoiceForm({ invoice, customers, products }: InvoiceFormProps) 
               <div className="space-y-2">
                 <Label htmlFor="status">Estado</Label>
                 <Select value={status} onValueChange={(val) => setStatus(val as typeof status)} disabled={loading}>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -292,14 +292,14 @@ export function InvoiceForm({ invoice, customers, products }: InvoiceFormProps) 
           <CardContent className="space-y-4">
             {items.map((item, index) => (
               <div key={index} className="grid grid-cols-12 gap-3 items-start p-4 border rounded-lg">
-                <div className="col-span-12 md:col-span-4">
+                <div className="col-span-12 md:col-span-4 min-w-0">
                   <Label className="text-xs font-semibold">Producto *</Label>
                   <Select
                     value={item.productId || ""}
                     onValueChange={(value) => selectProduct(index, value)}
                     disabled={loading}
                   >
-                    <SelectTrigger className="mt-1 border-2">
+                    <SelectTrigger className="w-full mt-1 border-2">
                       <SelectValue placeholder="Seleccionar producto..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -315,7 +315,7 @@ export function InvoiceForm({ invoice, customers, products }: InvoiceFormProps) 
                   </Select>
                 </div>
 
-                <div className="col-span-12 md:col-span-4">
+                <div className="col-span-12 md:col-span-4 min-w-0">
                   <Label className="text-xs font-semibold">Descripción *</Label>
                   <Input
                     className="mt-1"

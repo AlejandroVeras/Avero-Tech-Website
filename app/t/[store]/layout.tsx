@@ -32,9 +32,9 @@ export default async function TenantStoreLayout({
               <Image
                 src={store.logoUrl}
                 alt=""
-                width={40}
+                width={160}
                 height={40}
-                className="h-10 w-10 rounded-full object-cover bg-fog-white shrink-0"
+                className="h-10 w-auto max-w-[140px] object-contain shrink-0"
               />
             ) : (
               <span className="h-10 w-10 rounded-full bg-fog-white dark:bg-white/10 flex items-center justify-center shrink-0">

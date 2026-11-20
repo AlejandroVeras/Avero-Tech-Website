@@ -137,12 +137,12 @@ export function StoreSettingsForm({ store, userId, siteUrl }: { store: MyStore; 
             <div className="space-y-2">
               <Label>Logo</Label>
               <div className="flex items-center gap-4">
-                <div className="h-16 w-16 rounded-full border bg-muted flex items-center justify-center overflow-hidden shrink-0">
+                <div className="h-16 w-28 rounded-lg border bg-white flex items-center justify-center overflow-hidden shrink-0 p-1.5">
                   {uploading ? (
                     <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" aria-label="Subiendo logo" />
                   ) : logoUrl && !removeLogo ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={logoUrl} alt="Logo de la tienda" className="h-full w-full object-cover" />
+                    <img src={logoUrl} alt="Logo de la tienda" className="h-full w-full object-contain" />
                   ) : (
                     <Store className="h-6 w-6 text-muted-foreground" aria-hidden />
                   )}

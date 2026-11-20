@@ -54,13 +54,13 @@ export function InvoicePDF({ document, invoice, profile }: InvoicePDFProps) {
   }
 
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-wrap gap-2">
       <Button onClick={generatePDF} variant="outline" disabled={!document}>
-        <Printer className="h-4 w-4 mr-2" />
+        <Printer className="h-4 w-4" aria-hidden />
         Imprimir
       </Button>
       <Button onClick={sendEmail} variant="outline">
-        <Mail className="h-4 w-4 mr-2" />
+        <Mail className="h-4 w-4" aria-hidden />
         Enviar por Email
       </Button>
     </div>

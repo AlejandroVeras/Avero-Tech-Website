@@ -1,5 +1,6 @@
 "use client"
 
+import { formatDOP } from "@/lib/site"
 import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
@@ -186,12 +187,12 @@ export function CustomerForm({ customer }: CustomerFormProps) {
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div>
                         <p className="text-gray-700">Usado:</p>
-                        <p className="font-bold text-lg">{customer.financingUsed.toFixed(2)} DOP</p>
+                        <p className="font-bold text-lg">{formatDOP(customer.financingUsed)}</p>
                       </div>
                       <div>
                         <p className="text-gray-700">Disponible:</p>
                         <p className="font-bold text-lg text-green-600">
-                          {(customer.financingLimit - customer.financingUsed).toFixed(2)} DOP
+                          {formatDOP(customer.financingLimit - customer.financingUsed)}
                         </p>
                       </div>
                     </div>

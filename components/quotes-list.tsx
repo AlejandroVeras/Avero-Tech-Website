@@ -1,5 +1,6 @@
 "use client"
 
+import { formatDOP } from "@/lib/site"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FileText, MoreVertical, Edit, FileDown, CheckCircle, XCircle, ArrowRight } from "lucide-react"
@@ -202,7 +203,7 @@ export function QuotesList({ quotes }: QuotesListProps) {
                 <div className="bg-muted/50 p-4 border-t flex items-center justify-between">
                   <span className="text-sm font-medium text-muted-foreground">Total</span>
                   <span className="text-lg font-bold">
-                    DOP {quote.total.toLocaleString("es-DO", { minimumFractionDigits: 2 })}
+                    {formatDOP(quote.total)}
                   </span>
                 </div>
               </CardContent>

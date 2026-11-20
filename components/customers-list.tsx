@@ -1,5 +1,6 @@
 "use client"
 
+import { formatDOP } from "@/lib/site"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Mail, Phone, MapPin, Edit, Trash2, TrendingUp } from "lucide-react"
@@ -116,11 +117,11 @@ export function CustomersList({ customers }: CustomersListProps) {
                     <div className="space-y-1">
                       <div className="flex justify-between text-xs">
                         <span className="text-muted-foreground">Usado</span>
-                        <span className="font-semibold">{customer.financingUsed.toFixed(0)} DOP</span>
+                        <span className="font-semibold">{formatDOP(customer.financingUsed)}</span>
                       </div>
                       <div className="flex justify-between text-xs">
                         <span className="text-muted-foreground">Límite</span>
-                        <span className="font-semibold">{customer.financingLimit.toFixed(0)} DOP</span>
+                        <span className="font-semibold">{formatDOP(customer.financingLimit)}</span>
                       </div>
                       <div className="w-full bg-slate-200 rounded-full h-1.5 mt-2">
                         <div

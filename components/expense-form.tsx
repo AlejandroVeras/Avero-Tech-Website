@@ -64,7 +64,7 @@ export function ExpenseForm({ expense }: ExpenseFormProps) {
             <div className="space-y-2">
               <Label htmlFor="category">Categoría *</Label>
               <Select name="category" defaultValue={expense?.category} required disabled={loading}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccionar categoría" />
                 </SelectTrigger>
                 <SelectContent>
@@ -120,7 +120,7 @@ export function ExpenseForm({ expense }: ExpenseFormProps) {
             <div className="space-y-2">
               <Label htmlFor="paymentMethod">Método de Pago</Label>
               <Select name="paymentMethod" defaultValue={expense?.paymentMethod} disabled={loading}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccionar método" />
                 </SelectTrigger>
                 <SelectContent>
