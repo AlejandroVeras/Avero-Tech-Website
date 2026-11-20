@@ -23,7 +23,7 @@ test("the PDF carries the logo, the brand color and the ITBIS label", () => {
   assert.ok(html.includes('<img class="logo" src="data:image/png;base64,AAAA"'))
   assert.ok(html.includes("#be185d"))
   assert.ok(html.includes("ITBIS incluido (18%)"))
-  assert.ok(html.includes("Pago: Efectivo"))
+  assert.ok(html.includes("Forma de pago") && html.includes("Efectivo"))
   assert.ok(html.includes("PAGADA"))
 })
 

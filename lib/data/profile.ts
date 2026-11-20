@@ -7,7 +7,10 @@ import { getUser } from "@/lib/auth"
 export interface Profile {
   id: string
   businessName: string
+  /** Shown on invoices and quotes: the business email, or the login email when there is none. */
   email: string
+  /** Business email as saved in Configuración (empty = use the login email). */
+  businessEmail?: string
   phone?: string
   address?: string
   taxId?: string
@@ -44,7 +47,8 @@ export async function getProfile(): Promise<Profile | null> {
   return {
     id: profileError.id,
     businessName: profileError.business_name || user.businessName,
-    email: user.email,
+    email: profileError.business_email || user.email,
+    businessEmail: profileError.business_email ?? undefined,
     phone: profileError.phone,
     address: profileError.address,
     taxId: profileError.tax_id,
@@ -59,6 +63,7 @@ export async function updateProfile(data: {
   address?: string
   taxId?: string
   website?: string
+  businessEmail?: string
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -74,6 +79,7 @@ export async function updateProfile(data: {
       address: data.address || null,
       tax_id: data.taxId || null,
       website: data.website || null,
+      business_email: data.businessEmail?.trim().toLowerCase() || null,
       updated_at: new Date().toISOString(),
     })
 

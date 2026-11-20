@@ -78,14 +78,9 @@ export function invoiceFileName(doc: Pick<InvoiceDocument, "invoiceNumber" | "bu
   return `${doc.kind === "quote" ? "Cotizacion" : "Factura"}-${clean(doc.invoiceNumber)}-${clean(doc.business.name).slice(0, 40)}.pdf`
 }
 
-/** "#0071e3" + 0.08 → "rgba(0, 113, 227, 0.08)" (html2canvas does not read 8-digit hex). */
-function tint(hex: string, alpha: number) {
-  const n = parseInt(hex.slice(1), 16)
-  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`
-}
-
 export function invoiceDocumentHtml(doc: InvoiceDocument) {
   const accent = /^#[0-9a-f]{6}$/i.test(doc.accent ?? "") ? doc.accent! : "#10b981"
+  const ink = "#0f172a"
   const e = escapeHtml
   const b = doc.business
   const logoOk = b.logoUrl && /^(data:image\/|https:\/\/)/.test(b.logoUrl)
@@ -94,61 +89,63 @@ export function invoiceDocumentHtml(doc: InvoiceDocument) {
   const statusLabel = (quote ? QUOTE_STATUS : STATUS)[doc.status] ?? e(doc.status.toUpperCase())
   const good = doc.status === (quote ? "approved" : "paid")
   const bad = ["rejected", "cancelled", "overdue"].includes(doc.status)
-  const contact = [b.phone, b.email, b.website].filter(Boolean).map((v) => e(v)).join("  ·  ")
 
-  const cards = [
-    `<div class="card"><h3>${quote ? "Preparada para" : "Cliente"}</h3><p class="big">${e(doc.customerName)}</p></div>`,
-    `<div class="card"><h3>Fecha de emisión</h3><p>${e(longDate(doc.issueDate))}</p></div>`,
-    doc.dueDate ? `<div class="card"><h3>${quote ? "Válida hasta" : "Vence"}</h3><p>${e(longDate(doc.dueDate))}</p></div>` : "",
-    pay ? `<div class="card"><h3>Forma de pago</h3><p>Pago: ${pay}</p></div>` : "",
-  ].join("")
+  const facts = [
+    ["Fecha de emisión", longDate(doc.issueDate)],
+    doc.dueDate ? [quote ? "Válida hasta" : "Vence", longDate(doc.dueDate)] : null,
+    pay ? ["Forma de pago", pay] : null,
+  ]
+    .filter((f): f is string[] => !!f)
+    .map(([k, v]) => `<div class="fact"><span>${k}</span><strong>${e(v)}</strong></div>`)
+    .join("")
 
   return `<div class="av-inv">
 <style>
-.av-inv { width: 760px; background: #fff; color: #1e293b; font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; font-size: 13px; line-height: 1.45; box-sizing: border-box; }
+.av-inv { width: 760px; background: #fff; color: #334155; font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; font-size: 12.5px; line-height: 1.5; box-sizing: border-box; }
 .av-inv * { box-sizing: border-box; margin: 0; padding: 0; }
-.av-inv .bar { height: 10px; background: ${accent}; }
-.av-inv .in { padding: 34px 44px 30px; }
-.av-inv .hd { display: flex; justify-content: space-between; align-items: flex-start; gap: 28px; margin-bottom: 28px; }
-.av-inv .logo { max-height: 70px; max-width: 220px; object-fit: contain; display: block; margin-bottom: 12px; }
-.av-inv .co h1 { font-size: ${logoOk ? "15px" : "24px"}; font-weight: 800; color: #0f172a; margin-bottom: 4px; letter-spacing: -.2px; }
-.av-inv .co p { color: #64748b; font-size: 12px; margin: 1px 0; }
-.av-inv .meta { text-align: right; min-width: 210px; }
-.av-inv .kind { color: ${accent}; font-size: 12px; font-weight: 800; letter-spacing: 3px; }
-.av-inv .num { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.5px; line-height: 34px; margin-top: 2px; }
-.av-inv .badge { display: inline-block; margin-top: 10px; padding: 3px 12px 6px; line-height: 15px; border-radius: 999px; font-size: 10px; font-weight: 800; letter-spacing: 1px; background: ${tint(accent, 0.1)}; color: ${accent}; }
-.av-inv .badge.paid { background: #dcfce7; color: #166534; }
-.av-inv .badge.bad { background: #fee2e2; color: #991b1b; }
-.av-inv .cards { display: flex; gap: 12px; margin-bottom: 26px; }
-.av-inv .card { flex: 1; border: 1px solid ${tint(accent, 0.18)}; background: ${tint(accent, 0.04)}; border-radius: 12px; padding: 12px 14px; }
-.av-inv .card h3 { font-size: 10px; color: #64748b; letter-spacing: 1.2px; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
-.av-inv .card p { color: #0f172a; font-weight: 600; }
-.av-inv .card p.big { font-size: 15px; font-weight: 800; }
-.av-inv table { width: 100%; border-collapse: collapse; border-spacing: 0; margin-bottom: 22px; }
-.av-inv thead tr { background: ${tint(accent, 0.1)}; }
-.av-inv th { border: 0; color: ${accent}; text-align: left; padding: 11px 12px; line-height: 16px; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; vertical-align: middle; }
-.av-inv td { padding: 13px 12px; line-height: 18px; border-bottom: 1px solid #eef2f7; color: #334155; vertical-align: middle; }
-.av-inv td.n { color: #94a3b8; width: 34px; font-size: 12px; }
-.av-inv td.d { color: #0f172a; font-weight: 600; }
+.av-inv .bar { height: 5px; background: ${accent}; }
+.av-inv .in { padding: 36px 48px 28px; }
+.av-inv .hd { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; padding-bottom: 22px; border-bottom: 1px solid #cbd5e1; }
+.av-inv .logo { max-height: 62px; max-width: 210px; object-fit: contain; display: block; margin-bottom: 10px; }
+.av-inv .co h1 { font-size: ${logoOk ? "14px" : "22px"}; font-weight: 700; color: ${ink}; margin-bottom: 3px; }
+.av-inv .co p { color: #64748b; font-size: 11.5px; margin: 1px 0; }
+.av-inv .meta { text-align: right; min-width: 220px; }
+.av-inv .kind { color: ${ink}; font-size: 22px; font-weight: 300; letter-spacing: 5px; }
+.av-inv .num { font-size: 14px; font-weight: 700; color: ${accent}; letter-spacing: .5px; margin-top: 4px; }
+.av-inv .badge { display: inline-block; margin-top: 10px; padding: 2px 10px 5px; line-height: 14px; border: 1px solid #cbd5e1; border-radius: 3px; font-size: 9.5px; font-weight: 700; letter-spacing: 1.2px; color: #475569; }
+.av-inv .badge.paid { border-color: #86efac; color: #166534; }
+.av-inv .badge.bad { border-color: #fca5a5; color: #991b1b; }
+.av-inv .info { display: flex; justify-content: space-between; gap: 32px; padding: 20px 0 22px; }
+.av-inv .label { font-size: 9.5px; color: #94a3b8; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+.av-inv .client { font-size: 15px; font-weight: 700; color: ${ink}; }
+.av-inv .facts { min-width: 260px; }
+.av-inv .fact { display: flex; justify-content: space-between; gap: 18px; padding: 3px 0; }
+.av-inv .fact span { color: #64748b; }
+.av-inv .fact strong { color: ${ink}; font-weight: 600; }
+.av-inv table { width: 100%; border-collapse: collapse; border-spacing: 0; margin-bottom: 20px; }
+.av-inv thead tr { background: ${ink}; }
+.av-inv th { border: 0; color: #fff; text-align: left; padding: 9px 12px; line-height: 16px; font-size: 9.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; vertical-align: middle; }
+.av-inv td { padding: 11px 12px; line-height: 18px; border-bottom: 1px solid #e2e8f0; color: #334155; vertical-align: middle; }
+.av-inv tbody tr.alt td { background: #f8fafc; }
+.av-inv td.n { color: #94a3b8; width: 36px; }
+.av-inv td.d { color: ${ink}; }
 .av-inv .r { text-align: right; }
-.av-inv .bottom { display: flex; gap: 24px; align-items: flex-start; }
+.av-inv .bottom { display: flex; gap: 32px; align-items: flex-start; }
 .av-inv .side { flex: 1; }
-.av-inv .tot { width: 290px; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 16px 14px; }
-.av-inv .row { display: flex; justify-content: space-between; padding: 5px 0; line-height: 18px; color: #64748b; }
-.av-inv .row.disc { color: #dc2626; }
-.av-inv .row.big { margin-top: 10px; padding: 11px 14px 13px; border-radius: 10px; background: ${accent}; color: #fff; line-height: 24px; font-size: 18px; font-weight: 800; }
+.av-inv .tot { width: 270px; }
+.av-inv .row { display: flex; justify-content: space-between; padding: 5px 0; line-height: 18px; color: #475569; border-bottom: 1px solid #f1f5f9; }
+.av-inv .row.disc { color: #b91c1c; }
+.av-inv .row.big { margin-top: 6px; padding: 10px 0 4px; border-top: 2px solid ${ink}; border-bottom: 0; color: ${ink}; line-height: 24px; }
 .av-inv .row.big span { white-space: nowrap; }
-.av-inv .row.big span:first-child { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
-.av-inv .valid { padding: 12px 14px; border-radius: 12px; background: ${tint(accent, 0.07)}; color: #0f172a; margin-bottom: 12px; }
-.av-inv .valid strong { color: ${accent}; }
-.av-inv .valid span { display: block; color: #64748b; font-size: 12px; margin-top: 2px; }
-.av-inv .notes { padding: 12px 14px; border-left: 3px solid ${accent}; background: #f8fafc; border-radius: 0 10px 10px 0; }
-.av-inv .notes h3 { font-size: 10px; color: ${accent}; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; margin-bottom: 4px; }
-.av-inv .notes p { color: #334155; }
-.av-inv .sign { display: flex; gap: 56px; margin-top: 54px; }
-.av-inv .sign div { flex: 1; border-top: 1px solid #94a3b8; padding-top: 7px; text-align: center; color: #64748b; font-size: 11px; }
-.av-inv .ft { margin-top: 34px; padding: 14px 44px 18px; border-top: 1px solid #eef2f7; display: flex; justify-content: space-between; gap: 16px; color: #94a3b8; font-size: 11px; }
-.av-inv .ft strong { color: ${accent}; }
+.av-inv .row.big span:first-child { font-size: 10.5px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+.av-inv .row.big span:last-child { font-size: 19px; font-weight: 800; color: ${accent}; }
+.av-inv .block { padding: 10px 0 10px 14px; border-left: 2px solid ${accent}; margin-bottom: 14px; }
+.av-inv .block p { color: #334155; }
+.av-inv .block strong { color: ${ink}; }
+.av-inv .sign { display: flex; gap: 64px; margin-top: 60px; }
+.av-inv .sign div { flex: 1; border-top: 1px solid #64748b; padding-top: 7px; text-align: center; color: #64748b; font-size: 10.5px; }
+.av-inv .ft { margin: 30px 48px 0; padding: 12px 0 20px; border-top: 1px solid #cbd5e1; text-align: center; color: #94a3b8; font-size: 10.5px; }
+.av-inv .ft strong { color: #475569; font-weight: 600; }
 </style>
 <div class="bar"></div>
 <div class="in">
@@ -158,22 +155,27 @@ export function invoiceDocumentHtml(doc: InvoiceDocument) {
     <h1>${e(b.name)}</h1>
     ${b.taxId ? `<p>RNC: ${e(b.taxId)}</p>` : ""}
     ${b.address ? `<p>${e(b.address)}</p>` : ""}
-    ${contact ? `<p>${contact}</p>` : ""}
+    ${b.phone ? `<p>Tel. ${e(b.phone)}</p>` : ""}
+    ${b.email ? `<p>${e(b.email)}</p>` : ""}
+    ${b.website ? `<p>${e(b.website)}</p>` : ""}
   </div>
   <div class="meta">
     <p class="kind">${quote ? "COTIZACIÓN" : "FACTURA"}</p>
-    <p class="num">${e(doc.invoiceNumber)}</p>
+    <p class="num">No. ${e(doc.invoiceNumber)}</p>
     <span class="badge ${good ? "paid" : bad ? "bad" : ""}">${statusLabel}</span>
   </div>
 </div>
-<div class="cards">${cards}</div>
+<div class="info">
+  <div><p class="label">${quote ? "Preparada para" : "Cliente"}</p><p class="client">${e(doc.customerName)}</p></div>
+  <div class="facts">${facts}</div>
+</div>
 <table>
-  <thead><tr><th>#</th><th>Descripción</th><th class="r">Cant.</th><th class="r">Precio</th><th class="r">Total</th></tr></thead>
+  <thead><tr><th>#</th><th>Descripción</th><th class="r">Cant.</th><th class="r">Precio unit.</th><th class="r">Importe</th></tr></thead>
   <tbody>
     ${doc.items
       .map(
         (i, n) =>
-          `<tr><td class="n">${n + 1}</td><td class="d">${e(i.description)}</td><td class="r">${e(i.quantity)}</td><td class="r">${money.format(i.unitPrice)}</td><td class="r"><strong>${money.format(i.total)}</strong></td></tr>`,
+          `<tr class="${n % 2 ? "alt" : ""}"><td class="n">${n + 1}</td><td class="d">${e(i.description)}</td><td class="r">${e(i.quantity)}</td><td class="r">${money.format(i.unitPrice)}</td><td class="r"><strong>${money.format(i.total)}</strong></td></tr>`,
       )
       .join("")}
   </tbody>
@@ -182,10 +184,10 @@ export function invoiceDocumentHtml(doc: InvoiceDocument) {
   <div class="side">
     ${
       quote && doc.dueDate
-        ? `<div class="valid">Válida hasta el <strong>${e(longDate(doc.dueDate))}</strong><span>Precios en pesos dominicanos (RD$).</span></div>`
+        ? `<div class="block"><p class="label">Vigencia</p><p>Esta cotización es válida hasta el <strong>${e(longDate(doc.dueDate))}</strong>. Precios en pesos dominicanos (RD$).</p></div>`
         : ""
     }
-    ${doc.notes ? `<div class="notes"><h3>${quote ? "Condiciones y notas" : "Notas"}</h3><p>${e(doc.notes).replace(/\n/g, "<br/>")}</p></div>` : ""}
+    ${doc.notes ? `<div class="block"><p class="label">${quote ? "Condiciones y notas" : "Notas"}</p><p>${e(doc.notes).replace(/\n/g, "<br/>")}</p></div>` : ""}
   </div>
   <div class="tot">
     <div class="row"><span>Subtotal</span><span>${money.format(doc.subtotal)}</span></div>
@@ -194,8 +196,8 @@ export function invoiceDocumentHtml(doc: InvoiceDocument) {
     <div class="row big"><span>${quote ? "Total cotizado" : "Total"}</span><span>${money.format(doc.total)}</span></div>
   </div>
 </div>
-${quote ? `<div class="sign"><div>Preparada por · ${e(b.name)}</div><div>Aceptada por el cliente (firma y fecha)</div></div>` : ""}
+${quote ? `<div class="sign"><div>Preparada por<br/><strong>${e(b.name)}</strong></div><div>Aceptada por el cliente<br/>Firma y fecha</div></div>` : ""}
 </div>
-<div class="ft"><span>${quote ? "Gracias por considerarnos." : "Gracias por su compra."} <strong>${e(b.name)}</strong></span><span>${b.phone ? e(b.phone) : ""}</span></div>
+<div class="ft">${quote ? "Gracias por considerarnos." : "Gracias por su compra."} <strong>${e(b.name)}</strong>${b.phone ? ` · ${e(b.phone)}` : ""}${b.email ? ` · ${e(b.email)}` : ""}</div>
 </div>`
 }

@@ -24,6 +24,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
   const [address, setAddress] = useState(profile.address || "")
   const [taxId, setTaxId] = useState(profile.taxId || "")
   const [website, setWebsite] = useState(profile.website || "")
+  const [businessEmail, setBusinessEmail] = useState(profile.businessEmail || "")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -34,7 +35,8 @@ export function SettingsForm({ profile }: SettingsFormProps) {
       phone,
       address,
       taxId,
-      website
+      website,
+      businessEmail,
     })
 
     setLoading(false)
@@ -95,6 +97,20 @@ export function SettingsForm({ profile }: SettingsFormProps) {
             </div>
           </div>
           
+          <div className="space-y-2">
+            <Label htmlFor="businessEmail">Correo del negocio</Label>
+            <Input
+              id="businessEmail"
+              type="email"
+              value={businessEmail}
+              onChange={(e) => setBusinessEmail(e.target.value)}
+              placeholder={profile.email}
+            />
+            <p className="text-xs text-muted-foreground">
+              Aparece en tus facturas y cotizaciones. Si lo dejas vacío, se usa el correo con el que entras.
+            </p>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="website">Página Web</Label>
             <Input
