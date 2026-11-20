@@ -281,7 +281,7 @@ export function ProductForm({ product, userId, config, catalogPrefix }: ProductF
         </div>
       </details>
 
-      <div className="sticky bottom-0 z-10 -mx-4 flex items-center justify-between gap-3 border-t bg-background/95 px-4 py-3 backdrop-blur md:static md:mx-0 md:border-0 md:bg-transparent md:p-0">
+      <div className="sticky bottom-16 z-10 -mx-4 flex items-center justify-between gap-3 border-t bg-background/95 px-4 py-3 backdrop-blur md:static md:bottom-0 md:mx-0 md:border-0 md:bg-transparent md:p-0">
         <Button type="button" variant="outline" onClick={handleCancel} disabled={loading}>
           <ArrowLeft className="h-4 w-4" aria-hidden />
           Cancelar

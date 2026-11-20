@@ -2,7 +2,8 @@
 
 import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
-import { isBusinessType, isItbisMode, isSalesMode } from "@/lib/business-setup"
+import { isBusinessType, isItbisMode, isSalesMode, parseTools, suggestedFeatures, TOOL_KEYS, type Features } from "@/lib/business-setup"
+import { getBusinessSetup } from "@/lib/data/business-setup"
 
 export async function saveBusinessSetup(input: {
   businessType: string | null
@@ -55,6 +56,33 @@ export async function skipBusinessSetup() {
     .eq("id", user.id)
 
   if (error) return { error: "No pudimos guardar. Intenta de nuevo." }
+  revalidatePath("/dashboard", "layout")
+  return { success: true }
+}
+
+/** Configuración → Herramientas: keeps only the switches that differ from what the answers suggest. */
+export async function saveTools(input: Partial<Features>) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { error: "No autorizado" }
+
+  const wanted = parseTools(input)
+  const suggested = suggestedFeatures(await getBusinessSetup())
+  const diff: Partial<Features> = {}
+  for (const k of TOOL_KEYS) {
+    if (typeof wanted[k] === "boolean" && wanted[k] !== suggested[k]) diff[k] = wanted[k]
+  }
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ enabled_tools: Object.keys(diff).length ? diff : null, updated_at: new Date().toISOString() })
+    .eq("id", user.id)
+  if (error) {
+    console.error("Error saving tools:", error)
+    return { error: "No pudimos guardar las herramientas. Intenta de nuevo." }
+  }
   revalidatePath("/dashboard", "layout")
   return { success: true }
 }

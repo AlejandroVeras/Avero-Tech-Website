@@ -36,6 +36,8 @@ export interface BusinessSetup {
   completed: boolean
   /** The Avero Technology account: its public products feed averotechnology.com/catalogo. */
   isStoreOwner?: boolean
+  /** Tools the business switched on or off by hand (Configuración → Herramientas). */
+  tools?: Partial<Features>
 }
 
 /** Accounts from before DATABASE_BUSINESS_SETUP.sql, or when the columns can't be read: nothing changes. */
@@ -87,6 +89,7 @@ export function parseSetupRow(row: {
   itbis_mode?: unknown
   setup_completed_at?: unknown
   is_store_owner?: unknown
+  enabled_tools?: unknown
 }): BusinessSetup {
   return {
     businessType: oneOf(BUSINESS_TYPES, row.business_type),
@@ -95,6 +98,7 @@ export function parseSetupRow(row: {
     itbisMode: oneOf(ITBIS_MODES, row.itbis_mode) ?? "added",
     completed: row.setup_completed_at != null,
     isStoreOwner: row.is_store_owner === true,
+    tools: parseTools(row.enabled_tools),
   }
 }
 
@@ -107,7 +111,29 @@ export interface Features {
   serviceOrders: boolean
 }
 
+export const TOOL_KEYS = ["quickSale", "quotes", "customers", "serviceOrders"] as const
+
+/** Only true/false values for known tools survive; anything else is ignored. */
+export function parseTools(value: unknown): Partial<Features> {
+  if (!value || typeof value !== "object") return {}
+  const out: Partial<Features> = {}
+  for (const k of TOOL_KEYS) {
+    const v = (value as Record<string, unknown>)[k]
+    if (typeof v === "boolean") out[k] = v
+  }
+  return out
+}
+
+/** What the answers suggest, before any switch the business flipped by hand. */
+export function suggestedFeatures(setup: BusinessSetup): Features {
+  return featuresFor({ ...setup, tools: {} })
+}
+
 export function featuresFor(setup: BusinessSetup): Features {
+  return { ...baseFeatures(setup), ...(setup.tools ?? {}) }
+}
+
+function baseFeatures(setup: BusinessSetup): Features {
   const mode = setup.salesMode
   // No answer (old accounts, skipped questions): keep everything exactly as before.
   const serviceOrders = setup.businessType === "servicios"

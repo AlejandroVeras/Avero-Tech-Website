@@ -2,6 +2,8 @@ import { redirect } from "next/navigation"
 import { getProfile } from "@/lib/data/profile"
 import { SettingsForm } from "@/components/settings-form"
 import { BusinessSetupForm } from "@/components/business-setup-form"
+import { ToolsForm } from "@/components/tools-form"
+import { featuresFor } from "@/lib/business-setup"
 import { getBusinessSetup } from "@/lib/data/business-setup"
 import { getBranding } from "@/lib/data/branding"
 import { BrandColorForm, DashboardWidgetsForm } from "@/components/branding-settings"
@@ -29,6 +31,8 @@ export default async function SettingsPage() {
       <DashboardWidgetsForm current={branding.widgets} />
 
       <BusinessSetupForm setup={setup} mode="settings" />
+
+      <ToolsForm current={featuresFor(setup)} />
     </div>
   )
 }

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { getUser } from "@/lib/auth"
 import { getTickets } from "@/lib/data/tickets"
 import { getBusinessSetup } from "@/lib/data/business-setup"
+import { featuresFor } from "@/lib/business-setup"
 import { TicketsList } from "@/components/tickets-list"
 import { Suspense } from "react"
 import { Card, CardContent } from "@/components/ui/card"
@@ -34,7 +35,7 @@ async function TicketsContent() {
 
 export default async function TicketsPage() {
   const setup = await getBusinessSetup()
-  const workshop = setup.businessType === "servicios" && !setup.isStoreOwner
+  const workshop = featuresFor(setup).serviceOrders && !setup.isStoreOwner
   const user = await getUser()
   if (!user) redirect("/login")
 

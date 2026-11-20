@@ -15,7 +15,7 @@ export const getBusinessSetup = cache(async (): Promise<BusinessSetup> => {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("business_type, sales_mode, sells_on_credit, itbis_mode, setup_completed_at, is_store_owner")
+    .select("business_type, sales_mode, sells_on_credit, itbis_mode, setup_completed_at, is_store_owner, enabled_tools")
     .eq("id", user.id)
     .maybeSingle()
 

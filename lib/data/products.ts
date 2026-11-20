@@ -24,6 +24,8 @@ export interface Product {
   id: string
   userId: string
   name: string
+  /** Loaded with "Probar con ejemplos" (products.is_sample). */
+  isSample?: boolean
   description?: string
   sku?: string
   price: number
@@ -70,6 +72,7 @@ function toProduct(p: ProductRow, images: ProductImage[] = []): Product {
     id: p.id,
     userId: p.user_id,
     name: p.name,
+    isSample: (p as { is_sample?: boolean | null }).is_sample === true,
     description: p.description ?? undefined,
     sku: p.sku ?? undefined,
     price: Number(p.price),

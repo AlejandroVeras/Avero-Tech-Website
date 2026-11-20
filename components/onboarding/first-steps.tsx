@@ -6,6 +6,7 @@ import { ArrowRight, Check, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { FirstStep } from "@/lib/data/first-steps"
 import { cn } from "@/lib/utils"
+import { TrySamplesButton } from "@/components/onboarding/sample-products"
 
 const KEY = "avero:first-steps-hidden"
 
@@ -68,11 +69,14 @@ export function FirstSteps({ steps }: { steps: FirstStep[] }) {
               {!s.done && <p className="text-xs text-muted-foreground">{s.hint}</p>}
             </div>
             {!s.done && (
-              <Button asChild size="sm" variant={s.id === next?.id ? "default" : "outline"} className="shrink-0">
-                <Link href={s.href}>
-                  {s.cta} <ArrowRight className="h-3.5 w-3.5" aria-hidden />
-                </Link>
-              </Button>
+              <div className="flex shrink-0 flex-col items-end gap-1 sm:flex-row sm:items-center">
+                {s.id === "product" && <TrySamplesButton />}
+                <Button asChild size="sm" variant={s.id === next?.id ? "default" : "outline"}>
+                  <Link href={s.href}>
+                    {s.cta} <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+                  </Link>
+                </Button>
+              </div>
             )}
           </li>
         ))}

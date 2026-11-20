@@ -18,6 +18,7 @@ import {
   type SalesMode,
 } from "@/lib/business-setup"
 import { saveBusinessSetup, skipBusinessSetup } from "@/lib/data/business-setup-actions"
+import { dashboardNavigation } from "@/components/dashboard-nav"
 import { cn } from "@/lib/utils"
 
 type Option<T extends string> = { id: T; label: string; hint?: string }
@@ -179,6 +180,31 @@ export function BusinessSetupForm({ setup, mode }: { setup: BusinessSetup; mode:
             <p className="text-xs text-muted-foreground">
               Aplica a la pantalla Vender. Las facturas que haces a mano mantienen su casilla de ITBIS.
             </p>
+          </section>
+        )}
+
+        {mode === "welcome" && salesMode && (
+          <section aria-labelledby="menu-preview" className="rounded-xl border bg-muted/40 p-4">
+            <h2 id="menu-preview" className="text-sm font-semibold">Así se verá tu menú</h2>
+            <p className="mb-3 text-xs text-muted-foreground">Solo lo que tu negocio usa. Puedes prender más herramientas en Configuración.</p>
+            <div className="flex flex-wrap gap-x-6 gap-y-3">
+              {dashboardNavigation(
+                featuresFor({ businessType, salesMode, sellsOnCredit: credit === "yes", itbisMode, completed: true }),
+              )
+                .filter((g) => g.label !== "Cuenta")
+                .map((g) => (
+                  <div key={g.label || "main"}>
+                    {g.label && <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{g.label}</p>}
+                    <ul className="mt-1 flex flex-wrap gap-1.5">
+                      {g.items.map((i) => (
+                        <li key={i.href} className="flex items-center gap-1.5 rounded-full border bg-background px-2.5 py-1 text-xs">
+                          <i.icon className="h-3.5 w-3.5 text-primary" aria-hidden /> {i.name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+            </div>
           </section>
         )}
       </CardContent>

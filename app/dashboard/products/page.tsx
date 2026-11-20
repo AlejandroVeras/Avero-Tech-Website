@@ -3,6 +3,7 @@ import { getUser } from "@/lib/auth"
 import { getProducts } from "@/lib/data/products"
 
 import { ProductsList } from "@/components/products-list"
+import { SampleProductsBanner } from "@/components/onboarding/sample-products"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
@@ -34,6 +35,8 @@ export default async function ProductsPage() {
             </Link>
           </Button>
         </div>
+
+        {products.some((p) => p.isSample) && <SampleProductsBanner />}
 
         <ProductsList products={products} />
       </div>

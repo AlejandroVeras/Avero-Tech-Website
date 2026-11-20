@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { OPEN_MENU_EVENT } from "@/components/mobile-tab-bar"
 import { UserIcon, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -31,6 +32,11 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ user, isAdmin = false, isStoreOwner = false, features = ALL_FEATURES }: DashboardHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false)
+  useEffect(() => {
+    const open = () => setMenuOpen(true)
+    window.addEventListener(OPEN_MENU_EVENT, open)
+    return () => window.removeEventListener(OPEN_MENU_EVENT, open)
+  }, [])
   const router = useRouter()
 
   async function handleSignOut() {

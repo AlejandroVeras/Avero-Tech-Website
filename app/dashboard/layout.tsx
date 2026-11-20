@@ -4,6 +4,7 @@ import { getAccess, isPlatformAdmin } from "@/lib/data/access"
 import { DashboardHeader } from "@/components/dashboard-header"
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { SubscriptionBanner } from "@/components/subscription-banner"
+import { MobileTabBar } from "@/components/mobile-tab-bar"
 import { ActivationScreen } from "@/components/billing/activation-screen"
 import { redirect } from "next/navigation"
 import { getBusinessSetup } from "@/lib/data/business-setup"
@@ -40,9 +41,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <div className="flex flex-col flex-1 min-w-0 w-full lg:w-[calc(100%-16rem)] border-l print:border-0">
         <DashboardHeader user={user} isAdmin={isAdmin} isStoreOwner={!!setup.isStoreOwner} features={features} />
         <SubscriptionBanner access={access} businessName={user.businessName} />
-        <main className="flex-1 w-full">
+        <main className="flex-1 w-full pb-20 md:pb-0">
           {children}
         </main>
+        <MobileTabBar features={features} />
       </div>
     </div>
   )

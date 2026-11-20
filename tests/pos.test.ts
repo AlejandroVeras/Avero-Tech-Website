@@ -79,3 +79,12 @@ test("the product form fits the business", () => {
   assert.equal(productFormFor(null).showCondition, true)
   assert.equal(productFormFor("ferreteria").showWarranty, true)
 })
+
+test("tools switched by hand win over what the business type suggests", () => {
+  const setup = parseSetupRow({ business_type: "ropa", sales_mode: "counter", sells_on_credit: false, setup_completed_at: "x", enabled_tools: { quotes: true, serviceOrders: true, bogus: true, quickSale: "yes" } })
+  const f = featuresFor(setup)
+  assert.equal(f.quotes, true)
+  assert.equal(f.serviceOrders, true)
+  assert.equal(f.quickSale, true)
+  assert.equal(f.customers, false)
+})
